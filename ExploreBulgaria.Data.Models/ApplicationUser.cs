@@ -21,10 +21,10 @@ namespace ExploreBulgaria.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public ICollection<IdentityUserRole<string>> Roles { get; set; }
+        public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 
-        public ICollection<IdentityUserClaim<string>> Claims { get; set; }
+        public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
-        public ICollection<IdentityUserLogin<string>> Logins { get; set; }
+        public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
     }
 }
