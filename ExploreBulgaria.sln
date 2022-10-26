@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web", "ExploreBulgaria\ExploreBulgaria.Web.csproj", "{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{38D7D70C-9343-42FC-BBB6-B347E696A01B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{12730275-A231-4952-A0FE-1D496A3F82BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web.ViewModels", "ExploreBulgaria.ViewModels\ExploreBulgaria.Web.ViewModels.csproj", "{BFA7CBDF-0982-4E80-B6A7-367E7B553807}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Data", "ExploreBulgaria.Data\ExploreBulgaria.Data.csproj", "{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Data.Common", "ExploreBulgaria.Data.Common\ExploreBulgaria.Data.Common.csproj", "{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Data.Models", "ExploreBulgaria.Data.Models\ExploreBulgaria.Data.Models.csproj", "{00FEC566-AA91-4E74-A31C-01E7DEA8FC92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Services.Data", "ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj", "{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Services.Mapping", "ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj", "{182DE5DB-5508-4218-8B93-25735FBA7563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Common", "ExploreBulgaria.Common\ExploreBulgaria.Common.csproj", "{27B44BE3-5079-46CC-96B1-88E6151DC36E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFA7CBDF-0982-4E80-B6A7-367E7B553807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA7CBDF-0982-4E80-B6A7-367E7B553807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA7CBDF-0982-4E80-B6A7-367E7B553807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA7CBDF-0982-4E80-B6A7-367E7B553807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{182DE5DB-5508-4218-8B93-25735FBA7563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{182DE5DB-5508-4218-8B93-25735FBA7563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{182DE5DB-5508-4218-8B93-25735FBA7563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{182DE5DB-5508-4218-8B93-25735FBA7563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27B44BE3-5079-46CC-96B1-88E6151DC36E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27B44BE3-5079-46CC-96B1-88E6151DC36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27B44BE3-5079-46CC-96B1-88E6151DC36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27B44BE3-5079-46CC-96B1-88E6151DC36E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05} = {38D7D70C-9343-42FC-BBB6-B347E696A01B}
+		{BFA7CBDF-0982-4E80-B6A7-367E7B553807} = {38D7D70C-9343-42FC-BBB6-B347E696A01B}
+		{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1} = {12730275-A231-4952-A0FE-1D496A3F82BD}
+		{03A0CF61-BCB8-4539-A7EA-2FD55ADEAECC} = {12730275-A231-4952-A0FE-1D496A3F82BD}
+		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92} = {12730275-A231-4952-A0FE-1D496A3F82BD}
+		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
+		{182DE5DB-5508-4218-8B93-25735FBA7563} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88E5FA68-4CA1-4BE7-B180-7F55B0670FE5}
+	EndGlobalSection
+EndGlobal
