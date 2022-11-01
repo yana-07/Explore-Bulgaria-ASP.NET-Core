@@ -2,7 +2,6 @@
 using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static ExploreBulgaria.Data.Models.Constants.DataConstants;
 using static ExploreBulgaria.Data.Models.Constants.DataConstants.Attraction;
 
 namespace ExploreBulgaria.Data.Models
