@@ -24,11 +24,13 @@ namespace ExploreBulgaria.Data.Seeding
 
             var logger = serviceProvider.GetService<ILoggerFactory>()!.CreateLogger<ApplicationDbContextSeeder>();
 
-            var seeders = new List<ISeeder>() { new RolesSeeder() };
+            var seeders = new List<ISeeder>() { new RolesSeeder(), new AdminUserSeeder(), new CategoriesSeeder(),
+                new SubcategoriesSeeder(), new AttractionsSeeder() };
 
             foreach (var seeder in seeders)
             {
                 await seeder.SeedAsync(dbContext, serviceProvider);
+                ;
                 await dbContext.SaveChangesAsync();
                 logger.LogInformation($"Seeder {seeder.GetType().Name} done.");
             }
