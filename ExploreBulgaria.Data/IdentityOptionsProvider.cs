@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using static ExploreBulgaria.Data.Common.Constants.DataConstants.User;
 namespace ExploreBulgaria.Data
 {
     public static class IdentityOptionsProvider
@@ -15,7 +10,7 @@ namespace ExploreBulgaria.Data
             options.Password.RequireLowercase = false;
             options.Password.RequireUppercase = false;
             options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
+            options.Password.RequiredLength = PasswordMinLength;
         }
     }
 }
