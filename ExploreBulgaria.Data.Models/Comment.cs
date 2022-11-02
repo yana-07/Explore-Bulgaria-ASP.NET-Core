@@ -1,7 +1,7 @@
 ﻿using ExploreBulgaria.Data.Common.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static ExploreBulgaria.Data.Models.Constants.DataConstants.Comment;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants.Comment;
 
 namespace ExploreBulgaria.Data.Models
 {

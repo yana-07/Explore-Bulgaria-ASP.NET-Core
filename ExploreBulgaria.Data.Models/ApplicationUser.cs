@@ -1,8 +1,7 @@
 ﻿using ExploreBulgaria.Data.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using static ExploreBulgaria.Data.Models.Constants.DataConstants;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants;
 
 namespace ExploreBulgaria.Data.Models
 {
