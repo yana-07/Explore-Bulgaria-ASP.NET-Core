@@ -4,9 +4,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>18991779-445d-4416-a7b2-adeb658f8840</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -19,12 +21,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Common\ExploreBulgaria.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Data.Common\ExploreBulgaria.Data.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Data.Models\ExploreBulgaria.Data.Models.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Services\ExploreBulgaria.Services.csproj" />
   </ItemGroup>
 
 </Project>
