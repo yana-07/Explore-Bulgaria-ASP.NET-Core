@@ -3,6 +3,8 @@ using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Repositories;
 using ExploreBulgaria.Data.Seeding;
+using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +28,8 @@ builder.Services.AddSingleton(builder.Configuration);
 // Data Repositories
 builder.Services.AddScoped(typeof(IDeletableEnityRepository<>), typeof(EfDeletableEntityRepository<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 var app = builder.Build();
 
