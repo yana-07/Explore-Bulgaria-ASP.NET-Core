@@ -26,10 +26,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(builder.Configuration);
 
 // Data Repositories
-builder.Services.AddScoped(typeof(IDeletableEnityRepository<>), typeof(EfDeletableEntityRepository<>));
-builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-
-builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
