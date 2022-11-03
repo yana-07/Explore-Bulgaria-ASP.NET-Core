@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExploreBulgaria.styles.css" asp-append-version="true" />
-    <link href="~/theme/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/theme/assets/css/fontawesome.css">
-    <link rel="stylesheet" href="~/theme/assets/css/templatemo-woox-travel.css">
-    <link rel="stylesheet" href="~/theme/assets/css/owl.css">
-    <link rel="stylesheet" href="~/theme/assets/css/animate.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <partial name="_ThemeLinksPartial" />
 </head>
 <body>
     <header class="header-area header-sticky">
@@ -43,21 +38,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - ExploreBulgaria - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - ExploreBulgaria - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/theme/vendor/jquery/jquery.min.js"></script>
-    <script src="~/theme/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <script src="~/theme/assets/js/isotope.min.js"></script>
-    <script src="~/theme/assets/js/owl-carousel.js"></script>
-    <script src="~/theme/assets/js/wow.js"></script>
-    <script src="~/theme/assets/js/tabs.js"></script>
-    <script src="~/theme/assets/js/popup.js"></script>
-    <script src="~/theme/assets/js/custom.js"></script>
+    <partial name="_ThemeScriptsPartial" />
 
     <script>
         $(".option").click(function () {
