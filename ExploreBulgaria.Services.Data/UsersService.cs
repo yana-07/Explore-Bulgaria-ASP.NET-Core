@@ -21,6 +21,11 @@ namespace ExploreBulgaria.Services.Data
         {
             var user = userManager.FindByEmailAsync(model.Email).GetAwaiter().GetResult();
 
+            if (user == null)
+            {
+                return Task.FromResult(SignInResult.Failed);
+            }
+
             return signInManager.PasswordSignInAsync(user, model.Password, false, false);
         }
 
