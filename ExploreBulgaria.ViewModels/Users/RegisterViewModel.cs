@@ -8,7 +8,7 @@ using static ExploreBulgaria.Web.ViewModels.Common.Constants;
 
 namespace ExploreBulgaria.Web.ViewModels.Users
 {
-    public class RegisterViewModel : IMapFrom<ApplicationUser>
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = FieldRequired)]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = FieldLength)]
