@@ -1,13 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using static ExploreBulgaria.Web.ViewModels.Common.Constants;
 
 namespace ExploreBulgaria.Web.ViewModels.Users
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = FieldRequired)]
+        [DisplayName(DisplayEmail)]
         public string Email { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = FieldRequired)]
+        [DisplayName(DisplayPassword)]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
     }
