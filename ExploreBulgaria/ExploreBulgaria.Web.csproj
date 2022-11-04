@@ -18,7 +18,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Data\ExploreBulgaria.Data.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.ViewModels\ExploreBulgaria.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Views\" />
+    <Folder Include="Areas\Administration\ViewModels\" />
   </ItemGroup>
 
 </Project>

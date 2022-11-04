@@ -72,7 +72,7 @@ namespace ExploreBulgaria.Web.Controllers
                 return this.RedirectTo<HomeController>(c => c.Index());
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(string.Empty, "Неуспешен опит.");
 
             return View(model);
         }

@@ -38,7 +38,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 var error = new IdentityError
                 {
-                    Description = "An user with this email address already exists."
+                    Description = "Потребителското име е заето."
                 };
 
                 return Task.FromResult(IdentityResult.Failed(error));
@@ -48,7 +48,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 var error = new IdentityError
                 {
-                    Description = "An user with this username already exists."
+                    Description = "Имейлът е заето."
                 };
 
                 return Task.FromResult(IdentityResult.Failed(error));

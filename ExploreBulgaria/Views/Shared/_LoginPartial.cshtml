@@ -6,18 +6,18 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li>
-        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @User.Identity?.Name!</a>
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей, @User.Identity?.Name!</a>
     </li>
     <li>
-        <a asp-area="" asp-controller="Users" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Logout</a>
+        <a asp-area="" asp-controller="Users" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Изход</a>
     </li>
 }
 else
 {
     <li>
-        <a asp-area="" asp-controller="Users" asp-action="Register">Register</a>
+        <a asp-area="" asp-controller="Users" asp-action="Register">Регистрация</a>
     </li>
     <li>
-        <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
+        <a asp-area="" asp-controller="Users" asp-action="Login">Вход</a>
     </li>
 }
