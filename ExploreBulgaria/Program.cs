@@ -26,6 +26,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAntiforgery(options => 
+    options.HeaderName = "X-CSRF-TOKEN");
+
 builder.Services.AddSingleton(builder.Configuration);
 
 // Data Repositories
