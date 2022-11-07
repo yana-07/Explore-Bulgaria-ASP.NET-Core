@@ -13,6 +13,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IAttractionsService, AttractionsService>();
+            services.AddScoped<ICategoriesService, CategoriesService>();
+            services.AddScoped<ISubcategoriesService, SubcategoriesService>();
+            services.AddScoped<IRegionsService, RegionsService>();
 
             return services;
         }
