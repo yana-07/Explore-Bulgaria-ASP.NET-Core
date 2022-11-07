@@ -1,0 +1,30 @@
+﻿@model PagingViewModel
+<div class="col-lg-12">
+    <ul class="page-numbers">
+        <li @if (!Model.HasPreviousPage) {<text>disabled</text>}>
+            <a asp-action="All" asp-route-id="@Model.PreviousPageNumber">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+        </li>
+        @for (int i = Model.PageNumber - 3; i < Model.PageNumber; i++)
+        {
+            if (i > 0)
+            {
+                <li><a asp-action="All" asp-route-id="@i">@i</a></li>
+            }
+        }
+        <li class="active"><a href="#">@Model.PageNumber</a></li>
+        @for (int i = Model.PageNumber + 1; i < Model.PageNumber + 4; i++)
+        {
+            if (i <= Model.PagesCount)
+            {
+                <li><a asp-action="All" asp-route-id="@i">@i</a></li>
+            }
+        }
+        <li @if (!Model.HasNextPage) { <text>disabled</text> }>
+            <a asp-action="All" asp-route-id="@Model.NextPageNumber">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </li>
+    </ul>
+</div>
