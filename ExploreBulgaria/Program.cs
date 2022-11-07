@@ -4,9 +4,12 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Repositories;
 using ExploreBulgaria.Data.Seeding;
 using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Services.Mapping;
+using ExploreBulgaria.Web.ViewModels;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,8 @@ using (var serviceScope = app.Services.CreateScope())
     //dbContext.Database.Migrate();
     new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
 }
+
+AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
