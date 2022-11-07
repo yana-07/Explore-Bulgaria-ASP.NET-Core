@@ -92,7 +92,7 @@ namespace ExploreBulgaria.Services
                 ?.TextContent;
 
             var urls = document.QuerySelectorAll(
-                ".small-gallery-4 a")
+                ".gallery-img-holder a")
                 .Select(aEl => aEl.Attributes
                    .FirstOrDefault(attr => attr.Name == "style")
                    ?.Value
