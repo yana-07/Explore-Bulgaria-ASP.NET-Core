@@ -8,8 +8,20 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExploreBulgaria.styles.css" asp-append-version="true" />
     <partial name="_ThemeLinksPartial" />
+    @await RenderSectionAsync("Links", required: false)
 </head>
 <body>
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
     <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
@@ -34,6 +46,22 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div>
+
+    <div class="call-to-action">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2>Искаш да опознаеш България?</h2>
+                    <h4>С нас имаш тази възможност</h4>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border-button">
+                        <a asp-controller="Attractions" asp-action="All">Виж всички обекти</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">
