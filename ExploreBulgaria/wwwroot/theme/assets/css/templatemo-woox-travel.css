@@ -1063,7 +1063,7 @@ Call To Action Style
 
 .call-to-action {
   margin-top: 120px;
-  background-image: url(../images/cta-bg.jpg);
+  background-image: url(../images/rila-lakes-footer.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -1096,7 +1096,7 @@ Call To Action Style
 
 .call-to-action .border-button a:hover {
   background-color: #fff;
-  color: #8ed397;
+  color: #afafaf;
 }
 
 
@@ -1841,7 +1841,7 @@ Deals Page Style
 */
 
 .page-heading {
-  background-image: url(../images/heading-bg.jpg);
+  background-image: url(../images/attractions-all-heading.jpg);
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -1901,7 +1901,7 @@ Deals Page Style
 }
 
 .search-form #search-form option {
-  background-color: #1ea0ad;
+    background-color: #afafaf;
 }
 
 .search-form #search-form button {
