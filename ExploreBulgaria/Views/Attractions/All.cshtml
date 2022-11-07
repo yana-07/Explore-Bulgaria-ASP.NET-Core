@@ -17,7 +17,7 @@
 </div>
 
  <div class="search-form">
-    <div class="container">
+    <div class="container p-0">
       <div class="row">
         <div class="col-lg-12">
           <form id="search-form" name="gs" method="post" role="search">
@@ -71,57 +71,78 @@
   </div>
 </div>
 
-
 <div class="amazing-deals">
     <div class="container">
-        <div class="row">
+        <div class="row all-items">
             <div class="col-lg-6 offset-lg-3">
                 <div class="section-heading text-center">
                     <h2>Best Weekly Offers In Each City</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
                 </div>
             </div>
-                @foreach (var attraction in Model.Attractions)
-                {
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="item">
-                            <div class="row">                               
-                                <div class="col-lg-6">
-                                    <div class="image">
-                                        <img src="@attraction.ImageUrls.FirstOrDefault()" alt="">
+            @foreach (var attraction in Model.Attractions)
+            {
+                <div class="col-lg-6 col-sm-6 card-outer">
+                    <div class="item card-inner">
+                        <div class="row">                               
+                            <div class="col-lg-6">
+                                
+                                    <div id="carouselExampleControls" class="carousel slide vertical" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @{ bool active = true; }
+                                            @foreach (var img in attraction.ImageUrls)
+                                            {
+                                            <div class="image @if(active) { <text>active</text>}">
+                                                <div class="carousel-item active">
+                                                    <img src="@img" class="d-block w-100" alt="...">
+                                                </div>
+                                            </div>
+
+                                                active = false;
+                                            }                                         
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                   @* <img src="@attraction.ImageUrls.FirstOrDefault()" alt="">*@
+                            </div>
+                            <div class="col-lg-6 align-self-center">
+                                <div class="content">
+                                    <span class="info">*@attraction.RegionName</span>
+                                    <h4 class="lh-1">@attraction.Name</h4>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <i class="fa fa-clock"></i>
+                                            <span class="list">@attraction.CommentsCount</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <i class="fa fa-map"></i>
+                                            <span class="list">@attraction.ImagesCount</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <i class="fa fa-map"></i>
+                                            <span class="list">@attraction.CreatedOn</span>
+                                        </div>
+                                    </div>
+                                    <p>Lorem ipsum dolor sit amet dire consectetur adipiscing elit.</p>
+                                    <form id="form" asp-controller="Attractions" asp-action="Details" method="post">
+                                        <input type="hidden" asp-for="@attraction.Id">
+                                    </form>
+                                    <div class="main-button">
+                                        <a onclick="submitForm()" href="javascript:void(0)">Разгледай</a>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 align-self-center">
-                                    <div class="content">
-                                        <span class="info">*@attraction.RegionName</span>
-                                        <h4 class="lh-1">@attraction.Name</h4>
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <i class="fa fa-clock"></i>
-                                                <span class="list">@attraction.CommentsCount</span>
-                                            </div>
-                                            <div class="col-4">
-                                                <i class="fa fa-map"></i>
-                                                <span class="list">@attraction.ImagesCount</span>
-                                            </div>
-                                            <div class="col-4">
-                                                <i class="fa fa-map"></i>
-                                                <span class="list">@attraction.CreatedOn</span>
-                                            </div>
-                                        </div>
-                                        <p>Lorem ipsum dolor sit amet dire consectetur adipiscing elit.</p>
-                                        <form id="form" asp-controller="Attractions" asp-action="Details" method="post">
-                                            <input type="hidden" asp-for="@attraction.Id">
-                                        </form>
-                                        <div class="main-button">
-                                            <a onclick="submitForm()" href="javascript:void(0)">Разгледай</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                                                                       
-                        </div>
+                            </div>
+                        </div>                                                                       
                     </div>
-                }         
+                </div>
+            }         
                     <partial name="_PagingPartial" model="@Model" />
         </div>
     </div>
@@ -134,5 +155,9 @@
             form.submit();
         }
     </script>
+}
+
+@section Links {
+    <link rel="stylesheet" href="/path/to/cdn/vertical-carousel.css" />
 }
 
