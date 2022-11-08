@@ -1,4 +1,5 @@
 ﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.Infrastructure;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +83,33 @@ namespace ExploreBulgaria.Web.Controllers
             await this.usersService.SignOutAsync();
 
             return Redirect(returnUrl);
+        }
+
+        public async Task<IActionResult> Profile()
+        {
+            var model = await this.usersService.GetProfileAsync(User.Id());
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> EditProfile()
+        {
+            var model = await this.usersService.GetProfileAsync(User.Id());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(UserProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // TODO: Save changes
+
+            return RedirectToAction(nameof(Profile));
         }
     }
 }
