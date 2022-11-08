@@ -15,6 +15,25 @@ namespace ExploreBulgaria.Services.Data
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>()
-            => await repo.AllAsNoTracking().To<T>().ToListAsync();
+            => await repo.AllAsNoTracking()
+                 .OrderBy(x => x.Name)
+                 .To<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllForCategoryAndRegionAsync<T>(string categoryName, string? regionName = null)
+        {
+            if (regionName == null)
+            {
+                return await repo.AllAsNoTracking()
+                    .Where(sc => sc.Category.Name == categoryName)
+                    .OrderBy(x => x.Name)
+                    .To<T>().ToListAsync();
+            }
+
+            return await repo.AllAsNoTracking()
+                .Where(sc => sc.Category.Name == categoryName &&
+                        sc.Attractions.Select(a => a.RegionId).Contains(regionName))
+                .OrderBy(x => x.Name)
+                .To<T>().ToListAsync();
+        }       
     }
 }
