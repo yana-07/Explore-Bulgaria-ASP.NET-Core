@@ -1,13 +1,8 @@
 using ExploreBulgaria.Data;
-using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Data.Repositories;
 using ExploreBulgaria.Data.Seeding;
-using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels;
-using ExploreBulgaria.Web.ViewModels.Users;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
