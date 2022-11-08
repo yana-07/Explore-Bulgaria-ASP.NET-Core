@@ -16,3 +16,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.all-items {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card-outer {
+    flex: 0 0 50%;
+    padding: 20px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
