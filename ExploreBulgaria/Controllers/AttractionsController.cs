@@ -1,5 +1,8 @@
 ﻿using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Web.ViewModels.Attractions;
+using ExploreBulgaria.Web.ViewModels.Categories;
+using ExploreBulgaria.Web.ViewModels.Regions;
+using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +28,7 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> All(int id = 1)
+        public async Task <IActionResult> All(AttractionsFilterModel? filterModel = null, int id = 1)
         {
             if (id <= 0)
             {
@@ -33,17 +36,36 @@ namespace ExploreBulgaria.Web.Controllers
             }
 
             const int ItemsPerPage = 12;
+
             var model = new AttractionsListViewModel
             {
                 PageNumber = id,
                 ItemsPerPage = ItemsPerPage,
-                Attractions = await attractionsService
-                     .GetAllAsync<AttractionInListViewModel>(id, ItemsPerPage),
-                ItemsCount = attractionsService.GetCount(),
-                Categories = await categoriesService.GetAllAsync<CategorySelectViewModel>(),
-                Subcategories = await subcategoriesService.GetAllAsync<SubcategorySelectViewModel>(),
-                Regions = await regionsService.GetAllAsync<RegionSelectViewModel>(),
+                FilterModel = new AttractionsFilterModel
+                {                   
+                    Categories = await categoriesService.GetAllAsync<CategorySelectViewModel>(),
+                    Subcategories = await subcategoriesService.GetAllAsync<SubcategorySelectViewModel>(),
+                    Regions = await regionsService.GetAllAsync<RegionSelectViewModel>()
+                }
             };
+
+            if (filterModel?.CategoryName == null && 
+                filterModel?.SubcategoryName == null && 
+                filterModel?.RegionName == null)
+            {
+                model.Attractions = await attractionsService
+                          .GetAllAsync<AttractionInListViewModel>(id, itemsPerPage: ItemsPerPage);
+                model.ItemsCount = attractionsService.GetCount();
+
+                return View(model);
+            }
+
+            model.Attractions = await attractionsService
+                 .GetAllAsync<AttractionInListViewModel>(id, filterModel, ItemsPerPage);
+            model.ItemsCount = attractionsService.GetCount(filterModel);
+            model.FilterModel.CategoryName = filterModel.CategoryName;
+            model.FilterModel.SubcategoryName = filterModel.SubcategoryName;
+            model.FilterModel.RegionName = filterModel.RegionName;
 
             return View(model);
         }
