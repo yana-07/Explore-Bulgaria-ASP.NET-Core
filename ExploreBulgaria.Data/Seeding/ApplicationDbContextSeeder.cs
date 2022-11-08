@@ -25,7 +25,7 @@ namespace ExploreBulgaria.Data.Seeding
             var logger = serviceProvider.GetService<ILoggerFactory>()!.CreateLogger<ApplicationDbContextSeeder>();
 
             var seeders = new List<ISeeder>() { new RolesSeeder(), new AdminUserSeeder(), new CategoriesSeeder(),
-                new SubcategoriesSeeder(), new AttractionsSeeder() };
+                new SubcategoriesSeeder(), new RegionsSeeder(), new AttractionsSeeder() };
 
             foreach (var seeder in seeders)
             {
