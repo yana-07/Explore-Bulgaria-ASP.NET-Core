@@ -9,4 +9,6 @@ public interface IUsersService
     Task<SignInResult> SignInAsync(LoginViewModel model);
 
     Task SignOutAsync();
+
+    Task<UserProfileViewModel> GetProfileAsync(string userId);
 }
