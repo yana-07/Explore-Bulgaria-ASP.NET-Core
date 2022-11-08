@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExploreBulgaria.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/307eb2164d.js" crossorigin="anonymous"></script>
     <partial name="_ThemeLinksPartial" />
     @await RenderSectionAsync("Links", required: false)
 </head>
@@ -28,8 +29,8 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">
-                            <img src="~/theme/assets/images/logo.png" alt="">
-                        </a>
+                            @*<img src="~/theme/assets/images/logo.png" alt="">*@                           
+                       </a>
                         <ul class="nav">
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">Начало</a></li>
                             <partial name="_LoginPartial" />
