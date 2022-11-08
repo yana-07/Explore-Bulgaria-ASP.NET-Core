@@ -48,7 +48,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 var error = new IdentityError
                 {
-                    Description = "Имейлът е заето."
+                    Description = "Имейлът е зает."
                 };
 
                 return Task.FromResult(IdentityResult.Failed(error));
@@ -70,6 +70,28 @@ namespace ExploreBulgaria.Services.Data
         public async Task SignOutAsync()
         {
             await this.signInManager.SignOutAsync();
+        }
+
+        public async Task<UserProfileViewModel> GetProfileAsync(string userId)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid user ID");
+            }
+
+            return new UserProfileViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Email = user.Email,
+                JoinedOn = user.CreatedOn,
+                AttractionsAdded = user.CreatedAttractions.Count,
+                PhoneNumber = user.PhoneNumber,
+                AvatarUrl = user.AvatarUrl
+            };
         }
     }
 }
