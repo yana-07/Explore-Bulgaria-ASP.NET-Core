@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.IO;
 using Newtonsoft.Json;
-using System.Collections;
 
 namespace ExploreBulgaria.Data.Seeding
 {
@@ -26,7 +24,8 @@ namespace ExploreBulgaria.Data.Seeding
 
                 var attractionsJson = File.ReadAllText(path);
                 var attractionDtos = JsonConvert.DeserializeObject<AttractionDto[]>(attractionsJson)
-                    .Where(dto => dto.CategoryName != "");
+                    .Where(dto => dto.CategoryName != "")
+                    .DistinctBy(dto => dto.AttractionName);
 
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var user = await userManager.FindByEmailAsync("adminuser@abv.bg");//(u => u.Email == "adminuser@abv.bg"); //userManager.FindByEmailAsync("adminuser@abv.bg");
@@ -35,9 +34,9 @@ namespace ExploreBulgaria.Data.Seeding
                 {
                     var category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Name == dto.CategoryName);
 
-                    var subcategory = await dbContext.Subcategories.FirstOrDefaultAsync(c => c.Name == dto.SubCategoryName);
+                    var subcategory = await dbContext.Subcategories.FirstOrDefaultAsync(sc => sc.Name == dto.SubCategoryName);
 
-                    var region = new Region { Name = dto.AreaName };
+                    var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Name == dto.AreaName); 
 
                     var images = dto.ImagesUrls
                            .Select(url =>
