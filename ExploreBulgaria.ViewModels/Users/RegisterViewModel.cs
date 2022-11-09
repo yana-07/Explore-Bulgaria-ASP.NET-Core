@@ -37,6 +37,7 @@ namespace ExploreBulgaria.Web.ViewModels.Users
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
 
+        [Required(ErrorMessage = FieldRequired)]
         [Compare(nameof(Password))]
         [DataType(DataType.Password)]
         [DisplayName(DisplayRepeatPassword)]
