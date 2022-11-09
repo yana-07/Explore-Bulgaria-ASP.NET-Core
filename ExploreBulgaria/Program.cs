@@ -27,6 +27,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAntiforgery(options => 
     options.HeaderName = "X-CSRF-TOKEN");
 
+AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+
+builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
+
 builder.Services.AddSingleton(builder.Configuration);
 
 // Data Repositories
@@ -42,7 +46,6 @@ using (var serviceScope = app.Services.CreateScope())
     new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
 }
 
-AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
