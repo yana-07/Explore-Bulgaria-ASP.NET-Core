@@ -1,6 +1,9 @@
-﻿using ExploreBulgaria.Data.Models;
+﻿using AutoMapper;
+using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -8,13 +11,16 @@ namespace ExploreBulgaria.Services.Data
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IMapper mapper;
 
         public UsersService(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.mapper = mapper;
         }
 
         public Task<SignInResult> SignInAsync(LoginViewModel model)
@@ -29,29 +35,29 @@ namespace ExploreBulgaria.Services.Data
             return signInManager.PasswordSignInAsync(user, model.Password, false, false);
         }
 
-        public Task<IdentityResult> SignUpAsync(RegisterViewModel model)
+        public (Task<IdentityResult>, ApplicationUser?) SignUpAsync(RegisterViewModel model)
         {
-            var emailExists = userManager.FindByEmailAsync(model.Email).GetAwaiter().GetResult() != null;
-            var usernameExists = userManager.FindByNameAsync(model.UserName).GetAwaiter().GetResult() != null;
+            var emailAvailable= EmailAvailable(model.Email).GetAwaiter().GetResult();
+            var usernameAvailable = UserNameAvailable(model.UserName).GetAwaiter().GetResult();
 
-            if (emailExists)
+            if (!emailAvailable)
             {
                 var error = new IdentityError
                 {
                     Description = "Потребителското име е заето."
                 };
 
-                return Task.FromResult(IdentityResult.Failed(error));
+                return (Task.FromResult(IdentityResult.Failed(error)), null);
             }
 
-            if (usernameExists)
+            if (!usernameAvailable)
             {
                 var error = new IdentityError
                 {
                     Description = "Имейлът е зает."
                 };
 
-                return Task.FromResult(IdentityResult.Failed(error));
+                return (Task.FromResult(IdentityResult.Failed(error)), null);
             }
 
             var user = new ApplicationUser
@@ -64,7 +70,7 @@ namespace ExploreBulgaria.Services.Data
 
             // TODO: conditionally add user to LocalGuide Role 
 
-            return userManager.CreateAsync(user, model.Password);
+            return (userManager.CreateAsync(user, model.Password), user);
         }
 
         public async Task SignOutAsync()
@@ -72,7 +78,7 @@ namespace ExploreBulgaria.Services.Data
             await this.signInManager.SignOutAsync();
         }
 
-        public async Task<UserProfileViewModel> GetProfileAsync(string userId)
+        public async Task<T> GetProfileAsync<T>(string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
@@ -81,17 +87,22 @@ namespace ExploreBulgaria.Services.Data
                 throw new ArgumentException("Invalid user ID");
             }
 
-            return new UserProfileViewModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                JoinedOn = user.CreatedOn,
-                AttractionsAdded = user.CreatedAttractions.Count,
-                PhoneNumber = user.PhoneNumber,
-                AvatarUrl = user.AvatarUrl
-            };
+            return mapper.Map<T>(user);
         }
+
+        public async Task<bool> EmailAvailable(string email)
+            => await userManager.FindByEmailAsync(email) == null;
+
+        public async Task<bool> UserNameAvailable(string userName)
+            => await userManager.FindByNameAsync(userName) == null;
+
+        public async Task AddFirstNameClaimAsync(ApplicationUser user)
+            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.GivenName, user.FirstName));
+
+        public async Task AddLastNameClaimAsync(ApplicationUser user)
+            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Surname, user.LastName));
+
+        public async Task AddEmailClaimAsync(ApplicationUser user)
+            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
     }
 }

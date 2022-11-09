@@ -1,14 +1,25 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ExploreBulgaria.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ExploreBulgaria.Web.ViewModels.Users;
 
 public interface IUsersService
 {
-    Task<IdentityResult> SignUpAsync(RegisterViewModel model);
+    Task<bool> UserNameAvailable(string userName);
+
+    Task<bool> EmailAvailable(string email);
+
+    (Task<IdentityResult>, ApplicationUser?) SignUpAsync(RegisterViewModel model);
 
     Task<SignInResult> SignInAsync(LoginViewModel model);
 
     Task SignOutAsync();
 
-    Task<UserProfileViewModel> GetProfileAsync(string userId);
+    Task<T> GetProfileAsync<T>(string userId);
+
+    Task AddFirstNameClaimAsync(ApplicationUser user);
+
+    Task AddLastNameClaimAsync(ApplicationUser user);
+
+    Task AddEmailClaimAsync(ApplicationUser user);
 }
