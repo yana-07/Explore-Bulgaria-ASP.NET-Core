@@ -10,10 +10,14 @@ namespace ExploreBulgaria.Web.Controllers
     public class UsersController : BaseController
     {
         private readonly IUsersService usersService;
+        private readonly IWebHostEnvironment environment;
 
-        public UsersController(IUsersService usersService)
+        public UsersController(
+            IUsersService usersService,
+            IWebHostEnvironment environment)
         {
             this.usersService = usersService;
+            this.environment = environment;
         }
 
         [AllowAnonymous]
@@ -33,14 +37,20 @@ namespace ExploreBulgaria.Web.Controllers
                 return View(model);
             }
 
-            var result = await this.usersService.SignUpAsync(model);
+            var (result, user) = this.usersService.SignUpAsync(model);
 
-            if (result.Succeeded)
+            var resultAwaited = await result;
+
+            if (resultAwaited.Succeeded)
             {
+                await usersService.AddFirstNameClaimAsync(user!);
+
+                await usersService.AddLastNameClaimAsync(user!);
+
                 return this.RedirectTo<UsersController>(c => c.Login());
             }
 
-            foreach (var error in result.Errors)
+            foreach (var error in resultAwaited.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
@@ -87,26 +97,43 @@ namespace ExploreBulgaria.Web.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            var model = await this.usersService.GetProfileAsync(User.Id());
+            var model = await this.usersService.GetProfileAsync<UserProfileViewModel>(User.Id());
 
             return View(model);
         }
 
         public async Task<IActionResult> EditProfile()
         {
-            var model = await this.usersService.GetProfileAsync(User.Id());
+            var model = await this.usersService.GetProfileAsync<EditUserProfileInputModel>(User.Id());
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(UserProfileViewModel model)
+        public async Task<IActionResult> EditProfile(EditUserProfileInputModel model)
         {
+            if (!await usersService.UserNameAvailable(model.UserName))
+            {
+                model.AvatarUrl = model.AvatarUrlPreliminary;
+
+                ModelState.AddModelError(nameof(model.UserName), "Потребителското име е заето.");
+            }
+
+            if (!await usersService.EmailAvailable(model.Email))
+            {
+                model.AvatarUrl = model.AvatarUrlPreliminary;
+
+                ModelState.AddModelError(nameof(model.Email), "Имейлът е зает.");
+            }
+
             if (!ModelState.IsValid)
             {
+                model.AvatarUrl = model.AvatarUrlPreliminary;
+
                 return View(model);
             }
 
+            var path = environment.WebRootPath;
             // TODO: Save changes
 
             return RedirectToAction(nameof(Profile));
