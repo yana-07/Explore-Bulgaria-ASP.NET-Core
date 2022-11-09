@@ -5,16 +5,17 @@
     <div class="card p-4"> 
         <div class=" image d-flex flex-column justify-content-center align-items-center"> 
             <button class="btn btn-secondary"> 
-                <img src="~/avatars/@User.Id()" height="100" width="100" />
+                <img src="@Model.AvatarUrl" height="100" width="100" class="rounded-circle"/>
             </button> 
             <span class="name mt-3">@Model.FirstName @Model.LastName</span> 
+            <span class="idd">@Model.UserName</span> 
             <span class="idd">@Model.Email</span> 
             <div class="d-flex flex-row justify-content-center align-items-center gap-2"> 
                 <span class="idd1">@Model.PhoneNumber</span> 
                 <span><i class="fa-solid fa-mobile-screen-button"></i></span>
             </div> 
             <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
-                <span class="number">@Model.AttractionsAdded <span class="follow">добавени забележителности</span></span> 
+                <span class="number">@Model.CreatedAttractionsCount<span class="follow">добавени забележителности</span></span> 
             </div> 
             <div class="main-button d-flex mt-2"> 
                <a asp-action="EditProfile">Редактирай</a>
@@ -23,7 +24,7 @@
                 <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> 
                 <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span> 
             </div> <div class=" px-2 rounded mt-4 date "> 
-                <span class="join">Присъединил се @Model.JoinedOn.ToShortDateString()</span> 
+                <span class="join">Присъединил се @Model.CreatedOn.ToShortDateString()</span> 
             </div> 
         </div> 
     </div>

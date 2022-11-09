@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Data.Common\ExploreBulgaria.Data.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Data.Models\ExploreBulgaria.Data.Models.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj" />

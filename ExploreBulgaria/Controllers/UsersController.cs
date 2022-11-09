@@ -112,14 +112,14 @@ namespace ExploreBulgaria.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditUserProfileInputModel model)
         {
-            if (!await usersService.UserNameAvailable(model.UserName))
+            if (model.UserName != User.Identity?.Name && !await usersService.UserNameAvailable(model.UserName))
             {
                 model.AvatarUrl = model.AvatarUrlPreliminary;
 
                 ModelState.AddModelError(nameof(model.UserName), "Потребителското име е заето.");
             }
 
-            if (!await usersService.EmailAvailable(model.Email))
+            if (model.Email != User.Email() && !await usersService.EmailAvailable(model.Email))
             {
                 model.AvatarUrl = model.AvatarUrlPreliminary;
 
@@ -133,10 +133,10 @@ namespace ExploreBulgaria.Web.Controllers
                 return View(model);
             }
 
-            var path = environment.WebRootPath;
             // TODO: Save changes
+             await usersService.EditProfileAsync(model, User.Id(), $"{environment.WebRootPath}/images");
 
-            return RedirectToAction(nameof(Profile));
+            return RedirectToAction(nameof(Logout), new { returnUrl = "/Users/Login" });
         }
     }
 }

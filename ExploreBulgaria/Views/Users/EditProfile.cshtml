@@ -1,36 +1,44 @@
-﻿@using ExploreBulgaria.Web.Common;
-@model UserProfileViewModel
+﻿@model EditUserProfileInputModel
 
 <div class="container mt-5 mb-3 pt-4 d-flex justify-content-center">
     <div class="card p-4">
         <form asp-controller="Users" asp-action="EditProfile" method="post" enctype="multipart/form-data">
             <div class=" image d-flex flex-column justify-content-center align-items-center">
-                <span class="btn">
-                    <img id="avatar" class="rounded-circle" src="~/avatars/@User.Id()" height="100" width="100" />
+                <span class="btn btn-secondary">
+                    <img id="avatar" class="rounded-circle" src="@Model.AvatarUrl" height="100" width="100" />
                 </span>
                 <div class="inputWrapper mt-2 d-flex">
-                    Качи аватар
-                    <input id="file" class="fileInput" type="file" name="file1" onchange="getFile()" />
+                     Качи аватар
+                    <input asp-for="AvatarUrlUploaded" id="file" class="fileInput" onchange="getFile()" />
                 </div>
                 <span class="name mt-3 row">
-                    <input asp-for="FirstName" />
-                    <input asp-for="LastName" />
+                    <div>
+                        <input asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <input asp-for="LastName" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>  
                 </span>
-                <span class="idd"><input asp-for="Email" /></span>
+                <div class="row">
+                    <input class="idd" asp-for="UserName" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>      
+                <div class="row">
+                    <input class="idd" asp-for="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>                 
                 <div class="d-flex flex-row justify-content-center align-items-center gap-2">
                     <span class="idd1"><input asp-for="PhoneNumber" /></span>
                     <span><i class="fa-solid fa-mobile-screen-button"></i></span>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
-                <div class="d-flex flex-row justify-content-center align-items-center mt-3">
-                    <span class="number">@Model.AttractionsAdded <span class="follow">добавени забележителности</span></span>
-                </div>
+                <input asp-for="AvatarUrlPreliminary" id="avatar-url" type="hidden" />
                 <button type="submit" class="main-button d-flex mt-2">Запази</button>
                 <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
                     <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span>
                     <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span>
-                </div>
-                <div class=" px-2 rounded mt-4 date ">
-                    <span class="join">Присъединил се @Model.JoinedOn.ToShortDateString()</span>
                 </div>
             </div>
         </form>
@@ -42,6 +50,7 @@
 }
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         console.log('hello')
         const getFile = function() {
@@ -50,6 +59,7 @@
                 var fileReader = new FileReader();
                 fileReader.onload = function(event) {
                     document.getElementById('avatar').setAttribute('src', event.target.result);
+                    document.getElementById('avatar-url').setAttribute('value', event.target.result);
                 };
 
                 fileReader.readAsDataURL(files[0]);

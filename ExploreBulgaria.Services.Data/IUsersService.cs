@@ -22,4 +22,8 @@ public interface IUsersService
     Task AddLastNameClaimAsync(ApplicationUser user);
 
     Task AddEmailClaimAsync(ApplicationUser user);
+
+    Task AddAvatarUrlClaimAsync(ApplicationUser user);
+
+    Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
 }
