@@ -9,6 +9,12 @@
     <li>
         <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей, @((User?.FirstName() + " " +  @User?.LastName()) ?? @User?.Identity?.Name)</a>
     </li>
+    @if(User?.AvatarUrl() != null)
+    {
+        <li>
+            <img src="@User.AvatarUrl()" class="rounded-circle img-thumbnail img-fluid" style="width: 40px;" alt="Avatar" />
+        </li>
+    }   
     <li>
         <a asp-area="" asp-controller="Users" asp-action="Profile">Моят профил</a>
     </li>
