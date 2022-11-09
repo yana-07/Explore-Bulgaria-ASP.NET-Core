@@ -15,5 +15,8 @@ namespace ExploreBulgaria.Web.Common
 
         public static string Email(this ClaimsPrincipal user)
             => user.FindFirstValue(ClaimTypes.Email);
+
+        public static string AvatarUrl(this ClaimsPrincipal user)
+            => user.FindFirstValue(ClaimTypes.Uri);
     }
 }
