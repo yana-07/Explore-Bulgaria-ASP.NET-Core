@@ -4,12 +4,12 @@
     <div class="card p-4">
         <form asp-controller="Users" asp-action="EditProfile" method="post" enctype="multipart/form-data">
             <div class=" image d-flex flex-column justify-content-center align-items-center">
-                <span class="btn btn-secondary">
+                <span class="btn btn-link">
                     <img id="avatar" class="rounded-circle" src="@Model.AvatarUrl" height="100" width="100" />
                 </span>
                 <div class="inputWrapper mt-2 d-flex">
                      Качи аватар
-                    <input asp-for="AvatarUrlUploaded" id="file" class="fileInput" onchange="getFile()" />
+                    <input asp-for="AvatarUrlUploaded" id="file" class="fileInput" onchange="getFile(event)" />
                 </div>
                 <span class="name mt-3 row">
                     <div>
@@ -52,9 +52,8 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        console.log('hello')
-        const getFile = function() {
-            var files = document.getElementById('file').files;
+        const getFile = function(event) {
+            var files = event.target.files;
             if (files.length > 0) {
                 var fileReader = new FileReader();
                 fileReader.onload = function(event) {

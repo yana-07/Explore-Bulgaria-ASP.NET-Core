@@ -22,7 +22,11 @@ input {
 }
 
 .image img {
-    transition: all 0.5s
+    transition: all 0.5s;
+    object-fit: fill;
+    height: fit-content;
+    background-color: lightgrey; 
+    border: 3px solid #8ed397;
 }
 
 .card:hover .image img {
@@ -41,7 +45,7 @@ input {
     color: #545454;
 }
 
-.idd input {
+.idd {
     font-size: 14px;
     font-weight: 600;
     color: #545454;
@@ -100,6 +104,10 @@ hr .new1 {
 
 .date {
     background-color: #ccc
+}
+
+.text-danger {
+    text-align: center;
 }
 
 .main-button {

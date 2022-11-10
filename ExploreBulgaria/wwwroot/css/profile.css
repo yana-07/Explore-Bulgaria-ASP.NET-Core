@@ -16,7 +16,11 @@ body {
 }
 
 .image img {
-    transition: all 0.5s
+    transition: all 0.5s;
+    object-fit: fill;
+    height: fit-content;
+    background-color: lightgrey;
+    border: 3px solid #8ed397;
 }
 
 .card:hover .image img {
