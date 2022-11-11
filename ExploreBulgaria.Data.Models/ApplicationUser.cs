@@ -1,6 +1,7 @@
 ﻿using ExploreBulgaria.Data.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static ExploreBulgaria.Data.Common.Constants.DataConstants;
 
 namespace ExploreBulgaria.Data.Models
@@ -17,6 +18,8 @@ namespace ExploreBulgaria.Data.Models
             this.VisitedAttractions = new HashSet<AttractionUserVisited>();
             this.WantToVisitAttractions = new HashSet<AttractionUserWantToVisit>();
             this.AddedToFavoritesAttractions = new HashSet<AttractionUserAddedToFavorites>();
+            this.LikedComments = new HashSet<UserLikedComment>();
+            this.DislikedComments = new HashSet<UserDislikedComment>();
         }
 
         [Required]
@@ -50,5 +53,9 @@ namespace ExploreBulgaria.Data.Models
         public virtual ICollection<AttractionUserWantToVisit> WantToVisitAttractions { get; set; }
 
         public virtual ICollection<AttractionUserAddedToFavorites> AddedToFavoritesAttractions { get; set; }
+
+        public virtual ICollection<UserLikedComment>  LikedComments { get; set; }
+
+        public virtual ICollection<UserDislikedComment>  DislikedComments { get; set; }
     }
 }

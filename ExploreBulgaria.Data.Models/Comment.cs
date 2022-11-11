@@ -7,6 +7,12 @@ namespace ExploreBulgaria.Data.Models
 {
     public class Comment : BaseDeletableModel<int>
     {
+        public Comment()
+        {
+            this.LikedByUsers = new HashSet<UserLikedComment>();
+            this.DislikedByUsers = new HashSet<UserDislikedComment>();
+        }
+
         [Required]
         [ForeignKey(nameof(Attraction))]
         public string AttractionId { get; set; } = null!;
@@ -16,10 +22,15 @@ namespace ExploreBulgaria.Data.Models
         [Required]
         [ForeignKey(nameof(AddedByUser))]
         public string AddedByUserId { get; set; } = null!;
+
         public virtual ApplicationUser AddedByUser { get; set; } = null!;
 
         [Required]
         [MaxLength(TextMaxLength)]
         public string Text { get; set; } = null!;
+
+        public virtual ICollection<UserLikedComment> LikedByUsers { get; set; }
+
+        public virtual ICollection<UserDislikedComment> DislikedByUsers { get; set; }
     }
 }
