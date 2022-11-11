@@ -7,11 +7,11 @@ namespace ExploreBulgaria.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GetEmailUserNameController : ControllerBase
+    public class UsersApiController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
 
-        public GetEmailUserNameController(UserManager<ApplicationUser> userManager)
+        public UsersApiController(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
         }

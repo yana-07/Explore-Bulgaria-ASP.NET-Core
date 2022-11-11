@@ -8,13 +8,13 @@ namespace ExploreBulgaria.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FilterAttractionsController : ControllerBase
+    public class AttractionsApiController : ControllerBase
     {
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
 
-        public FilterAttractionsController(
+        public AttractionsApiController(
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService)
