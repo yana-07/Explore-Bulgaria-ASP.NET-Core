@@ -78,11 +78,9 @@
                                     </p>
                                     <p>@attraction.Description ...</p>
                                     <form id="form" asp-controller="Attractions" asp-action="Details" method="post">
-                                        <input type="hidden" asp-for="@attraction.Id">
+                                        <input type="hidden" name="attractionId" value="@attraction.Id">
+                                        <button type="submit" class="main-button">Разгледай</button>
                                     </form>
-                                    <div class="main-button">
-                                        <a onclick="submitForm()" href="javascript:void(0)">Разгледай</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>                                                                       
@@ -95,12 +93,6 @@
 </div>
 
 @section Scripts {
-    <script>
-        const submitForm = function() {
-            const form = document.getElementById('form');
-            form.submit();
-        }       
-    </script>
     <script src="~/js/filter-attractions-ajax.js"></script>
 }
 
