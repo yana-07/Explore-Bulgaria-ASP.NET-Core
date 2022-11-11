@@ -28,8 +28,8 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();
             }
 
-            if (filterModel.CategoryName != null && 
-                filterModel.SubcategoryName == null && 
+            if (filterModel.CategoryName != null &&
+                filterModel.SubcategoryName == null &&
                 filterModel.RegionName == null)
             {
                 return await repo.AllAsNoTracking().Where(a =>
@@ -57,7 +57,7 @@ namespace ExploreBulgaria.Services.Data
                 filterModel.SubcategoryName == null &&
                 filterModel.RegionName != null)
             {
-                return await repo.AllAsNoTracking().Where(a =>                 
+                return await repo.AllAsNoTracking().Where(a =>
                    a.Region != null && a.Region.Name == filterModel.RegionName)
                 .To<T>()
                 .Skip(skip)
@@ -65,7 +65,7 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();
             }
 
-            return await repo.AllAsNoTracking().Where(a => 
+            return await repo.AllAsNoTracking().Where(a =>
                a.Category.Name == filterModel.CategoryName &&
                a.Subcategory.Name == filterModel.SubcategoryName &&
                a.Region != null && a.Region.Name == filterModel.RegionName)
@@ -87,5 +87,11 @@ namespace ExploreBulgaria.Services.Data
                a.Subcategory.Name == filterModel.SubcategoryName &&
                a.Region != null && a.Region.Name == filterModel.RegionName).Count();
         }
+
+        public async Task<T?> GetByIdAsync<T>(string id)
+            => await repo.AllAsNoTracking()
+                 .Where(a => a.Id == id)
+                 .To<T>()
+                 .FirstOrDefaultAsync();
     }
 }
