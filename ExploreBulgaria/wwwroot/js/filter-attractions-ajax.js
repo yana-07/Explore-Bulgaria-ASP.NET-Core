@@ -5,7 +5,7 @@ const regionSelectEl = document.getElementById('chooseRegion');
 categorySelectEl.addEventListener('change', () => {
     const categoryName = categorySelectEl.value;
 
-    fetch("/api/FilterAttractions/subcategories", {
+    fetch("/api/AttractionsApi/subcategories", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -20,7 +20,7 @@ categorySelectEl.addEventListener('change', () => {
             childElements.forEach(c => subcategorySelectEl.appendChild(c));
         })
 
-    fetch("/api/FilterAttractions/regions", {
+    fetch("/api/AttractionsApi/regions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -41,7 +41,7 @@ subcategorySelectEl.addEventListener('change', () => {
     const categoryName = categorySelectEl.value;
     const subcategoryName = subcategorySelectEl.value;
 
-    fetch("/api/FilterAttractions/regions", {
+    fetch("/api/AttractionsApi/regions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
