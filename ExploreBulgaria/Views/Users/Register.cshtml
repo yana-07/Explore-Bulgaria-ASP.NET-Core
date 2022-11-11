@@ -78,7 +78,7 @@
         let usernameInputElement = document.getElementById('username');
         usernameInputElement.addEventListener('blur', () => {
             let userName = usernameInputElement.value;
-            fetch('/api/GetEmailUserName/username', {
+            fetch('/api/UsersApi/username', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +98,7 @@
         let emailInputElement = document.getElementById('email');
         emailInputElement.addEventListener('blur', () => {
             let email = emailInputElement.value;
-            fetch('/api/GetEmailUserName/email', {
+            fetch('/api/UsersApi/email', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
