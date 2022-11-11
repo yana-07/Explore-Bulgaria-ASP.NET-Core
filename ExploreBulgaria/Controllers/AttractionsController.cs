@@ -69,5 +69,14 @@ namespace ExploreBulgaria.Web.Controllers
 
             return View(model);
         }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(string attractionId)
+        {
+            var attraction = await attractionsService
+                .GetByIdAsync<AttractionDetailsViewModel>(attractionId);
+
+            return View(attraction);
+        }
     }
 }
