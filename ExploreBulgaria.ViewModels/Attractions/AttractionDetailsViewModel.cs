@@ -42,7 +42,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
                    opt.MapFrom(s => s.Images.Select(
                        i => i.RemoteImageUrl ?? $"images/attractions/{i.Id}.{i.Extension}")))
                 .ForMember(d => d.AddedByUser, opt => opt.MapFrom(s => s.CreatedByUser))
-                .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments));
+                .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments.OrderByDescending(c => c.CreatedOn)));
         }
     }
 }

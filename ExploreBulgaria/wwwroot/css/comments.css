@@ -81,3 +81,7 @@ textarea {
             color: green;
             cursor: pointer;
         }
+
+.like i:hover, .dislike i:hover {
+   cursor: pointer;
+}
