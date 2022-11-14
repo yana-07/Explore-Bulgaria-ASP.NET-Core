@@ -1,10 +1,11 @@
-﻿using ExploreBulgaria.Data.Models;
+﻿using AutoMapper;
+using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Users;
 
 namespace ExploreBulgaria.Web.ViewModels.Comments
 {
-    public class CommentViewModel : IMapFrom<Comment>
+    public class CommentViewModel : IMapFrom<Comment>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -19,5 +20,14 @@ namespace ExploreBulgaria.Web.ViewModels.Comments
         public IEnumerable<UserGenericViewModel> LikedByUsers { get; set; }
 
         public IEnumerable<UserGenericViewModel> DislikedByUsers { get; set; }
+
+        public IEnumerable<ReplyCommentViewModel> Replies { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Comment, CommentViewModel>()
+                .ForMember(d => d.Replies, opt => opt.MapFrom(
+                    s => s.Replies.OrderByDescending(r => r.CreatedOn)));
+        }
     }
 }

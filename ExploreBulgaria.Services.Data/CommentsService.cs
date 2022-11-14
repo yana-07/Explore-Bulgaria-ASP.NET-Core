@@ -1,17 +1,22 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Web.ViewModels.Comments;
+using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExploreBulgaria.Services.Data
 {
     public class CommentsService : ICommentsService
     {
-        private readonly IDeletableEnityRepository<Comment> repo;
+        private readonly IDeletableEnityRepository<Comment> commentsRepo;
+        private readonly IDeletableEnityRepository<ApplicationUser> usersRepo;
 
-        public CommentsService(IDeletableEnityRepository<Comment> repo)
+        public CommentsService(
+            IDeletableEnityRepository<Comment> commentsRepo,
+            IDeletableEnityRepository<ApplicationUser> usersRepo)
         {
-            this.repo = repo;
+            this.commentsRepo = commentsRepo;
+            this.usersRepo = usersRepo;
         }      
 
         public async Task<int> PostCommentAsync(CommentInputModel model, string userId)
@@ -23,22 +28,22 @@ namespace ExploreBulgaria.Services.Data
                 Text = model.Text
             };
 
-            await repo.AddAsync(comment);
+            await commentsRepo.AddAsync(comment);
 
-            await repo.SaveChangesAsync();
+            await commentsRepo.SaveChangesAsync();
 
             return comment.Id;
         }
 
         public async Task<int> LikeCommentAsync(int commentId, string userId)
         {
-            var comment = await repo.All()
+            var comment = await commentsRepo.All()
                 .Include(c => c.LikedByUsers)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
             if (comment == null)
             {
-                throw new InvalidOperationException("No such comment exists.");
+                throw new InvalidOperationException("Invalid comment Id.");
             }
 
             var userLikedComment = comment.LikedByUsers.FirstOrDefault(x => x.UserId == userId);
@@ -47,7 +52,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 comment.LikedByUsers.Remove(userLikedComment);
 
-                await repo.SaveChangesAsync();
+                await commentsRepo.SaveChangesAsync();
 
                 return comment.LikedByUsers.Count;
             }
@@ -67,20 +72,20 @@ namespace ExploreBulgaria.Services.Data
 
             comment.LikedByUsers.Add(userLikedComment);
 
-            await repo.SaveChangesAsync();
+            await commentsRepo.SaveChangesAsync();
 
             return comment.LikedByUsers.Count;
         }
 
         public async Task<int> DislikeCommentAsync(int commentId, string userId)
         {
-            var comment = await repo.All()
+            var comment = await commentsRepo.All()
                 .Include(c => c.DislikedByUsers)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
             if (comment == null)
             {
-                throw new InvalidOperationException("No such comment exists.");
+                throw new InvalidOperationException("Invalid comment Id.");
             }
 
             var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userId);
@@ -89,7 +94,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 comment.DislikedByUsers.Remove(userDislikedComment);
 
-                await repo.SaveChangesAsync();
+                await commentsRepo.SaveChangesAsync();
 
                 return comment.DislikedByUsers.Count;
             }
@@ -109,9 +114,65 @@ namespace ExploreBulgaria.Services.Data
 
             comment.DislikedByUsers.Add(userDislikedComment);
 
-            await repo.SaveChangesAsync();
+            await commentsRepo.SaveChangesAsync();
 
             return comment.DislikedByUsers.Count;
+        }
+
+        public async Task<int> AddReplyAsync(ReplyInputModel model, string userId)
+        {
+            var comment = await commentsRepo.All()
+                .Include(c => c.Replies)
+                .FirstOrDefaultAsync(c => c.Id == model.CommentId);
+
+            if (comment == null)
+            {
+                throw new InvalidOperationException("Invalid comment Id.");
+            }
+
+            var user = await usersRepo.AllAsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException("Invalid user Id.");
+            }
+
+            comment.Replies.Add(new Reply
+            {
+                AuthorId = userId,
+                CommentId = model.CommentId,
+                Text = model.ReplyText
+            });
+
+            await commentsRepo.SaveChangesAsync();
+
+            return comment.Replies.Count;
+        }
+
+        public async Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(int commentId)
+        {
+            var comment = await commentsRepo.All()
+                .Include(c => c.Replies)
+                .FirstOrDefaultAsync(c => c.Id == commentId);
+
+            if (comment == null)
+            {
+                throw new InvalidOperationException("Invalid comment Id.");
+            }
+
+            return comment.Replies.Select(r => new ReplyCommentViewModel
+            {
+                Text = r.Text,
+                Author = new UserGenericViewModel
+                {
+                    Id = r.AuthorId,
+                    FirstName = r.Author.FirstName,
+                    LastName = r.Author.LastName,
+                    AvatarUrl = r.Author.AvatarUrl,
+                },
+                CreatedOn = r.CreatedOn
+            }).ToList();
         }
     }
 }

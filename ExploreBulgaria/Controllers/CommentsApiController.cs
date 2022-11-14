@@ -59,5 +59,31 @@ namespace ExploreBulgaria.Web.Controllers
 
             return Ok(dislikesCount);
         }
+
+        [HttpPost("addReply")]
+        [Authorize]
+        public async Task<ActionResult<ReplyViewModel>> AddReply(ReplyInputModel model)
+        {
+            var repliesCount = await commentsService.AddReplyAsync(model, User.Id());
+
+            return Ok(new ReplyViewModel
+            {
+                Text = model.ReplyText,
+                RepliesCount = repliesCount,
+                AddedByUser = new UserGenericViewModel
+                {
+                    FirstName = User.FirstName(),
+                    LastName = User.LastName(),
+                    AvatarUrl = User.AvatarUrl()
+                },
+                CreatedOn = DateTime.UtcNow,
+            });
+        }
+
+        [HttpPost("getReplies")]
+        public async Task<IEnumerable<ReplyCommentViewModel>> GetReplies(int commentId)
+        {
+            return await commentsService.GetRepliesAsync(commentId);
+        }
     }
 }

@@ -9,5 +9,9 @@ namespace ExploreBulgaria.Services.Data
         Task<int> LikeCommentAsync(int commentId, string userId);
 
         Task<int> DislikeCommentAsync(int commentId, string userId);
+
+        Task<int> AddReplyAsync(ReplyInputModel model, string userId);
+
+        Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(int commentId);
     }
 }

@@ -23,7 +23,7 @@
                                         <img src="@url" alt="">
                                     </div>
                                 </div>
-                            }                                               
+                            }
                         </div>
                     </div>
                     <div class="card mb-0 mt-5">
@@ -37,13 +37,13 @@
                                     <small>
                                         <span>
                                             <img src="@Model.AddedByUser.AvatarUrl" class="autor-img rounded-circle mr-2" />
-                                        </span> 
+                                        </span>
                                         <span class="text-primary">@Model.AddedByUser.FirstName @Model.AddedByUser.LastName</span>
                                     </small>
                                 </div>
                             </p>
                         </div>
-                    </div>                   
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,15 +55,18 @@
             <div class="headings d-flex justify-content-between align-items-center mb-3">
                 <h5>Коментари</h5>
             </div>
-            <div id="addComment" class="card p-3 mt-2">             
-                <div class="row"> 
-                    <form method="post">
-                       <input id="attractionId" type="hidden" name="attractionId" value="@Model.Id" />
-                       <textarea id="commentText" class="text-secondary col-lg-9" placeholder="Напиши коментар..."></textarea>
-                       <button type="submit" onclick="addComment(event)" class="main-button col-lg-3" style="width: 115px; margin: 4px">Добави</button>
-                    </form>
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <div id="addComment" class="card p-3 mt-2">
+                    <div class="row">
+                        <form method="post">
+                            <input id="attractionId" type="hidden" name="attractionId" value="@Model.Id" />
+                            <textarea id="commentText" class="text-secondary col-lg-9" placeholder="Напиши коментар..."></textarea>
+                            <button type="submit" onclick="addComment(event)" class="main-button col-lg-3" style="width: 115px; margin: 4px">Добави</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            }
             @foreach (var comment in Model.Comments)
             {
                 <div class="card p-3 mt-2">
@@ -80,8 +83,6 @@
                     <div class="action d-flex justify-content-between mt-2 align-items-center">
                         <div class="reply px-4">
                             <small>Remove</small>
-                            <span class="dots"></span>
-                            <small>Reply</small>                                                 
                         </div>
                         <input type="hidden" name="commentId" value="@comment.Id">
                         <div class="d-flex flex-row align-items-center like">
@@ -90,14 +91,33 @@
                         </div>
                         <div class="d-flex flex-row align-items-center dislike">
                             <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByUsers.Any(u => u.Id == User.Id())) {<text>disabled</text>}"></i>
-                            <p id="dislikesCount" class="small text-muted mb-0 dislikes">@comment.DislikedByUsers.Count()</p>
+                            <p class="small text-muted mb-0 dislikes">@comment.DislikedByUsers.Count()</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center">
+                            <i onclick="appendReplySection(event)" class="far fa-comment mx-2 fa-xs text-black"></i>
+                            <p class="small text-muted mb-0 replies">@comment.Replies.Count()</p>
                         </div>
                         <div class="icons align-items-center">
                             <i class="fa fa-check-circle-o check-icon text-primary"></i>
-                        </div>
+                        </div>                        
+                    </div>  
+                    <div class="row">
+                        @foreach (var reply in comment.Replies)
+                        {
+                            <div class="card p-4 mt-2 col-lg-11 offset-lg-1">
+                                <div class="user d-flex flex-row align-items-center">
+                                    <img src="@reply.Author.AvatarUrl" class="user-img rounded-circle mr-2">
+                                    <div class="row">
+                                        <small class="font-weight-bold text-primary">@reply.Author.FirstName @reply.Author.LastName</small>
+                                        <small class="font-weight-bold text-secondary">@reply.Text</small>
+                                    </div>
+                                </div>
+                                <small class="text-secondary">@reply.CreatedOn.ToShortDateString()</small>`;
+                            </div>
+                        }
                     </div>
                 </div>
-            }           
+            }
         </div>
         <form method="post" id="antiForgeryForm"></form>
     </div>
@@ -107,7 +127,7 @@
     <link rel="stylesheet" href="~/css/comments.css" />
 }
 
-@section Scripts {
+    @section Scripts {
     <script>
         addComment = function (event) {
             event.preventDefault();
@@ -127,36 +147,40 @@
                 .then(data => {
                     var element = document.createElement('div');
                     element.setAttribute('class', 'card p-3 mt-2');
-                    element.innerHTML = 
-                    `<div class="d-flex justify-content-between align-items-center">
-                        <div class="user d-flex flex-row align-items-center">
-                            <img src="${data.addedByUser.avatarUrl}" class="user-img rounded-circle mr-2">
-                            <div class="row">
-                                <small class="font-weight-bold text-primary">${data.addedByUser.firstName} ${data.addedByUser.lastName}</small>
-                                <small class="font-weight-bold text-secondary">${data.text}</small>
-                            </div>
+                    element.innerHTML =
+                        `<div class="d-flex justify-content-between align-items-center">
+                             <div class="user d-flex flex-row align-items-center">
+                                 <img src="${data.addedByUser.avatarUrl}" class="user-img rounded-circle mr-2">
+                                 <div class="row">
+                                     <small class="font-weight-bold text-primary">${data.addedByUser.firstName} ${data.addedByUser.lastName}</small>
+                                     <small class="font-weight-bold text-secondary">${data.text}</small>
+                                 </div>
+                             </div>
+                             <small class="text-secondary">${new Date(data.createdOn).toLocaleDateString()}</small>
                         </div>
-                        <small class="text-secondary">${new Date(data.createdOn).toLocaleDateString()}</small>
-                    </div>
-                    <div class="action d-flex justify-content-between mt-2 align-items-center">
-                        <div class="reply px-4">
-                            <small>Remove</small>
-                            <span class="dots"></span>
-                            <small>Reply</small>
-                        </div>
-                        <input id="commentId" type="hidden" name="commentId" value="${data.id}">
-                        <div class="d-flex flex-row align-items-center like">
-                            <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black"></i>
-                            <p class="small text-muted mb-0 likes">0</p>
-                        </div>
-                        <div class="d-flex flex-row align-items-center dislike">
-                            <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black"></i>
-                            <p class="small text-muted mb-0 dislikes">0</p>
-                        </div>
-                        <div class="icons align-items-center">
-                            <i class="fa fa-check-circle-o check-icon text-primary"></i>
-                        </div>
-                    </div>`;
+                        <div class="action d-flex justify-content-between mt-2 align-items-center">
+                             <div class="reply px-4">
+                                 <small>Remove</small>
+                                 <span class="dots"></span>
+                                 <small>Reply</small>
+                             </div>
+                             <input id="commentId" type="hidden" name="commentId" value="${data.id}">
+                             <div class="d-flex flex-row align-items-center like">
+                                 <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black"></i>
+                                 <p class="small text-muted mb-0 likes">0</p>
+                             </div>
+                             <div class="d-flex flex-row align-items-center dislike">
+                                 <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black"></i>
+                                 <p class="small text-muted mb-0 dislikes">0</p>
+                             </div>
+                             <div class="d-flex flex-row align-items-center">
+                                 <i onclick="appendReplySection(event)" class="far fa-comment mx-2 fa-xs text-black"></i>
+                                 <p class="small text-muted mb-0 replies">0</p>
+                             </div>
+                             <div class="icons align-items-center">
+                                 <i class="fa fa-check-circle-o check-icon text-primary"></i>
+                             </div>
+                         </div>`;
 
                     document.getElementById('addComment').after(element);
 
@@ -165,8 +189,8 @@
         }
 
         const antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
-        
-        likeComment = function(event) {
+
+        likeComment = function (event) {
             const parentDivEl = event.target.parentElement.parentElement;
             const commentId = parentDivEl.querySelector('input[name="commentId"]').value;
 
@@ -178,20 +202,20 @@
                 },
                 body: JSON.stringify({ commentId })
             })
-            .then(result => result.json())
-            .then(data => {
-                event.target.parentElement.querySelector('.likes').textContent = data;
+                .then(result => result.json())
+                .then(data => {
+                    event.target.parentElement.querySelector('.likes').textContent = data;
 
-                const dislikeEl = parentDivEl.querySelector('.fa-thumbs-down');
-                if (dislikeEl.classList.contains('disabled')) {
-                    dislikeEl.classList.remove('disabled');
-                } else {
-                    dislikeEl.classList.add('disabled');
-                }
-            })
+                    const dislikeEl = parentDivEl.querySelector('.fa-thumbs-down');
+                    if (dislikeEl.classList.contains('disabled')) {
+                        dislikeEl.classList.remove('disabled');
+                    } else {
+                        dislikeEl.classList.add('disabled');
+                    }
+                })
         }
 
-        dislikeComment = function(event) {
+        dislikeComment = function (event) {
             const parentDivEl = event.target.parentElement.parentElement;
             const commentId = parentDivEl.querySelector('input[name="commentId"]').value;
 
@@ -214,6 +238,72 @@
                         likeEl.classList.add('disabled');
                     }
                 })
+        }
+
+        appendReplySection = function (event) {
+            const parentDivEl = event.target.parentElement.parentElement;
+            const commentId = parentDivEl.querySelector('input[name="commentId"]').value;
+
+            //fetch('/api/CommentsApi/getReplies', {
+            //    method: "POST",
+            //    headers: {
+            //        'Content-Type': 'application/json',
+            //        'X-CSRF-TOKEN': antiForgeryToken,
+            //    },
+            //    body: JSON.stringify({ commentId })
+            //})
+            //.then(result => result.json())
+            //.then(data => {
+
+            //})
+
+            const divElement = document.createElement('div');
+            divElement.setAttribute('class', 'card p-3 mt-2 add-reply');
+            divElement.innerHTML = `
+                             <form method="post">
+                                 <input type="hidden" name="commentId" value="${commentId}" />
+                                 <textarea class="text-secondary col-lg-9" placeholder="Напиши отговор..."></textarea>
+                                 <button type="submit" onclick="addReply(event)" class="main-button col-lg-3" style="width: 115px; margin: 4px">Добави</button>
+                             </form>`;
+
+            parentDivEl.parentElement.appendChild(divElement);
+        }
+
+        addReply = function (event) {
+            event.preventDefault();
+            const commentId = event.target.parentElement.querySelector('input[name="commentId"]').value;
+            const replyText = event.target.parentElement.querySelector('textarea').value;
+
+            fetch('/api/CommentsApi/addReply', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': antiForgeryToken,
+                },
+                body: JSON.stringify({ commentId, replyText })
+            })
+            .then(result => result.json())
+            .then(data => {
+                 const divContainerElement = event.target.parentElement.parentElement.parentElement;
+                 const addReplyDivElement = divContainerElement.querySelector('div.add-reply');
+                 divContainerElement.removeChild(addReplyDivElement);
+
+                 const newReplyElement = document.createElement('div');
+                 newReplyElement.setAttribute('class', 'card p-4 mt-2');
+
+                 newReplyElement.innerHTML = `
+                         <div class="user d-flex flex-row align-items-center">
+                             <img src="${data.addedByUser.avatarUrl}" class="user-img rounded-circle mr-2">
+                             <div class="row">
+                                 <small class="font-weight-bold text-primary">${data.addedByUser.firstName} ${data.addedByUser.lastName}</small>
+                                 <small class="font-weight-bold text-secondary">${data.text}</small>
+                             </div>
+                         </div>
+                         <small class="text-secondary">${new Date(data.createdOn).toLocaleDateString()}</small>`;
+
+                 divContainerElement.appendChild(newReplyElement);
+                 divContainerElement.querySelector('p.replies').textContent = data.repliesCount;   
+            })
         }
     </script>
 }
