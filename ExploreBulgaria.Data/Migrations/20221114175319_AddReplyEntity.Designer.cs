@@ -4,6 +4,7 @@ using ExploreBulgaria.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,10 @@ using NetTopologySuite.Geometries;
 namespace ExploreBulgaria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221114175319_AddReplyEntity")]
+    partial class AddReplyEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,7 +218,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("SubcategoryId");
 
-                    b.ToTable("Attractions", (string)null);
+                    b.ToTable("Attractions");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.AttractionUserAddedToFavorites", b =>
@@ -231,7 +233,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AttractionUserAddedToFavorites", (string)null);
+                    b.ToTable("AttractionUserAddedToFavorites");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.AttractionUserVisited", b =>
@@ -246,7 +248,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AttractionUserVisited", (string)null);
+                    b.ToTable("AttractionUserVisited");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.AttractionUserWantToVisit", b =>
@@ -261,7 +263,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AttractionUserWantToVisit", (string)null);
+                    b.ToTable("AttractionUserWantToVisit");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Category", b =>
@@ -290,7 +292,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Comment", b =>
@@ -334,7 +336,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Image", b =>
@@ -377,7 +379,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Region", b =>
@@ -406,7 +408,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Regions", (string)null);
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Reply", b =>
@@ -449,7 +451,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Replies", (string)null);
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Subcategory", b =>
@@ -484,7 +486,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Subcategories", (string)null);
+                    b.ToTable("Subcategories");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.UserDislikedComment", b =>
@@ -499,7 +501,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("UserDislikedComment", (string)null);
+                    b.ToTable("UserDislikedComment");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.UserLikedComment", b =>
@@ -514,7 +516,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("UserLikedComment", (string)null);
+                    b.ToTable("UserLikedComment");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Vote", b =>
@@ -556,7 +558,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,6 +4,7 @@
     {
         public const int NameMaxLength = 50;
         public const int NameMinLength = 5;
+        public const int TextMaxLength = 1000;
 
         public class User
         {
@@ -18,11 +19,6 @@
         {
             public const int NameMaxLength = 120;
             public const int DescriptionMaxLength = 10000;
-        }
-
-        public class Comment
-        {
-            public const int TextMaxLength = 1000;
         }
 
         public class Image

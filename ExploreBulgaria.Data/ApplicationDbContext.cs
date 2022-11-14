@@ -30,6 +30,8 @@ namespace ExploreBulgaria.Data
 
         public DbSet<Comment> Comments { get; set; } = null!;
 
+        public DbSet<Reply> Replies { get; set; } = null!;
+
         public DbSet<Vote> Votes { get; set; } = null!;
 
         public override int SaveChanges() => this.SaveChanges(true);
