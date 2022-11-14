@@ -14,7 +14,7 @@ namespace ExploreBulgaria.Web.ViewModels.Users
 
         public string LastName { get; set; } = null!;
 
-        public string AvatarUrl { get; set; } = null!;
+        public string? AvatarUrl { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
