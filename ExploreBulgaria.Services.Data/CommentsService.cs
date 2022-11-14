@@ -52,6 +52,13 @@ namespace ExploreBulgaria.Services.Data
                 return comment.LikedByUsers.Count;
             }
 
+            var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userId);
+
+            if (userDislikedComment != null)
+            {
+                return comment.LikedByUsers.Count;
+            }
+
             userLikedComment = new UserLikedComment
             {
                 UserId = userId,
@@ -65,7 +72,7 @@ namespace ExploreBulgaria.Services.Data
             return comment.LikedByUsers.Count;
         }
 
-        public async Task<int> DislikeCommentAsync(int commentId, string userid)
+        public async Task<int> DislikeCommentAsync(int commentId, string userId)
         {
             var comment = await repo.All()
                 .Include(c => c.DislikedByUsers)
@@ -76,7 +83,7 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("No such comment exists.");
             }
 
-            var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userid);
+            var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userId);
 
             if (userDislikedComment != null)
             {
@@ -87,9 +94,16 @@ namespace ExploreBulgaria.Services.Data
                 return comment.DislikedByUsers.Count;
             }
 
+            var userLikedComment = comment.LikedByUsers.FirstOrDefault(x => x.UserId == userId);
+
+            if (userLikedComment != null)
+            {
+                return comment.DislikedByUsers.Count;
+            }
+
             userDislikedComment = new UserDislikedComment
             {
-                UserId = userid,
+                UserId = userId,
                 CommentId = commentId
             };
 
