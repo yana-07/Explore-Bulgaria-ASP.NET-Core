@@ -11,9 +11,6 @@ namespace ExploreBulgaria.Data.Models
         public Attraction()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.VisitedByUsers = new HashSet<AttractionUserVisited>();
-            this.WantToVisitUsers = new HashSet<AttractionUserWantToVisit>();
-            this.AddedToFavoritesByUsers = new HashSet<AttractionUserAddedToFavorites>();
             this.Images = new HashSet<Image>();
             this.Comments = new HashSet<Comment>();
             this.Votes = new HashSet<Vote>();
@@ -51,12 +48,6 @@ namespace ExploreBulgaria.Data.Models
         public string CreatedByUserId { get; set; } = null!;
 
         public virtual ApplicationUser CreatedByUser { get; set; } = null!;
-
-        public virtual ICollection<AttractionUserVisited> VisitedByUsers { get; set; }
-
-        public virtual ICollection<AttractionUserWantToVisit> WantToVisitUsers { get; set; }
-
-        public virtual ICollection<AttractionUserAddedToFavorites> AddedToFavoritesByUsers { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }
 
