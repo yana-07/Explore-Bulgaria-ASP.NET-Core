@@ -85,3 +85,7 @@ textarea {
 .like i:hover, .dislike i:hover {
    cursor: pointer;
 }
+
+i.fa-comment:hover {
+    cursor: pointer;
+}

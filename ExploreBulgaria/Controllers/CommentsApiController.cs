@@ -81,9 +81,9 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("getReplies")]
-        public async Task<IEnumerable<ReplyCommentViewModel>> GetReplies(int commentId)
+        public async Task<ActionResult<IEnumerable<ReplyCommentViewModel>>> GetReplies(ShortReplyInputModel model)
         {
-            return await commentsService.GetRepliesAsync(commentId);
+            return Ok(await commentsService.GetRepliesAsync(model));
         }
     }
 }

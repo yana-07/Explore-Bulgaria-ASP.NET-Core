@@ -150,11 +150,12 @@ namespace ExploreBulgaria.Services.Data
             return comment.Replies.Count;
         }
 
-        public async Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(int commentId)
+        public async Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(ShortReplyInputModel model)
         {
             var comment = await commentsRepo.All()
                 .Include(c => c.Replies)
-                .FirstOrDefaultAsync(c => c.Id == commentId);
+                .ThenInclude(r => r.Author)
+                .FirstOrDefaultAsync(c => c.Id == model.CommentId);
 
             if (comment == null)
             {

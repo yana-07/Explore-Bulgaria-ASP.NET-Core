@@ -12,6 +12,6 @@ namespace ExploreBulgaria.Services.Data
 
         Task<int> AddReplyAsync(ReplyInputModel model, string userId);
 
-        Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(int commentId);
+        Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(ShortReplyInputModel model);
     }
 }
