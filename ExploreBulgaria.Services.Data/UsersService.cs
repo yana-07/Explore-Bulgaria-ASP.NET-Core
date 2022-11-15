@@ -5,7 +5,6 @@ using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -114,6 +113,9 @@ namespace ExploreBulgaria.Services.Data
         public async Task AddAvatarUrlClaimAsync(ApplicationUser user)
             => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Uri, user.AvatarUrl!));
 
+        public async Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId)
+            => await userManager.AddClaimAsync(user, new Claim("urn:exploreBulgaria:visitorId", visitorId));
+        
         public async Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath)
         {
             var user = await userManager.FindByIdAsync(userId);
@@ -151,6 +153,6 @@ namespace ExploreBulgaria.Services.Data
             }
 
             await repo.SaveChangesAsync();
-        }
+        }      
     }
 }

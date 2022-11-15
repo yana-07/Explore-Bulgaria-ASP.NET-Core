@@ -18,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ISubcategoriesService, SubcategoriesService>();
             services.AddScoped<IRegionsService, RegionsService>();
             services.AddScoped<ICommentsService, CommentsService>();
+            services.AddScoped<IVisitorsService, VisitorsService>();
 
             return services;
         }

@@ -18,5 +18,8 @@ namespace ExploreBulgaria.Web.Common
 
         public static string AvatarUrl(this ClaimsPrincipal user)
             => user.FindFirstValue(ClaimTypes.Uri);
+
+        public static string VisitorId(this ClaimsPrincipal user)
+            => user.FindFirstValue("urn:exploreBulgaria:visitorId");
     }
 }

@@ -25,5 +25,7 @@ public interface IUsersService
 
     Task AddAvatarUrlClaimAsync(ApplicationUser user);
 
+    Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId);
+
     Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
 }
