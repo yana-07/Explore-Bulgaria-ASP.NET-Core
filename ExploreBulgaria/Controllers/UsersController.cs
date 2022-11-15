@@ -10,13 +10,16 @@ namespace ExploreBulgaria.Web.Controllers
     public class UsersController : BaseController
     {
         private readonly IUsersService usersService;
+        private readonly IVisitorsService visitorsService;
         private readonly IWebHostEnvironment environment;
 
         public UsersController(
             IUsersService usersService,
+            IVisitorsService visitorsService,
             IWebHostEnvironment environment)
         {
             this.usersService = usersService;
+            this.visitorsService = visitorsService;
             this.environment = environment;
         }
 
@@ -43,6 +46,10 @@ namespace ExploreBulgaria.Web.Controllers
 
             if (resultAwaited.Succeeded)
             {
+                var visitorId = await visitorsService.CreateByUserId(user!.Id);
+
+                await usersService.AddVisitorIdClaimAsync(user, visitorId);
+
                 await usersService.AddFirstNameClaimAsync(user!);
 
                 await usersService.AddLastNameClaimAsync(user!);
