@@ -7,7 +7,10 @@ namespace ExploreBulgaria.Data.Models
     {
         public Visitor()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.CreatedAttractions = new HashSet<Attraction>();
+            this.LikedComments = new HashSet<VisitorLikedComment>();
+            this.DislikedComments = new HashSet<VisitorDislikedComment>();
         }
 
         [Required]
