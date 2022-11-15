@@ -44,10 +44,10 @@ namespace ExploreBulgaria.Data.Models
         public string Description { get; set; } = null!;
 
         [Required]
-        [ForeignKey(nameof(CreatedByUser))]
-        public string CreatedByUserId { get; set; } = null!;
+        [ForeignKey(nameof(CreatedByVisitor))]
+        public string CreatedByVisitorId { get; set; } = null!;
 
-        public virtual ApplicationUser CreatedByUser { get; set; } = null!;
+        public virtual Visitor CreatedByVisitor { get; set; } = null!;
 
         public virtual ICollection<Image> Images { get; set; }
 

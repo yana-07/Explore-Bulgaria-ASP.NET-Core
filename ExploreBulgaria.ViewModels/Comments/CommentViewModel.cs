@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
-using ExploreBulgaria.Web.ViewModels.Users;
+using ExploreBulgaria.Web.ViewModels.Visitors;
 
 namespace ExploreBulgaria.Web.ViewModels.Comments
 {
@@ -13,13 +13,13 @@ namespace ExploreBulgaria.Web.ViewModels.Comments
 
         public string Text { get; set; } = null!;
 
-        public UserGenericViewModel AddedByUser { get; set; } = null!;
+        public VisitorGenericViewModel AddedByVisitor { get; set; } = null!;
 
         public DateTime CreatedOn { get; set; }
 
-        public IEnumerable<UserGenericViewModel> LikedByUsers { get; set; }
+        public IEnumerable<VisitorGenericViewModel> LikedByVisitors { get; set; }
 
-        public IEnumerable<UserGenericViewModel> DislikedByUsers { get; set; }
+        public IEnumerable<VisitorGenericViewModel> DislikedByVisitors { get; set; }
 
         public IEnumerable<ReplyCommentViewModel> Replies { get; set; }
 

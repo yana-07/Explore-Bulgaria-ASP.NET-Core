@@ -36,9 +36,9 @@
                                     <small class="text-secondary">Добавено от: </small>
                                     <small>
                                         <span>
-                                            <img src="@Model.AddedByUser.AvatarUrl" class="autor-img rounded-circle mr-2" />
+                                            <img src="@Model.AddedByVisitor.UserAvatarUrl" class="autor-img rounded-circle mr-2" />
                                         </span>
-                                        <span class="text-primary">@Model.AddedByUser.FirstName @Model.AddedByUser.LastName</span>
+                                        <span class="text-primary">@Model.AddedByVisitor.UserFirstName @Model.AddedByVisitor.UserLastName</span>
                                     </small>
                                 </div>
                             </p>
@@ -72,9 +72,9 @@
                 <div class="card p-3 mt-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="user d-flex flex-row align-items-center">
-                            <img src="@comment.AddedByUser.AvatarUrl" class="user-img rounded-circle mr-2">
+                            <img src="@comment.AddedByVisitor.UserAvatarUrl" class="user-img rounded-circle mr-2">
                             <div class="row">
-                                <small class="font-weight-bold text-primary">@comment.AddedByUser.FirstName @comment.AddedByUser.LastName</small>
+                                <small class="font-weight-bold text-primary">@comment.AddedByVisitor.UserFirstName @comment.AddedByVisitor.UserLastName</small>
                                 <small class="font-weight-bold text-secondary">@Html.Raw(comment.Text)</small>
                             </div>
                         </div>
@@ -86,12 +86,12 @@
                         </div>
                         <input type="hidden" name="commentId" value="@comment.Id">
                         <div class="d-flex flex-row align-items-center like">
-                            <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByUsers.Any(u => u.Id == User.Id()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
-                            <p class="small text-muted mb-0 likes">@comment.LikedByUsers.Count()</p>
+                            <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByVisitors.Any(v => v.UserId == User.Id()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                            <p class="small text-muted mb-0 likes">@comment.LikedByVisitors.Count()</p>
                         </div>
                         <div class="d-flex flex-row align-items-center dislike">
-                            <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByUsers.Any(u => u.Id == User.Id()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
-                            <p class="small text-muted mb-0 dislikes">@comment.DislikedByUsers.Count()</p>
+                            <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByVisitors.Any(v => v.UserId == User.Id()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                            <p class="small text-muted mb-0 dislikes">@comment.DislikedByVisitors.Count()</p>
                         </div>
                         <div class="d-flex flex-row align-items-center">
                             <i onclick="appendReplySection(event)" class="far fa-comment mx-2 fa-xs text-black @if(!User.Identity?.IsAuthenticated ?? false) {<text>disabled</text>}"></i>

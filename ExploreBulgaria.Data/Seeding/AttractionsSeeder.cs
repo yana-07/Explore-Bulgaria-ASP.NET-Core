@@ -29,6 +29,7 @@ namespace ExploreBulgaria.Data.Seeding
 
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var user = await userManager.FindByEmailAsync("adminuser@abv.bg");//(u => u.Email == "adminuser@abv.bg"); //userManager.FindByEmailAsync("adminuser@abv.bg");
+                var visitor = await dbContext.Visitors.FirstOrDefaultAsync(v => v.UserId == user.Id);
 
                 foreach (var dto in attractionDtos)
                 {
@@ -56,7 +57,7 @@ namespace ExploreBulgaria.Data.Seeding
                             Convert.ToDouble(dto.Latitude))
                         { SRID = 4326 },
                         Description = dto.Description,
-                        CreatedByUserId = user.Id,
+                        CreatedByVisitorId = visitor.Id,
                         Images = images
                     };
 

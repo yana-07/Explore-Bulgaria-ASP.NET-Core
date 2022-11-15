@@ -10,7 +10,8 @@ namespace ExploreBulgaria.Data.Models
         [Required]
         [ForeignKey(nameof(Author))]
         public string AuthorId { get; set; } = null!;
-        public virtual ApplicationUser Author { get; set; } = null!;
+
+        public virtual Visitor Author { get; set; } = null!;
 
         [Required]
         [MaxLength(TextMaxLength)]

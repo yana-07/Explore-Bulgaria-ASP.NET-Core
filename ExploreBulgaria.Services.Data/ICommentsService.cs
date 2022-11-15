@@ -4,13 +4,13 @@ namespace ExploreBulgaria.Services.Data
 {
     public interface ICommentsService
     {
-        Task<int> PostCommentAsync(CommentInputModel model, string userId);
+        Task<int> PostCommentAsync(CommentInputModel model, string visitorId);
 
-        Task<int> LikeCommentAsync(int commentId, string userId);
+        Task<int> LikeCommentAsync(int commentId, string visitorId);
 
-        Task<int> DislikeCommentAsync(int commentId, string userId);
+        Task<int> DislikeCommentAsync(int commentId, string visitorId);
 
-        Task<int> AddReplyAsync(ReplyInputModel model, string userId);
+        Task<int> AddReplyAsync(ReplyInputModel model, string visitorId);
 
         Task<IEnumerable<ReplyCommentViewModel>> GetRepliesAsync(ShortReplyInputModel model);
     }

@@ -32,6 +32,8 @@ namespace ExploreBulgaria.Data
 
         public DbSet<Reply> Replies { get; set; } = null!;
 
+        public DbSet<Visitor> Visitors { get; set; }
+
         public DbSet<Vote> Votes { get; set; } = null!;
 
         public override int SaveChanges() => this.SaveChanges(true);

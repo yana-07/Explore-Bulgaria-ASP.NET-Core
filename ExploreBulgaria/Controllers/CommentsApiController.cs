@@ -1,7 +1,8 @@
 ﻿using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.ViewModels.Comments;
-using ExploreBulgaria.Web.ViewModels.Users;
+using ExploreBulgaria.Web.ViewModels.Visitors;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,9 @@ namespace ExploreBulgaria.Web.Controllers
         [Authorize]
         public async Task<ActionResult<CommentViewModel>> PostComment(CommentInputModel model)
         {
+            HtmlSanitizer sanitizer = new HtmlSanitizer();
+            model.Text = sanitizer.Sanitize(model.Text);
+
             var userId = User.Id();
 
             var commentId = await commentsService.PostCommentAsync(model, userId);
@@ -32,12 +36,12 @@ namespace ExploreBulgaria.Web.Controllers
                 AttractionId = model.AttractionId,
                 Text = model.Text,
                 CreatedOn = DateTime.UtcNow, 
-                AddedByUser = new UserGenericViewModel
+                AddedByVisitor = new VisitorGenericViewModel
                 {
                     Id = userId,
-                    FirstName = User.FirstName(),
-                    LastName = User.LastName(),
-                    AvatarUrl = User.AvatarUrl()
+                    UserFirstName = User.FirstName(),
+                    UserLastName = User.LastName(),
+                    UserAvatarUrl = User.AvatarUrl()
                 }           
             });
         }
@@ -64,17 +68,20 @@ namespace ExploreBulgaria.Web.Controllers
         [Authorize]
         public async Task<ActionResult<ReplyViewModel>> AddReply(ReplyInputModel model)
         {
+            HtmlSanitizer sanitizer = new HtmlSanitizer();
+            model.ReplyText = sanitizer.Sanitize(model.ReplyText);
+
             var repliesCount = await commentsService.AddReplyAsync(model, User.Id());
 
             return Ok(new ReplyViewModel
             {
                 Text = model.ReplyText,
                 RepliesCount = repliesCount,
-                AddedByUser = new UserGenericViewModel
+                AddedByVisitor = new VisitorGenericViewModel
                 {
-                    FirstName = User.FirstName(),
-                    LastName = User.LastName(),
-                    AvatarUrl = User.AvatarUrl()
+                    UserFirstName = User.FirstName(),
+                    UserLastName = User.LastName(),
+                    UserAvatarUrl = User.AvatarUrl()
                 },
                 CreatedOn = DateTime.UtcNow,
             });

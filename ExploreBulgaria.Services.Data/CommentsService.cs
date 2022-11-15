@@ -1,7 +1,7 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Web.ViewModels.Comments;
-using ExploreBulgaria.Web.ViewModels.Users;
+using ExploreBulgaria.Web.ViewModels.Visitors;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExploreBulgaria.Services.Data
@@ -19,12 +19,12 @@ namespace ExploreBulgaria.Services.Data
             this.usersRepo = usersRepo;
         }      
 
-        public async Task<int> PostCommentAsync(CommentInputModel model, string userId)
+        public async Task<int> PostCommentAsync(CommentInputModel model, string visitorId)
         {
             var comment = new Comment
             {
                 AttractionId = model.AttractionId,
-                AddedByUserId = userId,
+                AddedByVisitorId = visitorId,
                 Text = model.Text
             };
 
@@ -35,10 +35,10 @@ namespace ExploreBulgaria.Services.Data
             return comment.Id;
         }
 
-        public async Task<int> LikeCommentAsync(int commentId, string userId)
+        public async Task<int> LikeCommentAsync(int commentId, string visitorId)
         {
             var comment = await commentsRepo.All()
-                .Include(c => c.LikedByUsers)
+                .Include(c => c.LikedByVisitors)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
             if (comment == null)
@@ -46,41 +46,41 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid comment Id.");
             }
 
-            var userLikedComment = comment.LikedByUsers.FirstOrDefault(x => x.UserId == userId);
+            var userLikedComment = comment.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (userLikedComment != null)
             {
-                comment.LikedByUsers.Remove(userLikedComment);
+                comment.LikedByVisitors.Remove(userLikedComment);
 
                 await commentsRepo.SaveChangesAsync();
 
-                return comment.LikedByUsers.Count;
+                return comment.LikedByVisitors.Count;
             }
 
-            var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userId);
+            var userDislikedComment = comment.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (userDislikedComment != null)
             {
-                return comment.LikedByUsers.Count;
+                return comment.LikedByVisitors.Count;
             }
 
-            userLikedComment = new UserLikedComment
+            userLikedComment = new VisitorLikedComment
             {
-                UserId = userId,
+                VisitorId = visitorId,
                 CommentId = commentId
             };
 
-            comment.LikedByUsers.Add(userLikedComment);
+            comment.LikedByVisitors.Add(userLikedComment);
 
             await commentsRepo.SaveChangesAsync();
 
-            return comment.LikedByUsers.Count;
+            return comment.LikedByVisitors.Count;
         }
 
-        public async Task<int> DislikeCommentAsync(int commentId, string userId)
+        public async Task<int> DislikeCommentAsync(int commentId, string visitorId)
         {
             var comment = await commentsRepo.All()
-                .Include(c => c.DislikedByUsers)
+                .Include(c => c.DislikedByVisitors)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
             if (comment == null)
@@ -88,35 +88,35 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid comment Id.");
             }
 
-            var userDislikedComment = comment.DislikedByUsers.FirstOrDefault(x => x.UserId == userId);
+            var userDislikedComment = comment.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (userDislikedComment != null)
             {
-                comment.DislikedByUsers.Remove(userDislikedComment);
+                comment.DislikedByVisitors.Remove(userDislikedComment);
 
                 await commentsRepo.SaveChangesAsync();
 
-                return comment.DislikedByUsers.Count;
+                return comment.DislikedByVisitors.Count;
             }
 
-            var userLikedComment = comment.LikedByUsers.FirstOrDefault(x => x.UserId == userId);
+            var userLikedComment = comment.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (userLikedComment != null)
             {
-                return comment.DislikedByUsers.Count;
+                return comment.DislikedByVisitors.Count;
             }
 
-            userDislikedComment = new UserDislikedComment
+            userDislikedComment = new VisitorDislikedComment
             {
-                UserId = userId,
+                VisitorId = visitorId,
                 CommentId = commentId
             };
 
-            comment.DislikedByUsers.Add(userDislikedComment);
+            comment.DislikedByVisitors.Add(userDislikedComment);
 
             await commentsRepo.SaveChangesAsync();
 
-            return comment.DislikedByUsers.Count;
+            return comment.DislikedByVisitors.Count;
         }
 
         public async Task<int> AddReplyAsync(ReplyInputModel model, string userId)
@@ -165,12 +165,12 @@ namespace ExploreBulgaria.Services.Data
             return comment.Replies.Select(r => new ReplyCommentViewModel
             {
                 Text = r.Text,
-                Author = new UserGenericViewModel
+                Author = new VisitorGenericViewModel
                 {
                     Id = r.AuthorId,
-                    FirstName = r.Author.FirstName,
-                    LastName = r.Author.LastName,
-                    AvatarUrl = r.Author.AvatarUrl,
+                    UserFirstName = r.Author.User.FirstName,
+                    UserLastName = r.Author.User.LastName,
+                    UserAvatarUrl = r.Author.User.AvatarUrl,
                 },
                 CreatedOn = r.CreatedOn
             }).ToList();

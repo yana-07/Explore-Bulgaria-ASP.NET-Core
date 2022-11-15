@@ -9,8 +9,8 @@ namespace ExploreBulgaria.Data.Models
     {
         public Comment()
         {
-            this.LikedByUsers = new HashSet<UserLikedComment>();
-            this.DislikedByUsers = new HashSet<UserDislikedComment>();
+            this.LikedByVisitors = new HashSet<VisitorLikedComment>();
+            this.DislikedByVisitors = new HashSet<VisitorDislikedComment>();
             this.Replies = new HashSet<Reply>();
         }
 
@@ -21,18 +21,18 @@ namespace ExploreBulgaria.Data.Models
         public virtual Attraction Attraction { get; set; } = null!;
 
         [Required]
-        [ForeignKey(nameof(AddedByUser))]
-        public string AddedByUserId { get; set; } = null!;
+        [ForeignKey(nameof(AddedByVisitor))]
+        public string AddedByVisitorId { get; set; } = null!;
 
-        public virtual ApplicationUser AddedByUser { get; set; } = null!;
+        public virtual Visitor AddedByVisitor { get; set; } = null!;
 
         [Required]
         [MaxLength(TextMaxLength)]
         public string Text { get; set; } = null!;
 
-        public virtual ICollection<UserLikedComment> LikedByUsers { get; set; }
+        public virtual ICollection<VisitorLikedComment> LikedByVisitors { get; set; }
 
-        public virtual ICollection<UserDislikedComment> DislikedByUsers { get; set; }
+        public virtual ICollection<VisitorDislikedComment> DislikedByVisitors { get; set; }
 
         public virtual ICollection<Reply> Replies { get; set; }
     }

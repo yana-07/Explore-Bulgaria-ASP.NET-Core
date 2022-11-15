@@ -14,7 +14,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public string Description { get; set; } = null!;
 
-        public string CreatedByUser { get; set; } = null!;
+        public string CreatedByVisitor { get; set; } = null!;
 
         public int CommentsCount { get; set; }
 
@@ -29,7 +29,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
             configuration.CreateMap<Attraction, AttractionInListViewModel>()
                 .ForMember(d => d.ImageUrls, opt => opt.MapFrom(s => s.Images.Select(img => img.RemoteImageUrl)))
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Description.Substring(0, 100)))
-                .ForMember(d => d.CreatedByUser, opt => opt.MapFrom(s => $"{s.CreatedByUser.FirstName} {s.CreatedByUser.LastName}"));
+                .ForMember(d => d.CreatedByVisitor, opt => opt.MapFrom(s => $"{s.CreatedByVisitor.User.FirstName} {s.CreatedByVisitor.User.LastName}"));
         }
     }
 }

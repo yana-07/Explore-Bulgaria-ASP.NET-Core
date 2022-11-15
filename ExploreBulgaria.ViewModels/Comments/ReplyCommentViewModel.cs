@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
-using ExploreBulgaria.Web.ViewModels.Users;
+using ExploreBulgaria.Web.ViewModels.Visitors;
 
 namespace ExploreBulgaria.Web.ViewModels.Comments
 {
@@ -8,7 +8,7 @@ namespace ExploreBulgaria.Web.ViewModels.Comments
     {
         public string Text { get; set; } = null!;
 
-        public UserGenericViewModel Author { get; set; } = null!;
+        public VisitorGenericViewModel Author { get; set; } = null!;
 
         public DateTime CreatedOn { get; set; }
     }

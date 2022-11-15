@@ -2,12 +2,12 @@
 
 namespace ExploreBulgaria.Data.Models
 {
-    public class UserLikedComment
+    public class VisitorDislikedComment
     {
-        [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        [ForeignKey(nameof(Visitor))]
+        public string VisitorId { get; set; } = null!;
 
-        public virtual ApplicationUser User { get; set; } = null!;
+        public virtual Visitor Visitor { get; set; } = null!;
 
         [ForeignKey(nameof(Comment))]
         public int CommentId { get; set; }

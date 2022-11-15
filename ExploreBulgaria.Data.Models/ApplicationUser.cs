@@ -14,9 +14,6 @@ namespace ExploreBulgaria.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.CreatedAttractions = new HashSet<Attraction>();
-            this.LikedComments = new HashSet<UserLikedComment>();
-            this.DislikedComments = new HashSet<UserDislikedComment>();
         }
 
         [Required]
@@ -42,11 +39,5 @@ namespace ExploreBulgaria.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
-
-        public virtual ICollection<Attraction> CreatedAttractions { get; set; }
-
-        public virtual ICollection<UserLikedComment> LikedComments { get; set; }
-
-        public virtual ICollection<UserDislikedComment> DislikedComments { get; set; }
     }
 }

@@ -18,10 +18,10 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual Attraction Attraction { get; set; } = null!;
 
-        [ForeignKey(nameof(AddedByUser))]
-        public string? AddedByUserId { get; set; }
+        [ForeignKey(nameof(AddedByVisitor))]
+        public string? AddedByVisitorId { get; set; }
 
-        public virtual ApplicationUser? AddedByUser { get; set; }
+        public virtual Visitor? AddedByVisitor { get; set; }
 
         [Required]
         [MaxLength(ExtensionMaxLength)]

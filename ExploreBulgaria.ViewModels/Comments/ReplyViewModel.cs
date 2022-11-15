@@ -1,4 +1,4 @@
-﻿using ExploreBulgaria.Web.ViewModels.Users;
+﻿using ExploreBulgaria.Web.ViewModels.Visitors;
 
 namespace ExploreBulgaria.Web.ViewModels.Comments
 {
@@ -6,7 +6,7 @@ namespace ExploreBulgaria.Web.ViewModels.Comments
     {
         public string Text { get; set; } = null!;
 
-        public UserGenericViewModel AddedByUser { get; set; } = null!;
+        public VisitorGenericViewModel AddedByVisitor { get; set; } = null!;
 
         public int RepliesCount { get; set; }
 
