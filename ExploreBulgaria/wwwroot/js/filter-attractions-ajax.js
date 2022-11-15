@@ -1,6 +1,7 @@
 ﻿const categorySelectEl = document.getElementById('chooseCategory');
 const subcategorySelectEl = document.getElementById('chooseSubcategory');
 const regionSelectEl = document.getElementById('chooseRegion');
+const antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
 
 categorySelectEl.addEventListener('change', () => {
     const categoryName = categorySelectEl.value;
@@ -8,7 +9,8 @@ categorySelectEl.addEventListener('change', () => {
     fetch("/api/AttractionsApi/subcategories", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
         },
         body: JSON.stringify({ categoryName })
     })
@@ -23,7 +25,8 @@ categorySelectEl.addEventListener('change', () => {
     fetch("/api/AttractionsApi/regions", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
         },
         body: JSON.stringify({ categoryName })
     })
@@ -44,7 +47,8 @@ subcategorySelectEl.addEventListener('change', () => {
     fetch("/api/AttractionsApi/regions", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
         },
         body: JSON.stringify({ categoryName, subcategoryName })
     })

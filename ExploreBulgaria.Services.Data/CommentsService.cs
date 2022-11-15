@@ -9,14 +9,14 @@ namespace ExploreBulgaria.Services.Data
     public class CommentsService : ICommentsService
     {
         private readonly IDeletableEnityRepository<Comment> commentsRepo;
-        private readonly IDeletableEnityRepository<ApplicationUser> usersRepo;
+        private readonly IDeletableEnityRepository<Visitor> visitorsRepo;
 
         public CommentsService(
             IDeletableEnityRepository<Comment> commentsRepo,
-            IDeletableEnityRepository<ApplicationUser> usersRepo)
+            IDeletableEnityRepository<Visitor> visitorsRepo)
         {
             this.commentsRepo = commentsRepo;
-            this.usersRepo = usersRepo;
+            this.visitorsRepo = visitorsRepo;
         }      
 
         public async Task<int> PostCommentAsync(CommentInputModel model, string visitorId)
@@ -46,11 +46,11 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid comment Id.");
             }
 
-            var userLikedComment = comment.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
+            var visitorLikedComment = comment.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
-            if (userLikedComment != null)
+            if (visitorLikedComment != null)
             {
-                comment.LikedByVisitors.Remove(userLikedComment);
+                comment.LikedByVisitors.Remove(visitorLikedComment);
 
                 await commentsRepo.SaveChangesAsync();
 
@@ -64,13 +64,13 @@ namespace ExploreBulgaria.Services.Data
                 return comment.LikedByVisitors.Count;
             }
 
-            userLikedComment = new VisitorLikedComment
+            visitorLikedComment = new VisitorLikedComment
             {
                 VisitorId = visitorId,
                 CommentId = commentId
             };
 
-            comment.LikedByVisitors.Add(userLikedComment);
+            comment.LikedByVisitors.Add(visitorLikedComment);
 
             await commentsRepo.SaveChangesAsync();
 
@@ -88,11 +88,11 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid comment Id.");
             }
 
-            var userDislikedComment = comment.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
+            var visitorDislikedComment = comment.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
-            if (userDislikedComment != null)
+            if (visitorDislikedComment != null)
             {
-                comment.DislikedByVisitors.Remove(userDislikedComment);
+                comment.DislikedByVisitors.Remove(visitorDislikedComment);
 
                 await commentsRepo.SaveChangesAsync();
 
@@ -106,20 +106,20 @@ namespace ExploreBulgaria.Services.Data
                 return comment.DislikedByVisitors.Count;
             }
 
-            userDislikedComment = new VisitorDislikedComment
+            visitorDislikedComment = new VisitorDislikedComment
             {
                 VisitorId = visitorId,
                 CommentId = commentId
             };
 
-            comment.DislikedByVisitors.Add(userDislikedComment);
+            comment.DislikedByVisitors.Add(visitorDislikedComment);
 
             await commentsRepo.SaveChangesAsync();
 
             return comment.DislikedByVisitors.Count;
         }
 
-        public async Task<int> AddReplyAsync(ReplyInputModel model, string userId)
+        public async Task<int> AddReplyAsync(ReplyInputModel model, string visitorId)
         {
             var comment = await commentsRepo.All()
                 .Include(c => c.Replies)
@@ -130,8 +130,8 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid comment Id.");
             }
 
-            var user = await usersRepo.AllAsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await visitorsRepo.AllAsNoTracking()
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
 
             if (user == null)
             {
@@ -140,7 +140,7 @@ namespace ExploreBulgaria.Services.Data
 
             comment.Replies.Add(new Reply
             {
-                AuthorId = userId,
+                AuthorId = visitorId,
                 CommentId = model.CommentId,
                 Text = model.ReplyText
             });
@@ -155,6 +155,7 @@ namespace ExploreBulgaria.Services.Data
             var comment = await commentsRepo.All()
                 .Include(c => c.Replies)
                 .ThenInclude(r => r.Author)
+                .ThenInclude(a => a.User)
                 .FirstOrDefaultAsync(c => c.Id == model.CommentId);
 
             if (comment == null)

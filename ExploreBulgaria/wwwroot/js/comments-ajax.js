@@ -19,9 +19,9 @@
             element.innerHTML =
                 `<div class="d-flex justify-content-between align-items-center">
                              <div class="user d-flex flex-row align-items-center">
-                                 <img src="${data.addedByUser.avatarUrl}" class="user-img rounded-circle mr-2">
+                                 <img src="${data.addedByVisitor.userAvatarUrl}" class="user-img rounded-circle mr-2">
                                  <div class="row">
-                                     <small class="font-weight-bold text-primary">${data.addedByUser.firstName} ${data.addedByUser.lastName}</small>
+                                     <small class="font-weight-bold text-primary">${data.addedByVisitor.userFirstName} ${data.addedByVisitor.userLastName}</small>
                                      <small class="font-weight-bold text-secondary">${data.text}</small>
                                  </div>
                              </div>
@@ -132,9 +132,9 @@ const appendReplySection = function (event) {
                 replyDivElement.setAttribute('class', 'card p-4 mt-2 col-lg-11 offset-lg-1');
                 replyDivElement.innerHTML = `
                             <div class="user d-flex flex-row align-items-center">
-                                <img src="${reply.author.avatarUrl}" class="user-img rounded-circle mr-2">
+                                <img src="${reply.author.userAvatarUrl}" class="user-img rounded-circle mr-2">
                                 <div class="row">
-                                    <small class="font-weight-bold text-primary">${reply.author.firstName} ${reply.author.lastName}</small>
+                                    <small class="font-weight-bold text-primary">${reply.author.userFirstName} ${reply.author.userLastName}</small>
                                     <small class="font-weight-bold text-secondary">${reply.text}</small>
                                 </div>
                             </div>
@@ -182,9 +182,9 @@ const addReply = function (event) {
 
             newReplyElement.innerHTML = `
                          <div class="user d-flex flex-row align-items-center">
-                             <img src="${data.addedByUser.avatarUrl}" class="user-img rounded-circle mr-2">
+                             <img src="${data.addedByVisitor.userAvatarUrl}" class="user-img rounded-circle mr-2">
                              <div class="row">
-                                 <small class="font-weight-bold text-primary">${data.addedByUser.firstName} ${data.addedByUser.lastName}</small>
+                                 <small class="font-weight-bold text-primary">${data.addedByVisitor.userFirstName} ${data.addedByVisitor.userLastName}</small>
                                  <small class="font-weight-bold text-secondary">${data.text}</small>
                              </div>
                          </div>

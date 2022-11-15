@@ -13,10 +13,14 @@ namespace ExploreBulgaria.Web.Controllers
     public class CommentsApiController : ControllerBase
     {
         private readonly ICommentsService commentsService;
+        private readonly IVisitorsService visitorsService;
 
-        public CommentsApiController(ICommentsService commentsService)
+        public CommentsApiController(
+            ICommentsService commentsService,
+            IVisitorsService visitorsService)
         {
             this.commentsService = commentsService;
+            this.visitorsService = visitorsService;
         }
 
         [HttpPost("comments")]
@@ -26,9 +30,8 @@ namespace ExploreBulgaria.Web.Controllers
             HtmlSanitizer sanitizer = new HtmlSanitizer();
             model.Text = sanitizer.Sanitize(model.Text);
 
-            var userId = User.Id();
-
-            var commentId = await commentsService.PostCommentAsync(model, userId);
+            var visitorId = User.VisitorId();
+            var commentId = await commentsService.PostCommentAsync(model, visitorId);
 
             return Ok(new CommentViewModel
             {
@@ -38,7 +41,7 @@ namespace ExploreBulgaria.Web.Controllers
                 CreatedOn = DateTime.UtcNow, 
                 AddedByVisitor = new VisitorGenericViewModel
                 {
-                    Id = userId,
+                    Id = visitorId,
                     UserFirstName = User.FirstName(),
                     UserLastName = User.LastName(),
                     UserAvatarUrl = User.AvatarUrl()
@@ -50,7 +53,7 @@ namespace ExploreBulgaria.Web.Controllers
         [Authorize]
         public async Task<ActionResult<int>> Like(CommentLikeDislikeInputModel model)
         {
-            var likesCount = await commentsService.LikeCommentAsync(model.CommentId, User.Id());
+            var likesCount = await commentsService.LikeCommentAsync(model.CommentId, User.VisitorId());
 
             return Ok(likesCount);
         }
@@ -59,7 +62,7 @@ namespace ExploreBulgaria.Web.Controllers
         [Authorize]
         public async Task<ActionResult<int>> Dislike(CommentLikeDislikeInputModel model)
         {
-            var dislikesCount = await commentsService.DislikeCommentAsync(model.CommentId, User.Id());
+            var dislikesCount = await commentsService.DislikeCommentAsync(model.CommentId, User.VisitorId());
 
             return Ok(dislikesCount);
         }
@@ -71,7 +74,7 @@ namespace ExploreBulgaria.Web.Controllers
             HtmlSanitizer sanitizer = new HtmlSanitizer();
             model.ReplyText = sanitizer.Sanitize(model.ReplyText);
 
-            var repliesCount = await commentsService.AddReplyAsync(model, User.Id());
+            var repliesCount = await commentsService.AddReplyAsync(model, User.VisitorId());
 
             return Ok(new ReplyViewModel
             {

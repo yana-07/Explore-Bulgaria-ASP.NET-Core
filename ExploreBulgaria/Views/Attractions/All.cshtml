@@ -86,8 +86,9 @@
                         </div>                                                                       
                     </div>
                 </div>
-            }         
-                    <partial name="_PagingPartial" model="@Model" />
+            }  
+            <form id="antiForgeryForm" method="post"></form>
+            <partial name="_PagingPartial" model="@Model" />
         </div>
     </div>
 </div>
