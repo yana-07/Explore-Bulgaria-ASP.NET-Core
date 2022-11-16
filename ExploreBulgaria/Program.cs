@@ -3,6 +3,7 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Seeding;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -17,12 +18,34 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
     .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAuthentication()
+    .AddFacebook(fbOptions =>
+    {
+        fbOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+        fbOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+    })
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:AppId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:AppSecret"];
+    });
+
 builder.Services.ConfigureApplicationCookie(options =>
-    options.LoginPath = "/Users/Login");
+{
+    options.LoginPath = "/Users/Login";
+    options.LogoutPath = "/Users/Logout";
+});   
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.Strict;
+});
+
+builder.Services.AddControllersWithViews(options =>
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddControllersWithViews();
 
 builder.Services.AddAntiforgery(options => 
     options.HeaderName = "X-CSRF-TOKEN");
@@ -72,6 +95,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+app.MapControllerRoute(
+    name:"areaRoute", 
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

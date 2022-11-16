@@ -1,8 +1,10 @@
-﻿using ExploreBulgaria.Services.Data;
+﻿using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.Infrastructure;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExploreBulgaria.Web.Controllers
@@ -12,15 +14,18 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly IUsersService usersService;
         private readonly IVisitorsService visitorsService;
         private readonly IWebHostEnvironment environment;
+        private readonly SignInManager<ApplicationUser> signInManager;
 
         public UsersController(
             IUsersService usersService,
             IVisitorsService visitorsService,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            SignInManager<ApplicationUser> signInManager)
         {
             this.usersService = usersService;
             this.visitorsService = visitorsService;
             this.environment = environment;
+            this.signInManager = signInManager;
         }
 
         [AllowAnonymous]
@@ -66,9 +71,13 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            var model = new LoginViewModel();
+            var model = new LoginViewModel
+            {
+                ExternalLogins = (await signInManager
+                      .GetExternalAuthenticationSchemesAsync()).ToList()
+            };
 
             return View(model);
         }
@@ -146,6 +155,53 @@ namespace ExploreBulgaria.Web.Controllers
             await usersService.SignAutAndInAsync(User);
 
             return this.RedirectTo<HomeController>(c => c.Index());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Users", new { returnUrl });
+            var proprties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, proprties);
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (remoteError != null)
+            {
+                TempData["ErrorMessage"] = $"Error from external provider: {remoteError}";
+
+                return RedirectToAction(nameof(Login), new { returnUrl });
+            }
+
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                TempData["ErrorMessage"] = "Error loading external login information.";
+
+                return RedirectToAction(nameof(Login), new { returnUrl });
+            }
+
+            var result = await signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (result.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                // TODO: lockout redirect
+                return RedirectToPage("Identity/Account/Lockout");
+            }
+            else
+            {
+                return RedirectToAction(nameof(Register));
+            }
         }
     }
 }

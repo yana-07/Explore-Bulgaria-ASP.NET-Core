@@ -4,7 +4,7 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1 class="text-center">@ViewData["Title"]</h1>
+<h1 class="text-center"></h1>
 
 <div class="registration-form">
     <div class="container">
@@ -37,7 +37,39 @@
                         </div>
                     </div>
                 </form>
-            </div>
+                @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                {
+                    <div class="row">
+                        <div class="col-lg-4 offset-lg-4">
+                            <form id="external-account" asp-action="ExternalLogin" method="post">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    if (provider.Name == "Google")
+                                    {
+                                        <div class="d-grid mb-2">
+                                            <button name="provider" value="@provider.Name" class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+                                                <i class="fab fa-google me-2"></i> Sign in with @provider.DisplayName
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (provider.Name == "Facebook")
+                                    {
+                                        <div class="d-grid">
+                                            <button name="provider" value="@provider.Name" class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
+                                                <i class="fab fa-facebook-f me-2"></i> Sign in with @provider.DisplayName
+                                            </button>
+                                        </div>
+                                    }
+                                }
+                            </form>
+                        </div>            
+                    </div>            
+                }              
+            </div>                  
         </div>
     </div>
 </div>
+
+@section Links {
+    <link rel="stylesheet" href="~/css/external-login.css" />
+}
