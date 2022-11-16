@@ -23,9 +23,9 @@ namespace ExploreBulgaria.Web.Controllers
             this.visitorsService = visitorsService;
         }
 
-        [HttpPost("comments")]
+        [HttpPost("add")]
         [Authorize]
-        public async Task<ActionResult<CommentViewModel>> PostComment(CommentInputModel model)
+        public async Task<IActionResult> PostComment(CommentInputModel model)
         {
             HtmlSanitizer sanitizer = new HtmlSanitizer();
             model.Text = sanitizer.Sanitize(model.Text);
@@ -33,7 +33,7 @@ namespace ExploreBulgaria.Web.Controllers
             var visitorId = User.VisitorId();
             var commentId = await commentsService.PostCommentAsync(model, visitorId);
 
-            return Ok(new CommentViewModel
+            return Created("/Attractions/Details", new CommentViewModel
             {
                 Id = commentId,
                 AttractionId = model.AttractionId,
@@ -51,7 +51,7 @@ namespace ExploreBulgaria.Web.Controllers
 
         [HttpPost("like")]
         [Authorize]
-        public async Task<ActionResult<int>> Like(CommentLikeDislikeInputModel model)
+        public async Task<IActionResult> Like(CommentLikeDislikeInputModel model)
         {
             var likesCount = await commentsService.LikeCommentAsync(model.CommentId, User.VisitorId());
 
@@ -60,7 +60,7 @@ namespace ExploreBulgaria.Web.Controllers
 
         [HttpPost("dislike")]
         [Authorize]
-        public async Task<ActionResult<int>> Dislike(CommentLikeDislikeInputModel model)
+        public async Task<IActionResult> Dislike(CommentLikeDislikeInputModel model)
         {
             var dislikesCount = await commentsService.DislikeCommentAsync(model.CommentId, User.VisitorId());
 
@@ -69,14 +69,14 @@ namespace ExploreBulgaria.Web.Controllers
 
         [HttpPost("addReply")]
         [Authorize]
-        public async Task<ActionResult<ReplyViewModel>> AddReply(ReplyInputModel model)
+        public async Task<IActionResult> AddReply(ReplyInputModel model)
         {
             HtmlSanitizer sanitizer = new HtmlSanitizer();
             model.ReplyText = sanitizer.Sanitize(model.ReplyText);
 
             var repliesCount = await commentsService.AddReplyAsync(model, User.VisitorId());
 
-            return Ok(new ReplyViewModel
+            return Created("/Attractions/Details", new ReplyViewModel
             {
                 Text = model.ReplyText,
                 RepliesCount = repliesCount,
@@ -91,7 +91,8 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("getReplies")]
-        public async Task<ActionResult<IEnumerable<ReplyCommentViewModel>>> GetReplies(ShortReplyInputModel model)
+        [Authorize]
+        public async Task<IActionResult> GetReplies(ShortReplyInputModel model)
         {
             return Ok(await commentsService.GetRepliesAsync(model));
         }

@@ -4,7 +4,7 @@
     const text = $('#commentText').val();
     const antiForgeryToken = $('input[name=__RequestVerificationToken]').val();
 
-    fetch('/api/CommentsApi/comments', {
+    fetch('/api/CommentsApi/add', {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': antiForgeryToken,
