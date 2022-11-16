@@ -16,13 +16,11 @@ namespace ExploreBulgaria.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
-        [Required]
         [MaxLength(NameMaxLength)]
-        public string FirstName { get; set; } = null!;
+        public string? FirstName { get; set; } 
 
-        [Required]
         [MaxLength(NameMaxLength)]
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
