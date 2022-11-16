@@ -30,7 +30,6 @@ namespace ExploreBulgaria.Data.Seeding
             foreach (var seeder in seeders)
             {
                 await seeder.SeedAsync(dbContext, serviceProvider);
-                ;
                 await dbContext.SaveChangesAsync();
                 logger.LogInformation($"Seeder {seeder.GetType().Name} done.");
             }

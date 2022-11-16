@@ -24,8 +24,7 @@ namespace ExploreBulgaria.Data.Seeding
                      Email = "adminuser@abv.bg"
                 };
 
-                var result = await userManager.CreateAsync(user, "admin@123456");
-
+                await userManager.CreateAsync(user, "admin@123456");
                 await userManager.AddToRoleAsync(user, "Administrator");
             }
         }
