@@ -1,5 +1,6 @@
 ﻿using ExploreBulgaria.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ExploreBulgaria.Web.ViewModels.Users;
 
@@ -28,4 +29,6 @@ public interface IUsersService
     Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId);
 
     Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
+
+    Task SignAutAndInAsync(ClaimsPrincipal user);
 }

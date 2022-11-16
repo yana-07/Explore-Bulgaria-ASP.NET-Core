@@ -141,9 +141,11 @@ namespace ExploreBulgaria.Web.Controllers
             }
 
             // TODO: Save changes
-             await usersService.EditProfileAsync(model, User.Id(), $"{environment.WebRootPath}/images");
+            await usersService.EditProfileAsync(model, User.Id(), $"{environment.WebRootPath}/images");
 
-            return RedirectToAction(nameof(Logout), new { returnUrl = "/Users/Login" });
+            await usersService.SignAutAndInAsync(User);
+
+            return this.RedirectTo<HomeController>(c => c.Index());
         }
     }
 }

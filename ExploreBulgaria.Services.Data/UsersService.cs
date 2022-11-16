@@ -153,6 +153,14 @@ namespace ExploreBulgaria.Services.Data
             }
 
             await repo.SaveChangesAsync();
-        }      
+        }
+
+        public async Task SignAutAndInAsync(ClaimsPrincipal user)
+        {
+            await signInManager.SignOutAsync();
+
+            await signInManager.SignInAsync(
+                await userManager.GetUserAsync(user), isPersistent: false);
+        }
     }
 }
