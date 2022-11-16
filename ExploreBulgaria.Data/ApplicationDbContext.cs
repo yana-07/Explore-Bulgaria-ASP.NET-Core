@@ -32,7 +32,7 @@ namespace ExploreBulgaria.Data
 
         public DbSet<Reply> Replies { get; set; } = null!;
 
-        public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<Visitor> Visitors { get; set; } = null!;
 
         public DbSet<Vote> Votes { get; set; } = null!;
 
