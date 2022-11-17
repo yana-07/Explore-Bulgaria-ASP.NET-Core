@@ -9,9 +9,11 @@
                     <div class="col-lg-12">
                         <h2><em>@Model.Name</em></h2>
                         <div class="mb-3">
-                            <span class="text-secondary">@Model.CategoryName ></span>
-                            <span class="text-secondary">@Model.SubcategoryName ></span>
-                            <span class="text-secondary">@Model.RegionName</span>
+                            <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName">@Model.CategoryName ></a>
+                            <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName"
+                               asp-route-subcategoryName="@Model.SubcategoryName">@Model.SubcategoryName ></a>
+                            <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName" 
+                                  asp-route-subcategoryName="@Model.SubcategoryName" asp-route-regionName="@Model.RegionName">@Model.RegionName</a>
                         </div>
                     </div>
                     <div class="col-lg-12">
