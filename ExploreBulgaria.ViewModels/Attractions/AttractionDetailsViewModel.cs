@@ -26,6 +26,8 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public VisitorGenericViewModel AddedByVisitor { get; set; } = null!;
 
+        public double AverageVote { get; set; }
+
         public IEnumerable<string> ImageUrls { get; set; }
 
         public IEnumerable<CommentViewModel> Comments { get; set; }
@@ -37,6 +39,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
                    opt.MapFrom(s => s.Images.Select(
                        i => i.RemoteImageUrl ?? $"images/attractions/{i.Id}.{i.Extension}")))
                 .ForMember(d => d.AddedByVisitor, opt => opt.MapFrom(s => s.CreatedByVisitor))
+                .ForMember(d => d.AverageVote, opt => opt.MapFrom(s => s.Votes.Count == 0 ? 0 : s.Votes.Average(v => v.Value)))
                 .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments.OrderByDescending(c => c.CreatedOn)));
         }
     }
