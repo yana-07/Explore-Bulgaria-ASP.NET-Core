@@ -59,9 +59,9 @@ textarea {
 }
 
 
-    .form-check-input:focus {
-        box-shadow: none;
-    }
+.form-check-input:focus {
+    box-shadow: none;
+}
 
 
 .icons i {
@@ -72,15 +72,15 @@ textarea {
     margin-left: 12px;
 }
 
-    .reply small {
-        color: #b7b4b4;
-    }
+.reply small {
+    color: #b7b4b4;
+}
 
 
-        .reply small:hover {
-            color: green;
-            cursor: pointer;
-        }
+.reply small:hover {
+    color: green;
+    cursor: pointer;
+}
 
 .like i:hover, .dislike i:hover {
    cursor: pointer;
