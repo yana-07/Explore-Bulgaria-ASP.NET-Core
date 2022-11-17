@@ -44,6 +44,10 @@
                             </p>
                         </div>
                     </div>
+                    <input id="latitude" type="hidden" value="@Model.Location.Y"/>
+                    <input id="longitude" type="hidden" value="@Model.Location.X"/>
+                    <input id="description" type="hidden" value="@Model.Description.Substring(0, 100)"/>
+                    <div id="map" style="width: 1200px; height: 300px;" class="card mb-0 mt-5"></div>
                 </div>
             </div>
         </div>
@@ -99,9 +103,9 @@
                         </div>
                         <div class="icons align-items-center">
                             <i class="fa fa-check-circle-o check-icon text-primary"></i>
-                        </div>
-                        <div class="row replies-container">Отговори</div>
+                        </div>                        
                     </div>  
+                    <div class="row replies-container">Отговори</div>
                 </div>
             }
             <form method="post" id="antiForgeryForm"></form>
@@ -111,9 +115,33 @@
 
 @section Links {
     <link rel="stylesheet" href="~/css/comments.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" 
+        integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" 
+        crossorigin="" />
 }
 
-    @section Scripts {
+@section Scripts {
     <script src="~/js/comments-ajax.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+        integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+        crossorigin=""></script>
+
+    <script>
+        const lat = Number(document.getElementById('latitude').value);
+        const lng = Number(document.getElementById('longitude').value);
+        var description = document.getElementById('description').value;
+        const zoom = 13;
+
+        var map = L.map('map').setView([lat, lng], zoom);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        L.marker([lat, lng]).addTo(map)
+          .bindPopup(`${description}...`)
+          .openPopup();;
+    </script>   
 }
 
