@@ -166,6 +166,7 @@ namespace ExploreBulgaria.Web.Controllers
             return new ChallengeResult(provider, proprties);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -190,6 +191,7 @@ namespace ExploreBulgaria.Web.Controllers
 
             if (result.Succeeded)
             {
+                //TODO: Add Claims
                 return LocalRedirect(returnUrl);
             }
 
