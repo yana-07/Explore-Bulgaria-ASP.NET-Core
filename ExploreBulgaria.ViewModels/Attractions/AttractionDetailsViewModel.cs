@@ -4,6 +4,7 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
 using ExploreBulgaria.Web.ViewModels.Votes;
+using NetTopologySuite.Geometries;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
@@ -20,6 +21,8 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
         public string? RegionName { get; set; }
 
         public string Description { get; set; } = null!;
+
+        public Point Location { get; set; } = null!;
 
         public VisitorGenericViewModel AddedByVisitor { get; set; } = null!;
 

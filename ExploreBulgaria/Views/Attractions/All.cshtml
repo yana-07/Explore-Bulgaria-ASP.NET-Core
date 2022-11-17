@@ -22,19 +22,16 @@
 <div class="amazing-deals">
     <div class="container">
         <div class="row all-items">
-            <div class="col-lg-6 offset-lg-3">
-                <div class="section-heading text-center">
-                    <h2>Best Weekly Offers In Each City</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                </div>
-            </div>
             @foreach (var attraction in Model.Attractions)
             {
                 <div class="col-lg-6 @if(Model.Attractions.Count() <= 6){<text>offset-lg-3</text>} col-sm-6 card-outer">
                     <div class="item card-inner">
                         <div class="row">                               
                             <div class="col-lg-6">
-                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                <div class="image">
+                                    <img src="@attraction.ImageUrls.FirstOrDefault()" style="height: 350px"/>
+                                </div>
+                                @*<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
                                         @for (int i = 0; i < attraction.ImagesCount; i++)
                                         {
@@ -52,7 +49,7 @@
                                             }                                
                                         }                                      
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
                             <div class="col-lg-6 align-self-center">
                                 <div class="content">
