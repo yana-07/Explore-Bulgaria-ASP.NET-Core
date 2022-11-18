@@ -55,6 +55,14 @@
                                 <div class="content">
                                     <span class="info">*@attraction.RegionName</span>
                                     <h4 class="lh-1" @*style="height: 70px"*@>@attraction.Name</h4>
+                                    <ul class="item-rating">
+                                        <li class="star-@if(attraction.AverageVote >= 1) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="1"></i></li>
+                                        <li class="star-@if(attraction.AverageVote >= 2) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="2"></i></li>
+                                        <li class="star-@if(attraction.AverageVote >= 3) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="3"></i></li>
+                                        <li class="star-@if(attraction.AverageVote >= 4) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="4"></i></li>
+                                        <li class="star-@if(attraction.AverageVote == 5) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="5"></i></li>
+                                        <li><span id="averageVoteValue">@attraction.AverageVote.ToString("0.0")</span><span> / 5.0</span></li>
+                                    </ul>    
                                     <div class="row">
                                         <div class="col-4">
                                             <i class="fa-regular fa-comments"></i>
@@ -89,6 +97,10 @@
         </div>
     </div>
 </div>
+
+@section Links {
+    <link rel="stylesheet" href="~/css/votes.css" />
+}
 
 @section Scripts {
     <script src="~/js/filter-attractions-ajax.js"></script>

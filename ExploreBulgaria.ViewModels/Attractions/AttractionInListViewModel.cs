@@ -22,6 +22,8 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public DateTime CreatedOn { get; set; }
 
+        public double AverageVote { get; set; }
+
         public List<string> ImageUrls { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
@@ -29,6 +31,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
             configuration.CreateMap<Attraction, AttractionInListViewModel>()
                 .ForMember(d => d.ImageUrls, opt => opt.MapFrom(s => s.Images.Select(img => img.RemoteImageUrl)))
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Description.Substring(0, 100)))
+                .ForMember(d => d.AverageVote, opt => opt.MapFrom(s => s.Votes.Count == 0 ? 0 : s.Votes.Average(v => v.Value)))
                 .ForMember(d => d.CreatedByVisitor, opt => opt.MapFrom(s => $"{s.CreatedByVisitor.User.FirstName} {s.CreatedByVisitor.User.LastName}"));
         }
     }
