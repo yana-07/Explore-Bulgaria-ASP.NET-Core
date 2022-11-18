@@ -110,9 +110,10 @@ const dislikeComment = function (event) {
 const appendReplySection = function (event) {
     const parentDivEl = event.target.parentElement.parentElement.parentElement;
     const repliesContainerDiv = parentDivEl.querySelector('.replies-container');
+    const addReplyDiv = parentDivEl.querySelector('.add-reply');
     const commentId = parentDivEl.querySelector('input[name="commentId"]').value;
 
-    if (repliesContainerDiv.childElementCount != 0) {
+    if (addReplyDiv || repliesContainerDiv.childElementCount != 0) {
         return;
     }
 
