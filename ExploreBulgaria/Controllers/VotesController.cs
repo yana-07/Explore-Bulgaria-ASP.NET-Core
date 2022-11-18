@@ -1,6 +1,7 @@
 ﻿using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.ViewModels.Votes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExploreBulgaria.Web.Controllers
@@ -17,6 +18,7 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("postVote")]
+        [Authorize]
         public async Task<double> PostVote(VoteInputModel model)
         {
             var visitorId = User.VisitorId();
