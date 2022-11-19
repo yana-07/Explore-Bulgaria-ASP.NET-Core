@@ -19,60 +19,32 @@ namespace ExploreBulgaria.Services.Data
         {
             var skip = (page - 1) * itemsPerPage;
 
-            if (filterModel == null)
+            var attractions = repo
+                .AllAsNoTracking();
+
+            if (string.IsNullOrEmpty(filterModel?.CategoryName) == false)
             {
-                return await repo.AllAsNoTracking()
+                attractions = attractions
+                    .Where(a => a.Category.Name == filterModel.CategoryName);
+            }
+
+            if (string.IsNullOrEmpty(filterModel?.SubcategoryName) == false)
+            {
+                attractions = attractions
+                    .Where(a => a.Subcategory.Name == filterModel.SubcategoryName);
+            }
+
+            if (string.IsNullOrEmpty(filterModel?.RegionName) == false)
+            {
+                attractions = attractions
+                    .Where(a => a.Region != null && a.Region.Name == filterModel.RegionName);
+            }
+
+            return await attractions
                 .To<T>()
                 .Skip(skip)
                 .Take(itemsPerPage)
-                .ToListAsync();
-            }
-
-            if (filterModel.CategoryName != null &&
-                filterModel.SubcategoryName == null &&
-                filterModel.RegionName == null)
-            {
-                return await repo.AllAsNoTracking().Where(a =>
-                   a.Category.Name == filterModel.CategoryName)
-                .To<T>()
-                .Skip(skip)
-                .Take(itemsPerPage)
-                .ToListAsync();
-            }
-
-            if (filterModel.CategoryName != null &&
-                filterModel.SubcategoryName != null &&
-                filterModel.RegionName == null)
-            {
-                return await repo.AllAsNoTracking().Where(a =>
-                   a.Category.Name == filterModel.CategoryName &&
-                   a.Subcategory.Name == filterModel.SubcategoryName)
-                .To<T>()
-                .Skip(skip)
-                .Take(itemsPerPage)
-                .ToListAsync();
-            }
-
-            if (filterModel.CategoryName == null &&
-                filterModel.SubcategoryName == null &&
-                filterModel.RegionName != null)
-            {
-                return await repo.AllAsNoTracking().Where(a =>
-                   a.Region != null && a.Region.Name == filterModel.RegionName)
-                .To<T>()
-                .Skip(skip)
-                .Take(itemsPerPage)
-                .ToListAsync();
-            }
-
-            return await repo.AllAsNoTracking().Where(a =>
-               a.Category.Name == filterModel.CategoryName &&
-               a.Subcategory.Name == filterModel.SubcategoryName &&
-               a.Region != null && a.Region.Name == filterModel.RegionName)
-            .To<T>()
-            .Skip(skip)
-            .Take(itemsPerPage)
-            .ToListAsync();
+                .ToListAsync();          
         }
 
         public int GetCount(AttractionsFilterModel? filterModel = null)

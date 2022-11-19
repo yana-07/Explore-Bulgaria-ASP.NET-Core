@@ -49,9 +49,9 @@ namespace ExploreBulgaria.Web.Controllers
                 }
             };
 
-            if (filterModel?.CategoryName == null && 
-                filterModel?.SubcategoryName == null && 
-                filterModel?.RegionName == null)
+            if (string.IsNullOrEmpty(filterModel?.CategoryName) && 
+                string.IsNullOrEmpty(filterModel?.SubcategoryName) && 
+                string.IsNullOrEmpty(filterModel?.RegionName))
             {
                 model.Attractions = await attractionsService
                           .GetAllAsync<AttractionInListViewModel>(id, itemsPerPage: ItemsPerPage);
