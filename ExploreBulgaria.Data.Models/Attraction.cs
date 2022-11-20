@@ -32,9 +32,11 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual Subcategory Subcategory { get; set; } = null!;
 
-        public string? RegionId { get; set; }
+        [Required]
+        [ForeignKey(nameof(Region))]
+        public string RegionId { get; set; } = null!;
 
-        public virtual Region? Region { get; set; }
+        public virtual Region Region { get; set; } = null!;
 
         [Required]
         public Point Location { get; set; } = null!;
