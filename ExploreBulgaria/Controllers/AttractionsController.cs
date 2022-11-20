@@ -49,23 +49,21 @@ namespace ExploreBulgaria.Web.Controllers
                 }
             };
 
-            if (string.IsNullOrEmpty(filterModel?.CategoryName) && 
-                string.IsNullOrEmpty(filterModel?.SubcategoryName) && 
-                string.IsNullOrEmpty(filterModel?.RegionName))
-            {
-                model.Attractions = await attractionsService
-                          .GetAllAsync<AttractionInListViewModel>(id, itemsPerPage: ItemsPerPage);
-                model.ItemsCount = attractionsService.GetCount();
-
-                return View(model);
-            }
-
             model.Attractions = await attractionsService
-                 .GetAllAsync<AttractionInListViewModel>(id, filterModel, ItemsPerPage);
-            model.ItemsCount = attractionsService.GetCount(filterModel);
-            model.FilterModel.CategoryName = filterModel.CategoryName;
-            model.FilterModel.SubcategoryName = filterModel.SubcategoryName;
-            model.FilterModel.RegionName = filterModel.RegionName;
+                 .GetAllAsync<AttractionInListViewModel>(id,
+                 filterModel?.CategoryName,
+                 filterModel?.SubcategoryName,
+                 filterModel?.RegionName,
+                 ItemsPerPage);
+
+            model.ItemsCount = await attractionsService.GetCountAsync(
+                filterModel?.CategoryName,
+                filterModel?.SubcategoryName,
+                filterModel?.RegionName);
+
+            model.FilterModel.CategoryName = filterModel?.CategoryName;
+            model.FilterModel.SubcategoryName = filterModel?.SubcategoryName;
+            model.FilterModel.RegionName = filterModel?.RegionName;
 
             return View(model);
         }

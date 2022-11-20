@@ -3,6 +3,7 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -15,30 +16,16 @@ namespace ExploreBulgaria.Services.Data
             this.repo = repo;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(int page, AttractionsFilterModel? filterModel = null, int itemsPerPage = 12)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(
+            int page,
+            string? categoryName = null,
+            string? subcategoryName = null,
+            string? regionName = null,
+            int itemsPerPage = 12)
         {
             var skip = (page - 1) * itemsPerPage;
 
-            var attractions = repo
-                .AllAsNoTracking();
-
-            if (string.IsNullOrEmpty(filterModel?.CategoryName) == false)
-            {
-                attractions = attractions
-                    .Where(a => a.Category.Name == filterModel.CategoryName);
-            }
-
-            if (string.IsNullOrEmpty(filterModel?.SubcategoryName) == false)
-            {
-                attractions = attractions
-                    .Where(a => a.Subcategory.Name == filterModel.SubcategoryName);
-            }
-
-            if (string.IsNullOrEmpty(filterModel?.RegionName) == false)
-            {
-                attractions = attractions
-                    .Where(a => a.Region != null && a.Region.Name == filterModel.RegionName);
-            }
+            var attractions = ApplyFilter(categoryName, subcategoryName, regionName);
 
             return await attractions
                 .To<T>()
@@ -47,17 +34,15 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();          
         }
 
-        public int GetCount(AttractionsFilterModel? filterModel = null)
+        public async Task<int> GetCountAsync(
+            string? categoryName = null,
+            string? subcategoryName = null,
+            string? regionName = null)
         {
-            if (filterModel == null)
-            {
-                return this.repo.AllAsNoTracking().Count();
-            }
 
-            return this.repo.AllAsNoTracking().Where(a =>
-               a.Category.Name == filterModel.CategoryName &&
-               a.Subcategory.Name == filterModel.SubcategoryName &&
-               a.Region != null && a.Region.Name == filterModel.RegionName).Count();
+            var attractions = ApplyFilter(categoryName, subcategoryName, regionName);
+
+            return await attractions.CountAsync();
         }
 
         public async Task<T?> GetByIdAsync<T>(string id)
@@ -65,5 +50,34 @@ namespace ExploreBulgaria.Services.Data
                  .Where(a => a.Id == id)
                  .To<T>()
                  .FirstOrDefaultAsync();
+
+        private IQueryable<Attraction> ApplyFilter(
+            string? categoryName = null,
+            string? subcategoryName = null,
+            string? regionName = null)
+        {
+            var result = repo
+                .AllAsNoTracking();
+
+            if (string.IsNullOrEmpty(categoryName) == false)
+            {
+                result = result
+                    .Where(a => a.Category.Name == categoryName);
+            }
+
+            if (string.IsNullOrEmpty(subcategoryName) == false)
+            {
+                result = result
+                    .Where(a => a.Subcategory.Name == subcategoryName);
+            }
+
+            if (string.IsNullOrEmpty(regionName) == false)
+            {
+                result = result
+                    .Where(a => a.Region != null && a.Region.Name == regionName);
+            }
+
+            return result;
+        }
     }
 }
