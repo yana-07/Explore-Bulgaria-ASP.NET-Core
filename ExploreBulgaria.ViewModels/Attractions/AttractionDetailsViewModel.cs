@@ -28,9 +28,11 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public double AverageVote { get; set; }
 
-        public IEnumerable<string> ImageUrls { get; set; }
+        public IEnumerable<string> ImageUrls { get; set; } 
+            = Enumerable.Empty<string>();
 
-        public IEnumerable<CommentViewModel> Comments { get; set; }
+        public IEnumerable<CommentViewModel> Comments { get; set; } 
+            = Enumerable.Empty<CommentViewModel>(); 
 
         public void CreateMappings(IProfileExpression configuration)
         {

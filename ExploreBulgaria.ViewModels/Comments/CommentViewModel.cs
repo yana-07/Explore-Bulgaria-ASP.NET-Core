@@ -17,11 +17,14 @@ namespace ExploreBulgaria.Web.ViewModels.Comments
 
         public DateTime CreatedOn { get; set; }
 
-        public IEnumerable<VisitorGenericViewModel> LikedByVisitors { get; set; }
+        public IEnumerable<VisitorGenericViewModel> LikedByVisitors { get; set; } 
+            = Enumerable.Empty<VisitorGenericViewModel>();
 
-        public IEnumerable<VisitorGenericViewModel> DislikedByVisitors { get; set; }
+        public IEnumerable<VisitorGenericViewModel> DislikedByVisitors { get; set; } 
+            = Enumerable.Empty<VisitorGenericViewModel>();
 
-        public IEnumerable<ReplyCommentViewModel> Replies { get; set; }
+        public IEnumerable<ReplyCommentViewModel> Replies { get; set; } 
+            = Enumerable.Empty<ReplyCommentViewModel>();
 
         public void CreateMappings(IProfileExpression configuration)
         {

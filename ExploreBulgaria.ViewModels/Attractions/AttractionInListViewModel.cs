@@ -24,7 +24,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public double AverageVote { get; set; }
 
-        public List<string> ImageUrls { get; set; }
+        public List<string> ImageUrls { get; set; } = new List<string>();
 
         public void CreateMappings(IProfileExpression configuration)
         {

@@ -28,7 +28,7 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> All(AttractionsFilterModel? filterModel = null, int id = 1)
+        public async Task <IActionResult> All(AttractionsFilterModel filterModel, int id = 1)
         {
             if (id <= 0)
             {
@@ -51,19 +51,19 @@ namespace ExploreBulgaria.Web.Controllers
 
             model.Attractions = await attractionsService
                  .GetAllAsync<AttractionInListViewModel>(id,
-                 filterModel?.CategoryName,
-                 filterModel?.SubcategoryName,
-                 filterModel?.RegionName,
+                 filterModel.CategoryName,
+                 filterModel.SubcategoryName,
+                 filterModel.RegionName,
                  ItemsPerPage);
 
             model.ItemsCount = await attractionsService.GetCountAsync(
-                filterModel?.CategoryName,
-                filterModel?.SubcategoryName,
-                filterModel?.RegionName);
+                filterModel.CategoryName,
+                filterModel.SubcategoryName,
+                filterModel.RegionName);
 
-            model.FilterModel.CategoryName = filterModel?.CategoryName;
-            model.FilterModel.SubcategoryName = filterModel?.SubcategoryName;
-            model.FilterModel.RegionName = filterModel?.RegionName;
+            model.FilterModel.CategoryName = filterModel.CategoryName;
+            model.FilterModel.SubcategoryName = filterModel.SubcategoryName;
+            model.FilterModel.RegionName = filterModel.RegionName;
 
             return View(model);
         }

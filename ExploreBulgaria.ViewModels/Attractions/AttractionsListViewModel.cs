@@ -2,8 +2,9 @@
 {
     public class AttractionsListViewModel : PagingViewModel
     {
-        public IEnumerable<AttractionInListViewModel> Attractions { get; set; }
+        public IEnumerable<AttractionInListViewModel> Attractions { get; set; } 
+            = Enumerable.Empty<AttractionInListViewModel>();
 
-        public AttractionsFilterModel FilterModel { get; set; }
+        public AttractionsFilterModel FilterModel { get; set; } = null!;
     }
 }
