@@ -72,5 +72,30 @@ namespace ExploreBulgaria.Web.Controllers
 
             return View(attraction);
         }
+
+        public async Task<IActionResult> Add()
+        {
+            var model = new AddAttractionViewModel
+            {
+                Categories = await categoriesService
+                    .GetAllAsync<CategoryOptionViewModel>()               
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddAttractionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await categoriesService
+                    .GetAllAsync<CategoryOptionViewModel>();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }

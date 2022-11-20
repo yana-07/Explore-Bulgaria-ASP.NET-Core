@@ -1,0 +1,118 @@
+﻿@model AddAttractionViewModel
+@{
+    ViewData["Title"] = "Добави обект";
+}
+
+<div>
+    <form class="generic-form">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-lg-6 offset-lg-3">
+                <fieldset>
+                    <label class="form-label" asp-for="Name">Заглавие</label>
+                    <input class="form-control" asp-for="Name" placeholder="Пример: Античен театър - Пловдив"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col-lg-6 offset-lg-3">
+                <fieldset>
+                    <label class="form-label" asp-for="Description">Описание</label>
+                    <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col-lg-6 offset-lg-3">
+                <fieldset>
+                    <label class="form-label" asp-for="CategoryId">Категория</label>
+                    <select asp-for="CategoryId" class="text-secondary">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id" class="text-secondary">@category.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col-lg-6 offset-lg-3">
+                <fieldset>
+                    <label class="form-label" asp-for="Region">Предлаганият обект се намира в или в близост до следното населено място</label>
+                    <input class="form-control" asp-for="Region" />
+                    <span asp-validation-for="Region" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div id="map" class="col-lg-12" style="height: 300px"></div>
+            <div class="col-lg-6">
+                <label class="form-label" asp-for="Latitude">Географска ширина</label>
+                <input id="lat" asp-for="Latitude" disabled />
+            </div>
+            <div class="col-lg-6">
+                <label class="form-label" asp-for="Longitude">Географска дължина</label>
+                <input id="lng" asp-for="Longitude" disabled />
+            </div>
+            <div id="image-container" class="mb-5"></div>
+            <div class="col-lg-6 offset-lg-3 inputWrapper text-center">
+                Добави снимки
+                <input id="image-file" asp-for="Images" class="fileInput" onchange="getFile(event)" />
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Links {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+    <link rel="stylesheet" href="~/css/profile.css" />
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+
+    <script>
+        var map = L.map('map').setView([42.754542, 25.243757], 7);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        const onMapClick = function(event) {
+            var coordinates = event.latlng;
+            L.marker([coordinates.lat, coordinates.lng]).addTo(map);
+
+            document.getElementById('lat').value = coordinates.lat;  
+            document.getElementById('lng').value = coordinates.lng;  
+        }
+
+        map.on('click', onMapClick);
+
+        var fileInput = document.getElementById('image-file');
+        var imageContainer = document.getElementById('image-container');
+        const getFile = function(event) {
+            var files = event.target.files;
+            if (files.length > 0) {
+                const setupReader = function(file) {
+                    var fileReader = new FileReader();
+
+                    fileReader.onload = function (event) {
+                        var imgElement = document.createElement('img');
+                        imgElement.setAttribute('class', 'img-thumbnail m-2');
+                        imgElement.setAttribute('style', 'height: 150px; width: 150px;');
+                        imgElement.setAttribute('src', event.target.result);
+                        imageContainer.appendChild(imgElement);
+                    }
+
+                    fileReader.readAsDataURL(file);
+                }
+               
+                for(const file of files) {
+                    setupReader(file);
+                }
+            }           
+        }
+    </script>
+}
