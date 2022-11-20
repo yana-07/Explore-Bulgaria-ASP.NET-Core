@@ -12,6 +12,8 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public string? RegionName { get; set; }
 
+        public string? SearchTerm { get; set; }
+
         public IEnumerable<CategorySelectViewModel> Categories { get; set; } 
             = Enumerable.Empty<CategorySelectViewModel>();
 

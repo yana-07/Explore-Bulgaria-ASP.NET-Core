@@ -3,7 +3,6 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -18,14 +17,14 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(
             int page,
-            string? categoryName = null,
-            string? subcategoryName = null,
-            string? regionName = null,
+            AttractionsFilterModel filterModel,
             int itemsPerPage = 12)
         {
             var skip = (page - 1) * itemsPerPage;
 
-            var attractions = ApplyFilter(categoryName, subcategoryName, regionName);
+            var attractions = ApplyFilter(
+                filterModel.CategoryName, filterModel.SubcategoryName,
+                filterModel.RegionName, filterModel.SearchTerm);
 
             return await attractions
                 .To<T>()
@@ -34,13 +33,12 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();          
         }
 
-        public async Task<int> GetCountAsync(
-            string? categoryName = null,
-            string? subcategoryName = null,
-            string? regionName = null)
+        public async Task<int> GetCountAsync(AttractionsFilterModel filterModel)
         {
 
-            var attractions = ApplyFilter(categoryName, subcategoryName, regionName);
+            var attractions = ApplyFilter(
+                filterModel.CategoryName, filterModel.SubcategoryName,
+                filterModel.RegionName, filterModel.SearchTerm);
 
             return await attractions.CountAsync();
         }
@@ -54,7 +52,8 @@ namespace ExploreBulgaria.Services.Data
         private IQueryable<Attraction> ApplyFilter(
             string? categoryName = null,
             string? subcategoryName = null,
-            string? regionName = null)
+            string? regionName = null,
+            string? searchTerm = null)
         {
             var result = repo
                 .AllAsNoTracking();
@@ -75,6 +74,15 @@ namespace ExploreBulgaria.Services.Data
             {
                 result = result
                     .Where(a => a.Region != null && a.Region.Name == regionName);
+            }
+
+            if (string.IsNullOrEmpty(searchTerm) == false)
+            {
+                searchTerm = $"%{searchTerm.ToLower()}%";
+
+                result = result
+                    .Where(a => EF.Functions.Like(a.Name.ToLower(), searchTerm) ||
+                        EF.Functions.Like(a.Description.ToLower(), searchTerm));
             }
 
             return result;

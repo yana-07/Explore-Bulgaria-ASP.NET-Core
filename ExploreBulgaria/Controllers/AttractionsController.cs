@@ -51,19 +51,15 @@ namespace ExploreBulgaria.Web.Controllers
 
             model.Attractions = await attractionsService
                  .GetAllAsync<AttractionInListViewModel>(id,
-                 filterModel.CategoryName,
-                 filterModel.SubcategoryName,
-                 filterModel.RegionName,
+                 filterModel,
                  ItemsPerPage);
 
-            model.ItemsCount = await attractionsService.GetCountAsync(
-                filterModel.CategoryName,
-                filterModel.SubcategoryName,
-                filterModel.RegionName);
+            model.ItemsCount = await attractionsService.GetCountAsync(filterModel);
 
             model.FilterModel.CategoryName = filterModel.CategoryName;
             model.FilterModel.SubcategoryName = filterModel.SubcategoryName;
             model.FilterModel.RegionName = filterModel.RegionName;
+            model.FilterModel.SearchTerm = filterModel.SearchTerm;
 
             return View(model);
         }

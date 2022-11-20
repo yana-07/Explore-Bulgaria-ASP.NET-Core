@@ -6,15 +6,10 @@ namespace ExploreBulgaria.Services.Data
     {
         Task<IEnumerable<T>> GetAllAsync<T>(
             int page,
-            string? categoryName = null,
-            string? subcategoryName = null,
-            string? regionName = null,
+            AttractionsFilterModel filterModel,
             int itemsPerPage = 12);
 
-        Task<int> GetCountAsync(
-            string? categoryName = null,
-            string? subcategoryName = null,
-            string? regionName = null);
+        Task<int> GetCountAsync(AttractionsFilterModel filterModel);
 
         Task<T?> GetByIdAsync<T>(string id);
     }

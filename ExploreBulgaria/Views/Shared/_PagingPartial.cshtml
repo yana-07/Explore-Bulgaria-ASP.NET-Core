@@ -1,11 +1,12 @@
 ﻿@model AttractionsListViewModel
 <div class="col-lg-12">
     <ul class="page-numbers">
-        <li @if(!Model.HasPreviousPage) {<text>class="disabled"</text>}>
+        <li class="@(Model.HasPreviousPage == false ? "disabled" : string.Empty)">
             <a asp-action="All" asp-route-id="@Model.PreviousPageNumber" 
                  asp-route-categoryName="@Model.FilterModel.CategoryName"
                  asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
-                 asp-route-regionName="@Model.FilterModel.RegionName">
+                 asp-route-regionName="@Model.FilterModel.RegionName"
+                 asp-route-searchTerm="@Model.FilterModel.SearchTerm">
                 <i class="fa fa-arrow-left"></i>
             </a>
         </li>
@@ -17,7 +18,8 @@
                     <a asp-action="All" asp-route-id="@i"
                         asp-route-categoryName="@Model.FilterModel.CategoryName"
                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
-                        asp-route-regionName="@Model.FilterModel.RegionName">
+                        asp-route-regionName="@Model.FilterModel.RegionName"
+                        asp-route-searchTerm="@Model.FilterModel.SearchTerm">
                         @i
                     </a>
                 </li>
@@ -29,19 +31,22 @@
             if (i <= Model.PagesCount)
             {
                 <li>
-                    <a asp-action="All" asp-route-id="@i" asp-route-categoryName="@Model.FilterModel.CategoryName"
-                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
-                         asp-route-regionName="@Model.FilterModel.RegionName">
-                         @i
+                    <a asp-action="All" asp-route-id="@i" 
+                        asp-route-categoryName="@Model.FilterModel.CategoryName"
+                        asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
+                        asp-route-regionName="@Model.FilterModel.RegionName"
+                        asp-route-searchTerm="@Model.FilterModel.SearchTerm">
+                        @i
                     </a>
                 </li>
             }
         }
-        <li @if (!Model.HasNextPage) { <text>class="disabled"</text> }>
+        <li class="@(Model.HasNextPage == false ? "disabled" : string.Empty)">
             <a asp-action="All" asp-route-id="@Model.NextPageNumber" 
                  asp-route-categoryName="@Model.FilterModel.CategoryName" 
                  asp-route-subcategoryName="@Model.FilterModel.SubcategoryName" 
-                 asp-route-regionName="@Model.FilterModel.RegionName">
+                 asp-route-regionName="@Model.FilterModel.RegionName"
+                 asp-route-searchTerm="@Model.FilterModel.SearchTerm">
                 <i class="fa fa-arrow-right"></i>
             </a>
         </li>
