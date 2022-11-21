@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
 namespace ExploreBulgaria.Data.Migrations
 {
-    public partial class AddTableTemporaryAttractions : Migration
+    public partial class AddTableTemporaryAttraction : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,7 +18,8 @@ namespace ExploreBulgaria.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: false),
                     CategoryId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Location = table.Column<Point>(type: "geography", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
                     Region = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     CreatedByVisitorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
