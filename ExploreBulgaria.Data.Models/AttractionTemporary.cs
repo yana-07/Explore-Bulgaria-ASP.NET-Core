@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static ExploreBulgaria.Data.Common.Constants.DataConstants.Attraction;
-using NetTopologySuite.Geometries;
 using ExploreBulgaria.Data.Common.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExploreBulgaria.Data.Models
 {
@@ -18,14 +18,19 @@ namespace ExploreBulgaria.Data.Models
         [Required]
         public string CategoryId { get; set; } = null!;
 
-        [Required]
-        public Point Location { get; set; } = null!;
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
 
         [Required]
         [MaxLength(NameMaxLength)]
         public string Region { get; set; } = null!;
 
         [Required]
+        [MaxLength(GuidMaxLength)]
         public string CreatedByVisitorId { get; set; } = null!;
+
+        [Required]
+        public string ImageGuids { get; set; } = null!;
     }
 }

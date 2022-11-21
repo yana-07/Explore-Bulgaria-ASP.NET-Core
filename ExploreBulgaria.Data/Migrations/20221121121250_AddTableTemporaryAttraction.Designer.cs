@@ -13,7 +13,7 @@ using NetTopologySuite.Geometries;
 namespace ExploreBulgaria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221121075729_AddTableTemporaryAttraction")]
+    [Migration("20221121121250_AddTableTemporaryAttraction")]
     partial class AddTableTemporaryAttraction
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,7 +234,8 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.Property<string>("CreatedByVisitorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -245,6 +246,10 @@ namespace ExploreBulgaria.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(10000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageGuids")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
