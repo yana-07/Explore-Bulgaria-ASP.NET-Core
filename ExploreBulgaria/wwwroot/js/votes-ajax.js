@@ -17,7 +17,13 @@
     })
         .then(result => result.json())
         .then(data => {
-            document.getElementById("averageVoteValue").textContent = `${data}.0`;
+            var voteElement = document.getElementById("averageVoteValue");
+            if (Number.isInteger(data)) {
+                voteElement.textContent = `${data}.0`;
+            } else {
+                voteElement.textContent = data;
+            }
+            
             var liElements = document.querySelectorAll(".item-rating li");
 
             for (let i = 0; i < liElements.length - 1; i++) {
