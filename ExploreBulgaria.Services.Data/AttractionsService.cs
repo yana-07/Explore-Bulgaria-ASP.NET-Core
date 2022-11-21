@@ -45,7 +45,6 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<int> GetCountAsync(AttractionsFilterModel filterModel)
         {
-
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
                 filterModel.RegionName, filterModel.SearchTerm);
