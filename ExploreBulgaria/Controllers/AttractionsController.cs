@@ -29,9 +29,9 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> All(AttractionsFilterModel filterModel, int id = 1)
+        public async Task <IActionResult> All(AttractionsFilterModel filterModel, int page = 1)
         {
-            if (id <= 0)
+            if (page <= 0)
             {
                 return NotFound();
             }
@@ -40,7 +40,7 @@ namespace ExploreBulgaria.Web.Controllers
 
             var model = new AttractionsListViewModel
             {
-                PageNumber = id,
+                PageNumber = page,
                 ItemsPerPage = ItemsPerPage,
                 FilterModel = new AttractionsFilterModel
                 {                   
@@ -51,7 +51,7 @@ namespace ExploreBulgaria.Web.Controllers
             };
 
             model.Attractions = await attractionsService
-                 .GetAllAsync<AttractionInListViewModel>(id,
+                 .GetAllAsync<AttractionInListViewModel>(page,
                  filterModel,
                  ItemsPerPage);
 

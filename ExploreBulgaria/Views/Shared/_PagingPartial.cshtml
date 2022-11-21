@@ -2,7 +2,7 @@
 <div class="col-lg-12">
     <ul class="page-numbers">
         <li class="@(Model.HasPreviousPage == false ? "disabled" : string.Empty)">
-            <a asp-action="All" asp-route-id="@Model.PreviousPageNumber" 
+            <a asp-action="All" asp-route-page="@Model.PreviousPageNumber" 
                  asp-route-categoryName="@Model.FilterModel.CategoryName"
                  asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
                  asp-route-regionName="@Model.FilterModel.RegionName"
@@ -15,7 +15,7 @@
             if (i > 0)
             {
                 <li>
-                    <a asp-action="All" asp-route-id="@i"
+                    <a asp-action="All" asp-route-page="@i"
                         asp-route-categoryName="@Model.FilterModel.CategoryName"
                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
                         asp-route-regionName="@Model.FilterModel.RegionName"
@@ -31,7 +31,7 @@
             if (i <= Model.PagesCount)
             {
                 <li>
-                    <a asp-action="All" asp-route-id="@i" 
+                    <a asp-action="All" asp-route-page="@i" 
                         asp-route-categoryName="@Model.FilterModel.CategoryName"
                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
                         asp-route-regionName="@Model.FilterModel.RegionName"
@@ -42,7 +42,7 @@
             }
         }
         <li class="@(Model.HasNextPage == false ? "disabled" : string.Empty)">
-            <a asp-action="All" asp-route-id="@Model.NextPageNumber" 
+            <a asp-action="All" asp-route-page="@Model.NextPageNumber" 
                  asp-route-categoryName="@Model.FilterModel.CategoryName" 
                  asp-route-subcategoryName="@Model.FilterModel.SubcategoryName" 
                  asp-route-regionName="@Model.FilterModel.RegionName"
