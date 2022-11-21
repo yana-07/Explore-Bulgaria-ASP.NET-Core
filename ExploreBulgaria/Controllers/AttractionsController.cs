@@ -15,6 +15,7 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
+        private const int ItemsPerPage = 12;
 
         public AttractionsController(
             IAttractionsService attractionsService,
@@ -36,8 +37,6 @@ namespace ExploreBulgaria.Web.Controllers
                 return NotFound();
             }
 
-            const int ItemsPerPage = 12;
-
             var model = new AttractionsListViewModel
             {
                 PageNumber = page,
@@ -47,7 +46,10 @@ namespace ExploreBulgaria.Web.Controllers
                     Categories = await categoriesService.GetAllAsync<CategorySelectViewModel>(),
                     Subcategories = await subcategoriesService.GetAllAsync<SubcategorySelectViewModel>(),
                     Regions = await regionsService.GetAllAsync<RegionSelectViewModel>()
-                }
+                },
+                Area = "",
+                Controller = "Attractions",
+                Action = "All"
             };
 
             model.Attractions = await attractionsService
