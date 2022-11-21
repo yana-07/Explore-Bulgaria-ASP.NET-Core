@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IAttractionsService, AttractionsService>();
+            services.AddScoped<ITemporaryAttractionsService, TemporaryAttractionsService>();
             services.AddScoped<ICategoriesService, CategoriesService>();
             services.AddScoped<ISubcategoriesService, SubcategoriesService>();
             services.AddScoped<IRegionsService, RegionsService>();
