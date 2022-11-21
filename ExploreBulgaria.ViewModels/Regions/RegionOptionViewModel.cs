@@ -1,9 +1,9 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 
-namespace ExploreBulgaria.Web.ViewModels.Categories
+namespace ExploreBulgaria.Web.ViewModels.Regions
 {
-    public class CategoryOptionViewModel : CategorySelectViewModel, IMapFrom<Category>
+    public class RegionOptionViewModel : RegionSelectViewModel, IMapFrom<Region>
     {
         public string Id { get; set; } = null!;
     }
