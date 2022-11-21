@@ -1,4 +1,5 @@
 ﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
@@ -94,6 +95,8 @@ namespace ExploreBulgaria.Web.Controllers
 
                 return View(model);
             }
+
+            await attractionsService.SaveTemporaryAsync(model, User.VisitorId());
 
             return RedirectToAction(nameof(All));
         }

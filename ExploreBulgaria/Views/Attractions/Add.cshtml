@@ -4,7 +4,7 @@
 }
 
 <div>
-    <form class="generic-form">
+    <form class="generic-form" asp-controller="Attractions" asp-action="Add" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-lg-12">
                 <h4>@ViewData["Title"]</h4>
@@ -45,17 +45,18 @@
             <div id="map" class="col-lg-12" style="height: 300px"></div>
             <div class="col-lg-6">
                 <label class="form-label" asp-for="Latitude">Географска ширина</label>
-                <input id="lat" asp-for="Latitude" disabled />
+                <input id="lat" asp-for="Latitude" />
             </div>
             <div class="col-lg-6">
                 <label class="form-label" asp-for="Longitude">Географска дължина</label>
-                <input id="lng" asp-for="Longitude" disabled />
+                <input id="lng" asp-for="Longitude" />
             </div>
             <div id="image-container" class="mb-5"></div>
             <div class="col-lg-6 offset-lg-3 inputWrapper text-center">
                 Добави снимки
-                <input id="image-file" asp-for="Images" class="fileInput" onchange="getFile(event)" />
+                <input asp-for="Images" class="fileInput" onchange="getFile(event)" />
             </div>
+            <button type="submit" class="main-button col-lg-6 offset-lg-3 mt-3">Направи предложение</button>
         </div>
     </form>
 </div>
@@ -68,6 +69,8 @@
 }
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
         crossorigin=""></script>
@@ -90,7 +93,6 @@
 
         map.on('click', onMapClick);
 
-        var fileInput = document.getElementById('image-file');
         var imageContainer = document.getElementById('image-container');
         const getFile = function(event) {
             var files = event.target.files;

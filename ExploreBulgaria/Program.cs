@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using ExploreBulgaria.Data;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Seeding;
@@ -55,6 +56,8 @@ AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly)
 builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
 builder.Services.AddSingleton(builder.Configuration);
+
+builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorageConnection")));
 
 // Data Repositories
 builder.Services.AddApplicationServices();

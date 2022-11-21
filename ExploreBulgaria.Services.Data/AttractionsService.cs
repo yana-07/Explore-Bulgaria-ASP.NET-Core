@@ -1,18 +1,28 @@
-﻿using ExploreBulgaria.Data.Common.Repositories;
+﻿using Azure.Storage.Blobs;
+using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace ExploreBulgaria.Services.Data
 {
     public class AttractionsService : IAttractionsService
     {
         private readonly IDeletableEnityRepository<Attraction> repo;
+        private readonly IDeletableEnityRepository<AttractionTemporary> repoTemp;
+        private readonly BlobServiceClient blobServiceClient;
 
-        public AttractionsService(IDeletableEnityRepository<Attraction> repo)
+        public AttractionsService(
+            IDeletableEnityRepository<Attraction> repo,
+            IDeletableEnityRepository<AttractionTemporary> repoTemp,
+            BlobServiceClient blobServiceClient)
         {
             this.repo = repo;
+            this.repoTemp = repoTemp;
+            this.blobServiceClient = blobServiceClient;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(
@@ -86,6 +96,47 @@ namespace ExploreBulgaria.Services.Data
             }
 
             return result;
+        }
+
+        public async Task SaveTemporaryAsync(AddAttractionViewModel model, string visitorId)
+        {
+            var attractionTemp = new AttractionTemporary
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Region = model.Region,
+                CategoryId = model.CategoryId,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
+                CreatedByVisitorId = visitorId
+            };
+
+            var sb = new StringBuilder();
+
+            foreach (var image in model.Images)
+            {
+                var imageGUID = Guid.NewGuid().ToString();
+                sb.Append($"{imageGUID}, ");
+                
+                await UploadImageAsync(image, imageGUID);
+            }
+
+           attractionTemp.ImageGuids = sb.ToString().Trim();
+           
+           await repoTemp.AddAsync(attractionTemp);
+
+           await repoTemp.SaveChangesAsync();
+        }
+
+        private async Task UploadImageAsync(IFormFile image, string blobName)
+        {
+            var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            using (var stream = image.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream);
+            }
         }
     }
 }

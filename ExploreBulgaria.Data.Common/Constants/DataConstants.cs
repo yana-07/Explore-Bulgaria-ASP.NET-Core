@@ -19,6 +19,7 @@
         {
             public const int NameMaxLength = 120;
             public const int DescriptionMaxLength = 10000;
+            public const int GuidMaxLength = 36;
         }
 
         public class Image
