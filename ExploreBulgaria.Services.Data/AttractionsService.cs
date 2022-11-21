@@ -122,10 +122,10 @@ namespace ExploreBulgaria.Services.Data
                     throw new Exception($"Invalid image extension {extension}");
                 }
 
-                var imageGUID = Guid.NewGuid().ToString();
-                sb.Append($"{imageGUID}, ");
+                var blobName = $"{Guid.NewGuid()}.{extension}";
+                sb.Append($"{blobName}, ");
                 
-                await UploadImageAsync(image, imageGUID);
+                await UploadImageAsync(image, blobName);
             }
 
            attractionTemp.ImageGuids = sb.ToString().Trim();
