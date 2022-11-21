@@ -128,7 +128,7 @@ namespace ExploreBulgaria.Services.Data
                 await UploadImageAsync(image, blobName);
             }
 
-           attractionTemp.ImageGuids = sb.ToString().Trim();
+           attractionTemp.BlobNames = sb.ToString().Trim();
            
            await repoTemp.AddAsync(attractionTemp);
 
