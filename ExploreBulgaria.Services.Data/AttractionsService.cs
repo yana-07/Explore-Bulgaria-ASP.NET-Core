@@ -11,6 +11,8 @@ namespace ExploreBulgaria.Services.Data
 {
     public class AttractionsService : IAttractionsService
     {
+        private readonly string[] allowedExtensions = new[] { "jpg", "png", "gif" };
+
         private readonly IDeletableEnityRepository<Attraction> repo;
         private readonly IDeletableEnityRepository<AttractionTemporary> repoTemp;
         private readonly BlobServiceClient blobServiceClient;
@@ -114,6 +116,12 @@ namespace ExploreBulgaria.Services.Data
 
             foreach (var image in model.Images)
             {
+                var extension = Path.GetExtension(image.FileName.TrimStart('.'));
+                if (!allowedExtensions.Any(x => extension.EndsWith(x)))
+                {
+                    throw new Exception($"Invalid image extension {extension}");
+                }
+
                 var imageGUID = Guid.NewGuid().ToString();
                 sb.Append($"{imageGUID}, ");
                 

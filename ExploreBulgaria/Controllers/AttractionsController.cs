@@ -98,7 +98,20 @@ namespace ExploreBulgaria.Web.Controllers
                 return View(model);
             }
 
-            await attractionsService.SaveTemporaryAsync(model, User.VisitorId());
+            try
+            {
+                await attractionsService.SaveTemporaryAsync(model, User.VisitorId());
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                model.Categories = await categoriesService
+                    .GetAllAsync<CategoryOptionViewModel>();
+
+                return View(model);
+            }
+
 
             return RedirectToAction(nameof(All));
         }
