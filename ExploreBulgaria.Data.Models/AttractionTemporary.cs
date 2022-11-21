@@ -31,6 +31,6 @@ namespace ExploreBulgaria.Data.Models
         public string CreatedByVisitorId { get; set; } = null!;
 
         [Required]
-        public string ImageGuids { get; set; } = null!;
+        public string BlobNames { get; set; } = null!;
     }
 }
