@@ -116,7 +116,7 @@ namespace ExploreBulgaria.Services.Data
 
             foreach (var image in model.Images)
             {
-                var extension = Path.GetExtension(image.FileName.TrimStart('.'));
+                var extension = Path.GetExtension(image.FileName).TrimStart('.');
                 if (!allowedExtensions.Any(x => extension.EndsWith(x)))
                 {
                     throw new Exception($"Invalid image extension {extension}");
