@@ -70,10 +70,18 @@ namespace ExploreBulgaria.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(string attractionId)
         {
-            var attraction = await attractionsService
-                .GetByIdAsync<AttractionDetailsViewModel>(attractionId);
+            try
+            {
+                var attraction = await attractionsService
+                    .GetByIdAsync<AttractionDetailsViewModel>(attractionId);
 
-            return View(attraction);
+                return View(attraction);
+            }
+            catch (Exception)
+            {
+                // TODO: Toast message
+                return RedirectToAction(nameof(All));
+            }
         }
 
         public async Task<IActionResult> Add()

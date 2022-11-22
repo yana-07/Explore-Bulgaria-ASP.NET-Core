@@ -24,10 +24,19 @@ namespace ExploreBulgaria.Services.Data
                .Contains(regionName)).OrderBy(x => x.Name)
                .To<T>().ToListAsync();
 
-        public async Task<T?> GetByIdAsync<T>(string id)
-            => await repo.AllAsNoTracking()
+        public async Task<T> GetByIdAsync<T>(string id)
+        {
+            var category = await repo.AllAsNoTracking()
                 .Where(c => c.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
+
+            if (category == null)
+            {
+                throw new ArgumentException("Invalid Category ID.");
+            }
+
+            return category;
+        }
     }
 }

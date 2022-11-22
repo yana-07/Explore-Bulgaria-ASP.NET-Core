@@ -54,11 +54,20 @@ namespace ExploreBulgaria.Services.Data
             return await attractions.CountAsync();
         }
 
-        public async Task<T?> GetByIdAsync<T>(string id)
-            => await repo.AllAsNoTracking()
+        public async Task<T> GetByIdAsync<T>(string id)
+        {
+            var attraction = await repo.AllAsNoTracking()
                  .Where(a => a.Id == id)
                  .To<T>()
                  .FirstOrDefaultAsync();
+
+            if (attraction == null)
+            {
+                throw new ArgumentException("Invalid Attraction ID.");
+            }
+
+            return attraction;
+        }
 
         private IQueryable<Attraction> ApplyFilter(
             string? categoryName = null,

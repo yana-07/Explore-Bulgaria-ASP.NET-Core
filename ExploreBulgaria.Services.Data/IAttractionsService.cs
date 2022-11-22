@@ -11,7 +11,7 @@ namespace ExploreBulgaria.Services.Data
 
         Task<int> GetCountAsync(AttractionsFilterModel filterModel);
 
-        Task<T?> GetByIdAsync<T>(string id);
+        Task<T> GetByIdAsync<T>(string id);
 
         Task SaveTemporaryAsync(AddAttractionViewModel model, string visitorId);
     }
