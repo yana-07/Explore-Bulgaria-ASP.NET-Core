@@ -23,5 +23,11 @@ namespace ExploreBulgaria.Services.Data
                .Where(c => c.Attractions.Select(a => a.Region.Name)
                .Contains(regionName)).OrderBy(x => x.Name)
                .To<T>().ToListAsync();
+
+        public async Task<T?> GetByIdAsync<T>(string id)
+            => await repo.AllAsNoTracking()
+                .Where(c => c.Id == id)
+                .To<T>()
+                .FirstOrDefaultAsync();
     }
 }
