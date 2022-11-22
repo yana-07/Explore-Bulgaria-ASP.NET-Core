@@ -1,5 +1,8 @@
-﻿@using ExploreBulgaria.Web.ViewModels.Administration;
-@model AttractionTemporaryListViewModel
+﻿@model AttractionTemporaryListViewModel
+
+@{
+    ViewData["Title"] = "Предложени обекти";
+}
 
 <div class="search-form pt-5">
     <div class="container p-0">
@@ -28,7 +31,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <i class="fa-regular fa-images"></i>
-                                            <span class="list">@attraction.ImageGuids.Split(", ").Length</span>
+                                            <span class="list">@attraction.BlobNames.Split(", ").Length</span>
                                         </div>
                                         <div class="col-6">
                                             <i class="fa-regular fa-calendar-days"></i>
@@ -39,11 +42,11 @@
                                         <i class="fa-regular fa-user"></i>
                                         @attraction.CreatedByVisitorId
                                     </p>
-                                    <p>@attraction.Description ...</p>
-                                    <form id="form" asp-controller="Attractions" asp-action="Details" method="post">
-                                        <input type="hidden" name="attractionId" value="@attraction.Id">
-                                        <button type="submit" class="main-button">Разгледай</button>
-                                    </form>
+                                    <p>@attraction.Description.Substring(0, 50)...</p>
+                                    <a asp-area="Administration" asp-controller="Attractions" 
+                                       asp-action="Details" asp-route-id="@attraction.Id" class="main-button">
+                                    Разгледай
+                                   </a>
                                 </div>
                             </div>
                         </div>                                                                       

@@ -1,0 +1,182 @@
+﻿@model AttractionTempDetailsViewModel
+
+@{
+    ViewData["Title"] = "Детайли за предложен обект";
+}
+
+<div class="cities-town" style="padding-top: 50px">
+    <div class="container">
+        <div class="slider-content">
+            <form asp-area="Administration" asp-controller="Attractions" asp-action="Approve" class="antiforgery-form" method="post">
+                <div class="row">
+                    <input asp-for="Id" type="hidden"/>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <label class="form-label text-secondary" asp-for="Name">Заглавие:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input class="form-control" asp-for="Name" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-2">
+                            <label class="form-label text-secondary" asp-for="CategoryId">Категория:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input asp-for="CategoryModel.Name" class="form-control" disabled />
+                        </div>
+                        <div class="col-lg-2 text-secondary">Избери друга:</div>
+                        <div class="col-lg-3">
+                            <select asp-for="CategoryId" class="form-select" onchange="changeSubcategories()">
+                                <option></option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-2">
+                            <label class="form-label text-secondary">Подкатегория:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input class="form-control" disabled />
+                        </div>
+                        <div class="col-lg-2 text-secondary">Избери:</div>
+                        <div class="col-lg-3">
+                            <select asp-for="SubcategoryId" class="form-select">
+                                <option></option>
+                                @foreach (var subcategory in Model.Subcategories)
+                                {
+                                    <option value="@subcategory.Id">@subcategory.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="SubcategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-2">
+                            <label class="form-label text-secondary" asp-for="Region">Регион:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input asp-for="Region" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 text-secondary">Избери друг:</div>
+                        <div class="col-lg-3">
+                            <select asp-for="RegionId" class="form-select">
+                                <option></option>
+                                @foreach (var region in Model.Regions)
+                                {
+                                    <option value="@region.Id">@region.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-lg-12 mt-5">
+                        <div class="row">
+                            @foreach (var blobName in Model.BlobNames.Split(", "))
+                            {
+                                <div class="item col-lg-4">
+                                    <div class="thumb">
+                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "Administration", blobName = blobName.TrimEnd(',') })" alt="">
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <input type="hidden" asp-for="BlobNames"/>
+                    </div>
+                    <div class="card mb-0 mt-5 mb-4">
+                        <div class="card-body">
+                            <fieldset>
+                                <label class="form-label" asp-for="Description">Описание</label>
+                                <textarea asp-for="Description" class="form-control card-text text-secondary" rows="7"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </fieldset>
+                             <div class="row mt-4">
+                                 <div class="col-lg-2">
+                                     <label asp-for="CreatedByVisitorId" class="form-label text-secondary">Добавено от:</label>
+                                 </div>
+                                 <div class="col-lg-6">
+                                     <input asp-for="CreatedByVisitorId" class="form-control text-secondary col-lg-3" />
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label" asp-for="Latitude">Географска ширина</label>
+                        <input id="latitude" asp-for="Latitude" class="form-control" />
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label" asp-for="Longitude">Географска дължина</label>
+                        <input id="longitude" asp-for="Longitude" class="form-control" />
+                    </div>
+                    <div id="map" style="width: 1200px; height: 300px;" class="card mb-0 mt-5" onclick="onMapClick(event)"></div>
+                    <div class="col-lg-3 offset-lg-5 mt-4">
+                        <button type="submit" class="main-button">Одобри</button>
+                    </div>
+                </div>
+            </form>           
+        </div>
+    </div>
+</div>
+
+@section Links {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+      integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+      crossorigin="" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+        integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+        crossorigin=""></script>
+    <script src="~/js/leaflet.js"></script>
+    <script>
+        const onMapClick = function (event) {
+            var coordinates = event.latlng;
+
+            if (marker) {
+                marker.setLatLng(coordinates);
+            } else {
+                marker = L.marker([coordinates.lat, coordinates.lng]).addTo(map);
+            }
+
+            document.getElementById('latitude').value = coordinates.lat;
+            document.getElementById('longitude').value = coordinates.lng;
+        }
+
+        map.on('click', onMapClick);
+
+        const changeSubcategories = function() {
+            const subcategorySelectEl = document.getElementById('SubcategoryId');
+            const antiForgeryToken = document.querySelector('.antiforgery-form input[name=__RequestVerificationToken]').value;
+            const categorySelectEl = document.getElementById('CategoryId');
+            const categoryName = categorySelectEl.options[categorySelectEl.selectedIndex].text;
+
+            fetch("/api/AttractionsApi/subcategories", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': antiForgeryToken,
+                },
+                body: JSON.stringify({ categoryName })
+            })
+                .then(response => response.json())
+                .then(categories => {
+                    console.log(categories)
+                    subcategorySelectEl.innerHTML = '';
+                    subcategorySelectEl.appendChild(new Option(''));
+                    var childElements = categories.map(c => new Option(c.name, c.id));
+                    childElements.forEach(c => subcategorySelectEl.appendChild(c));
+                })
+        }      
+
+    </script>
+}

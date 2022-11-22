@@ -9,6 +9,10 @@ namespace ExploreBulgaria.Services.Data
             AttractionTemporaryFilterModel filterModel,
             int itemsPerPage);
 
+        Task<T> GetByIdAsync<T>(int id);
+
         Task<int> GetCountAsync(AttractionTemporaryFilterModel filterModel);
+
+        Task ApproveAsync(AttractionTempDetailsViewModel model);
     }
 }

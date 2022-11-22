@@ -3,17 +3,55 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace ExploreBulgaria.Services.Data
 {
     public class TemporaryAttractionsService : ITemporaryAttractionsService
     {
-        private readonly IDeletableEnityRepository<AttractionTemporary> repo;
+        private readonly IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
+        private readonly IDeletableEnityRepository<Attraction> attrRepo;
 
         public TemporaryAttractionsService(
-            IDeletableEnityRepository<AttractionTemporary> repo)
+            IDeletableEnityRepository<AttractionTemporary> attrTempRepo,
+            IDeletableEnityRepository<Attraction> attrRepo)
         {
-            this.repo = repo;
+            this.attrTempRepo = attrTempRepo;
+            this.attrRepo = attrRepo;
+        }
+
+        public async Task ApproveAsync(AttractionTempDetailsViewModel model)
+        {
+            var attraction = new Attraction
+            {
+                CategoryId = model.CategoryId,
+                CreatedByVisitorId = model.CreatedByVisitorId,
+                Description = model.Description,
+                Location = new Point(model.Longitude, model.Latitude)
+                { SRID = 4326 },
+                Name = model.Name,
+                RegionId = model.RegionId,
+                SubcategoryId = model.SubcategoryId,
+            };
+
+            foreach (var blob in model.BlobNames.Split(", "))
+            {
+                attraction.Images.Add(new Image
+                {
+                     AddedByVisitorId = model.CreatedByVisitorId,
+                     BlobStorageUrl = blob.TrimEnd(','),
+                     Extension = Path.GetExtension(blob).Trim('.', ',')
+                });
+            }
+
+            var attrTempToDelete = await attrTempRepo
+                .All().FirstOrDefaultAsync(at => at.Id == model.Id);
+
+            await attrRepo.AddAsync(attraction);
+            await attrRepo.SaveChangesAsync();
+
+            attrTempRepo.Delete(attrTempToDelete!);
+            await attrTempRepo.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int page,
@@ -31,6 +69,22 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();
         }
 
+        public async Task<T> GetByIdAsync<T>(int id)
+        {
+            var attraction = await attrTempRepo
+                .AllAsNoTracking()
+                .Where(at => at.Id == id)
+                .To<T>()
+                .FirstOrDefaultAsync();
+
+            if (attraction == null)
+            {
+                throw new ArgumentException("Invalid AttractionTemporary ID.");
+            }
+
+            return attraction;
+        }
+
         public async Task<int> GetCountAsync(AttractionTemporaryFilterModel filterModel)
         {
             var attractionsTemp = ApplyFilter(filterModel);
@@ -40,7 +94,7 @@ namespace ExploreBulgaria.Services.Data
 
         private IQueryable<AttractionTemporary> ApplyFilter(AttractionTemporaryFilterModel filterModel)
         {
-            var result = repo.AllAsNoTracking();
+            var result = attrTempRepo.AllAsNoTracking();
 
             var searchTerm = filterModel.SearchTerm;
 
