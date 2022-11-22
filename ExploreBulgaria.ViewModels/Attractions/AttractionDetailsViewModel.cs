@@ -28,7 +28,10 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public double AverageVote { get; set; }
 
-        public IEnumerable<string> ImageUrls { get; set; } 
+        public IEnumerable<string> RemoteImageUrls { get; set; } 
+            = Enumerable.Empty<string>();
+
+        public IEnumerable<string> BlobStorageUrls { get; set; }
             = Enumerable.Empty<string>();
 
         public IEnumerable<CommentViewModel> Comments { get; set; } 
@@ -37,9 +40,8 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Attraction, AttractionDetailsViewModel>()
-                .ForMember(d => d.ImageUrls, opt =>
-                   opt.MapFrom(s => s.Images.Select(
-                       i => i.RemoteImageUrl ?? $"images/attractions/{i.Id}.{i.Extension}")))
+                .ForMember(d => d.RemoteImageUrls, opt => opt.MapFrom(s => s.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl)))
+                .ForMember(d => d.BlobStorageUrls, opt => opt.MapFrom(s => s.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl)))
                 .ForMember(d => d.AddedByVisitor, opt => opt.MapFrom(s => s.CreatedByVisitor))
                 .ForMember(d => d.AverageVote, opt => opt.MapFrom(s => s.Votes.Count == 0 ? 0 : s.Votes.Average(v => v.Value)))
                 .ForMember(d => d.Comments, opt => opt.MapFrom(s => s.Comments.OrderByDescending(c => c.CreatedOn)));

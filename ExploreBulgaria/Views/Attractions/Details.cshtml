@@ -26,11 +26,19 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="owl-cites-town owl-carousel">
-                            @foreach (var url in Model.ImageUrls)
+                            @foreach (var url in Model.RemoteImageUrls)
                             {
                                 <div class="item">
                                     <div class="thumb">
                                         <img src="@url" alt="">
+                                    </div>
+                                </div>
+                            }
+                            @foreach (var url in Model.BlobStorageUrls)
+                            {
+                                <div class="item">
+                                    <div class="thumb">
+                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "Administration", blobName = url })" alt="">
                                     </div>
                                 </div>
                             }

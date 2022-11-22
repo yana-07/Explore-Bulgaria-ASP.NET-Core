@@ -18,18 +18,21 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public int CommentsCount { get; set; }
 
-        public int ImagesCount => ImageUrls.Count;
+        public int ImagesCount => RemoteImageUrls.Count + BlobStorageUrls.Count;
 
         public DateTime CreatedOn { get; set; }
 
         public double AverageVote { get; set; }
 
-        public List<string> ImageUrls { get; set; } = new List<string>();
+        public List<string> RemoteImageUrls { get; set; } = new List<string>();
+
+        public List<string> BlobStorageUrls { get; set; } = new List<string>();
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Attraction, AttractionInListViewModel>()
-                .ForMember(d => d.ImageUrls, opt => opt.MapFrom(s => s.Images.Select(img => img.RemoteImageUrl)))
+                .ForMember(d => d.RemoteImageUrls, opt => opt.MapFrom(s => s.Images.Where(img => img.RemoteImageUrl != null).Select(img => img.RemoteImageUrl)))
+                .ForMember(d => d.BlobStorageUrls, opt => opt.MapFrom(s => s.Images.Where(img => img.BlobStorageUrl != null).Select(img => img.BlobStorageUrl)))
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Description.Substring(0, 100)))
                 .ForMember(d => d.AverageVote, opt => opt.MapFrom(s => s.Votes.Count == 0 ? 0 : s.Votes.Average(v => v.Value)))
                 .ForMember(d => d.CreatedByVisitor, opt => opt.MapFrom(s => $"{s.CreatedByVisitor.User.FirstName} {s.CreatedByVisitor.User.LastName}"));
