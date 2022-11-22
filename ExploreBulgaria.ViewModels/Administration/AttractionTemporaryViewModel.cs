@@ -22,7 +22,7 @@ namespace ExploreBulgaria.Web.ViewModels.Administration
 
         public string CreatedByVisitorId { get; set; } = null!;
 
-        public string ImageGuids { get; set; } = null!;
+        public string BlobNames { get; set; } = null!;
 
         public DateTime CreatedOn { get; set; }
     }
