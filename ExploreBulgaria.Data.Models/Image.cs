@@ -27,6 +27,9 @@ namespace ExploreBulgaria.Data.Models
         [MaxLength(ExtensionMaxLength)]
         public string Extension { get; set; } = null!;
 
-        public string? RemoteImageUrl { get; set; }      
+        public string? RemoteImageUrl { get; set; }
+
+        [MaxLength(BlobStorageUrlMaxLength)]
+        public string? BlobStorageUrl { get; set; }      
     }
 }
