@@ -11,5 +11,8 @@
         public const string DisplayEmail = "Имейл";
         public const string DisplayPassword = "Парола";
         public const string DisplayRepeatPassword = "Повтори парола";
+        public const string DisplayName = "Заглавие";
+        public const string DisplayDescription = "Описание";
+        public const string DisplayRegion = "Регион";
     }
 }

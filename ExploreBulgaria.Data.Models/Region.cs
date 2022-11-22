@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Models;
 using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants.Region;
 
 namespace ExploreBulgaria.Data.Models
 {
@@ -13,7 +13,7 @@ namespace ExploreBulgaria.Data.Models
         }
 
         [Required]
-        [MaxLength(NameMaxLength)]
+        [MaxLength(RegionNameMaxLength)]
         public string Name { get; set; } = null!;
 
         public virtual ICollection<Attraction> Attractions { get; set; }

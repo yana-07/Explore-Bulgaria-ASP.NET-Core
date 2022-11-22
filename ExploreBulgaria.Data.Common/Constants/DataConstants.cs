@@ -17,9 +17,17 @@
 
         public class Attraction
         {
-            public const int NameMaxLength = 120;
+            public const int AttractionNameMaxLength = 120;
+            public const int AttractionNameMinLength = 5;
             public const int DescriptionMaxLength = 10000;
+            public const int DescriptionMinLength = 100;
             public const int GuidMaxLength = 36;
+        }
+
+        public class Region
+        {
+            public const int RegionNameMaxLength = 50;
+            public const int RegionNameMinLength = 3;
         }
 
         public class Image

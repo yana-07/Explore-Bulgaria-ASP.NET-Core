@@ -4,24 +4,26 @@ using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using static ExploreBulgaria.Web.ViewModels.Common.Constants;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants.Attraction;
+using static ExploreBulgaria.Data.Common.Constants.DataConstants.Region;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
     public class AddAttractionViewModel 
     {
         [Required(ErrorMessage = FieldRequired)]
-        [StringLength(120, MinimumLength = 5, ErrorMessage = FieldLength)]
-        [Display(Name = "Заглавие")]
+        [StringLength(AttractionNameMaxLength, MinimumLength = AttractionNameMinLength, ErrorMessage = FieldLength)]
+        [Display(Name = DisplayName)]
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [StringLength(10000, MinimumLength = 50, ErrorMessage = FieldLength)]
-        [Display(Name = "Описание")]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = FieldLength)]
+        [Display(Name = DisplayDescription)]
         public string Description { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = FieldLength)]
-        [Display(Name = "Регион")]
+        [StringLength(RegionNameMaxLength,MinimumLength = RegionNameMinLength, ErrorMessage = FieldLength)]
+        [Display(Name = DisplayRegion)]
         public string Region { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]

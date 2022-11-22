@@ -8,7 +8,7 @@ namespace ExploreBulgaria.Data.Models
     public class AttractionTemporary : BaseDeletableModel<int>
     {
         [Required]
-        [MaxLength(NameMaxLength)]
+        [MaxLength(AttractionNameMaxLength)]
         public string Name { get; set; } = null!;
 
         [Required]
@@ -23,7 +23,7 @@ namespace ExploreBulgaria.Data.Models
         public double Longitude { get; set; }
 
         [Required]
-        [MaxLength(NameMaxLength)]
+        [MaxLength(AttractionNameMaxLength)]
         public string Region { get; set; } = null!;
 
         [Required]

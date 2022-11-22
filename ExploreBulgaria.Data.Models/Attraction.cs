@@ -17,7 +17,7 @@ namespace ExploreBulgaria.Data.Models
         }
 
         [Required]
-        [MaxLength(NameMaxLength)]
+        [MaxLength(AttractionNameMaxLength)]
         public string Name { get; set; } = null!;
 
         [Required]
