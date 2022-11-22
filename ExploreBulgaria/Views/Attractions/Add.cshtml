@@ -83,9 +83,16 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        var marker = null;
+
         const onMapClick = function(event) {
             var coordinates = event.latlng;
-            L.marker([coordinates.lat, coordinates.lng]).addTo(map);
+
+            if (marker) {
+                marker.setLatLng(coordinates);
+            } else {
+                marker = L.marker([coordinates.lat, coordinates.lng]).addTo(map);
+            }
 
             document.getElementById('lat').value = coordinates.lat;  
             document.getElementById('lng').value = coordinates.lng;  
