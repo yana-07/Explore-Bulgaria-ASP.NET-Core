@@ -25,6 +25,7 @@
         public class Image
         {
             public const int ExtensionMaxLength = 7;
+            public const int BlobStorageUrlMaxLength = 42;
         }
     }
 }
