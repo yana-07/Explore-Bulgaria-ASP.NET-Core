@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Data.Models
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Services.Data", "ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj", "{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Data", "ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj", "{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Services.Mapping", "ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj", "{182DE5DB-5508-4218-8B93-25735FBA7563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Mapping", "ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj", "{182DE5DB-5508-4218-8B93-25735FBA7563}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Common", "ExploreBulgaria.Common\ExploreBulgaria.Common.csproj", "{27B44BE3-5079-46CC-96B1-88E6151DC36E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Common", "ExploreBulgaria.Common\ExploreBulgaria.Common.csproj", "{27B44BE3-5079-46CC-96B1-88E6151DC36E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
