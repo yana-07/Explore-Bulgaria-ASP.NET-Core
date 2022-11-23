@@ -3,9 +3,9 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Web.ViewModels.Common.Constants;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants.Attraction;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants.Region;
+using static ExploreBulgaria.Services.Common.Constants.UIConstants;
+using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Attraction;
+using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Region;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {

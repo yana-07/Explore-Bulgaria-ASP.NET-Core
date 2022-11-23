@@ -1,6 +1,6 @@
-﻿namespace ExploreBulgaria.Data.Common.Constants
+﻿namespace ExploreBulgaria.Services.Common.Constants
 {
-    public class DataConstants
+    public class EntityAndVMConstants
     {
         public const int NameMaxLength = 50;
         public const int NameMinLength = 5;

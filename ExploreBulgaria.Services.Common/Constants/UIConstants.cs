@@ -1,6 +1,6 @@
-﻿namespace ExploreBulgaria.Web.ViewModels.Common
+﻿namespace ExploreBulgaria.Services.Common.Constants
 {
-    public static class Constants
+    public class UIConstants
     {
         public const string FieldRequired = "Полето {0} е задължително.";
         public const string FieldLength = "Полето {0} трябва да бъде между {2} и {1} символа.";

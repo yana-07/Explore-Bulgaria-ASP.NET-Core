@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants.Attraction;
+using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Attraction;
 using ExploreBulgaria.Data.Common.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 

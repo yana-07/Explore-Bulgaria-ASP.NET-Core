@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using static ExploreBulgaria.Data.Common.Constants.DataConstants.User;
+using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.User;
 namespace ExploreBulgaria.Data
 {
     public static class IdentityOptionsProvider
