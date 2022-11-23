@@ -32,5 +32,9 @@ namespace ExploreBulgaria.Data.Models
 
         [Required]
         public string BlobNames { get; set; } = null!;
+
+        public bool IsApproved { get; set; }
+
+        public bool IsRejected { get; set; }
     }
 }
