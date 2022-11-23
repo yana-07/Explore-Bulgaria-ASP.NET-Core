@@ -11,9 +11,9 @@ namespace ExploreBulgaria.Web.ViewModels.Visitors
 
         public string UserId { get; set; } = null!;
 
-        public string UserFirstName { get; set; } = null!;
+        public string? UserFirstName { get; set; }
 
-        public string UserLastName { get; set; } = null!;
+        public string? UserLastName { get; set; }
 
         public string? UserAvatarUrl { get; set; }
 
