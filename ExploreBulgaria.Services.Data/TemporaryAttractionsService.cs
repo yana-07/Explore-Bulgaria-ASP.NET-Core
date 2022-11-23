@@ -1,9 +1,11 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Common.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -11,13 +13,16 @@ namespace ExploreBulgaria.Services.Data
     {
         private readonly IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
         private readonly IDeletableEnityRepository<Attraction> attrRepo;
+        private readonly IGuard guard;
 
         public TemporaryAttractionsService(
             IDeletableEnityRepository<AttractionTemporary> attrTempRepo,
-            IDeletableEnityRepository<Attraction> attrRepo)
+            IDeletableEnityRepository<Attraction> attrRepo,
+            IGuard guard)
         {
             this.attrTempRepo = attrTempRepo;
             this.attrRepo = attrRepo;
+            this.guard = guard;
         }
 
         public async Task ApproveAsync(AttractionTempDetailsViewModel model)
@@ -77,12 +82,9 @@ namespace ExploreBulgaria.Services.Data
                 .To<T>()
                 .FirstOrDefaultAsync();
 
-            if (attraction == null)
-            {
-                throw new ArgumentException("Invalid AttractionTemporary ID.");
-            }
+            guard.AgainstNull(attraction, InvalidAttractionTemporaryId);
 
-            return attraction;
+            return attraction!;
         }
 
         public async Task<int> GetCountAsync(AttractionTemporaryFilterModel filterModel)

@@ -1,8 +1,10 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Common.Guards;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
 using Microsoft.EntityFrameworkCore;
+using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -10,13 +12,16 @@ namespace ExploreBulgaria.Services.Data
     {
         private readonly IDeletableEnityRepository<Comment> commentsRepo;
         private readonly IDeletableEnityRepository<Visitor> visitorsRepo;
+        private readonly IGuard guard;
 
         public CommentsService(
             IDeletableEnityRepository<Comment> commentsRepo,
-            IDeletableEnityRepository<Visitor> visitorsRepo)
+            IDeletableEnityRepository<Visitor> visitorsRepo,
+            IGuard guard)
         {
             this.commentsRepo = commentsRepo;
             this.visitorsRepo = visitorsRepo;
+            this.guard = guard;
         }      
 
         public async Task<int> PostCommentAsync(CommentInputModel model, string visitorId)
@@ -41,12 +46,9 @@ namespace ExploreBulgaria.Services.Data
                 .Include(c => c.LikedByVisitors)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
-            if (comment == null)
-            {
-                throw new InvalidOperationException("Invalid comment Id.");
-            }
+            guard.AgainstNull(comment, InvalidCommentId);
 
-            var visitorLikedComment = comment.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
+            var visitorLikedComment = comment!.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (visitorLikedComment != null)
             {
@@ -83,12 +85,9 @@ namespace ExploreBulgaria.Services.Data
                 .Include(c => c.DislikedByVisitors)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
 
-            if (comment == null)
-            {
-                throw new InvalidOperationException("Invalid comment Id.");
-            }
+            guard.AgainstNull(comment, InvalidCommentId);
 
-            var visitorDislikedComment = comment.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
+            var visitorDislikedComment = comment!.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (visitorDislikedComment != null)
             {
@@ -125,10 +124,7 @@ namespace ExploreBulgaria.Services.Data
                 .Include(c => c.Replies)
                 .FirstOrDefaultAsync(c => c.Id == model.CommentId);
 
-            if (comment == null)
-            {
-                throw new InvalidOperationException("Invalid comment Id.");
-            }
+            guard.AgainstNull(comment, InvalidCommentId);
 
             var user = await visitorsRepo.AllAsNoTracking()
                 .FirstOrDefaultAsync(v => v.Id == visitorId);
@@ -138,7 +134,7 @@ namespace ExploreBulgaria.Services.Data
                 throw new InvalidOperationException("Invalid user Id.");
             }
 
-            comment.Replies.Add(new Reply
+            comment!.Replies.Add(new Reply
             {
                 AuthorId = visitorId,
                 CommentId = model.CommentId,
@@ -158,12 +154,9 @@ namespace ExploreBulgaria.Services.Data
                 .ThenInclude(a => a.User)
                 .FirstOrDefaultAsync(c => c.Id == model.CommentId);
 
-            if (comment == null)
-            {
-                throw new InvalidOperationException("Invalid comment Id.");
-            }
+            guard.AgainstNull(comment, InvalidCommentId);
 
-            return comment.Replies.Select(r => new ReplyCommentViewModel
+            return comment!.Replies.Select(r => new ReplyCommentViewModel
             {
                 Text = r.Text,
                 Author = new VisitorGenericViewModel

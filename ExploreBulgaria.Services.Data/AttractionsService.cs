@@ -1,11 +1,13 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Common.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -15,15 +17,18 @@ namespace ExploreBulgaria.Services.Data
 
         private readonly IDeletableEnityRepository<Attraction> repo;
         private readonly IDeletableEnityRepository<AttractionTemporary> repoTemp;
+        private readonly IGuard guard;
         private readonly BlobServiceClient blobServiceClient;
 
         public AttractionsService(
             IDeletableEnityRepository<Attraction> repo,
             IDeletableEnityRepository<AttractionTemporary> repoTemp,
+            IGuard guard,
             BlobServiceClient blobServiceClient)
         {
             this.repo = repo;
             this.repoTemp = repoTemp;
+            this.guard = guard;
             this.blobServiceClient = blobServiceClient;
         }
 
@@ -61,12 +66,9 @@ namespace ExploreBulgaria.Services.Data
                  .To<T>()
                  .FirstOrDefaultAsync();
 
-            if (attraction == null)
-            {
-                throw new ArgumentException("Invalid Attraction ID.");
-            }
+            guard.AgainstNull(attraction, InvalidAttractionId);
 
-            return attraction;
+            return attraction!;
         }
 
         private IQueryable<Attraction> ApplyFilter(

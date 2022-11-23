@@ -1,17 +1,23 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Common.Guards;
 using ExploreBulgaria.Services.Mapping;
 using Microsoft.EntityFrameworkCore;
+using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
     public class CategoriesService : ICategoriesService
     {
         private readonly IDeletableEnityRepository<Category> repo;
+        private readonly IGuard guard;
 
-        public CategoriesService(IDeletableEnityRepository<Category> repo)
+        public CategoriesService(
+            IDeletableEnityRepository<Category> repo,
+            IGuard guard)
         {
             this.repo = repo;
+            this.guard = guard;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>()
@@ -31,12 +37,9 @@ namespace ExploreBulgaria.Services.Data
                 .To<T>()
                 .FirstOrDefaultAsync();
 
-            if (category == null)
-            {
-                throw new ArgumentException("Invalid Category ID.");
-            }
+            guard.AgainstNull(category, InvalidCategoryId);
 
-            return category;
+            return category!;
         }
     }
 }
