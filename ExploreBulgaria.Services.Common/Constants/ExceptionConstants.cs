@@ -1,6 +1,6 @@
 ﻿namespace ExploreBulgaria.Services.Common.Constants
 {
-    public class ExceptionConstants
+    public static class ExceptionConstants
     {
         public const string InvalidAttractionId = "Invalid Attraction ID.";
 

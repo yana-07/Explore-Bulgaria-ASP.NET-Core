@@ -1,6 +1,6 @@
 ﻿namespace ExploreBulgaria.Services.Common.Constants
 {
-    public class EntityAndVMConstants
+    public static class EntityAndVMConstants
     {
         public const int NameMaxLength = 50;
         public const int NameMinLength = 5;
