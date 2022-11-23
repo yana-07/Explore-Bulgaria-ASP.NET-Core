@@ -6,6 +6,7 @@ using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static ExploreBulgaria.Services.Common.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -120,6 +121,7 @@ namespace ExploreBulgaria.Web.Controllers
                 return View(model);
             }
 
+            TempData[SuccessMessage] = "Благодарим Ви за предложението! Ще бъдете уведомени относно статуса на обекта.";
 
             return RedirectToAction(nameof(All));
         }

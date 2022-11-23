@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExploreBulgaria.styles.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/307eb2164d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" asp-append-version="true" />
     <partial name="_ThemeLinksPartial" />
     @await RenderSectionAsync("Links", required: false)
 </head>
 <body>
+    <partial name="_UserMessages" />
     <div id="js-preloader" class="js-preloader">
         <div class="preloader-inner">
             <span class="dot"></span>
@@ -73,6 +75,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
     <partial name="_ThemeScriptsPartial" />
 
     <script>

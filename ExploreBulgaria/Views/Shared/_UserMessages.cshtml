@@ -1,0 +1,22 @@
+﻿@using static ExploreBulgaria.Services.Common.Constants.MessageConstants
+
+@if(TempData[ErrorMessage] != null)
+{
+    <script>
+        window.onload = function () { toastr.error('@TempData[ErrorMessage]!.ToString()'); };
+    </script>
+}
+
+@if (TempData[WarningMessage] != null)
+{
+    <script>
+        window.onload = function () { toastr.warning('@TempData[WarningMessage]!.ToString()'); };
+    </script>
+}
+
+@if (TempData[SuccessMessage] != null)
+{
+    <script>
+        window.onload = function () { toastr.success('@TempData[SuccessMessage]!.ToString()'); };
+    </script>
+}
