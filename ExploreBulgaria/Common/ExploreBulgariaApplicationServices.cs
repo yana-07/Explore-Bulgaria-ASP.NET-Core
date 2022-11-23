@@ -1,5 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Repositories;
+using ExploreBulgaria.Services.Common.Guards;
 using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Web.ViewModels.Users;
 
@@ -21,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICommentsService, CommentsService>();
             services.AddScoped<IVisitorsService, VisitorsService>();
             services.AddScoped<IVotesService, VotesService>();
+            services.AddScoped<IGuard, Guard>();
 
             return services;
         }
