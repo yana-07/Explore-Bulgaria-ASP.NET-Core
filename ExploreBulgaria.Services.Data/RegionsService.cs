@@ -20,19 +20,20 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<IEnumerable<T>> GetAllForCategoryAndSubcategoryAsync<T>(string categoryName, string? subcategoryName = null)
         {
-            if (subcategoryName == null)
+            var regions = repo.AllAsNoTracking()
+                   .Where(r => r.Attractions
+                     .Select(a => a.Category.Name).Contains(categoryName));
+
+            if (subcategoryName != null)
             {
-                return await repo.AllAsNoTracking()
-                   .Where(r => r.Attractions.Select(a => a.Category.Name).Contains(categoryName))
-                   .OrderBy(x => x.Name)
-                   .To<T>().ToListAsync();
+                regions = regions
+                    .Where(r => r.Attractions
+                       .Select(a => a.Subcategory.Name).Contains(subcategoryName));
             }
 
-            return await repo.AllAsNoTracking()
-                    .Where(r => r.Attractions.Select(a => a.Category.Name).Contains(categoryName) &&
-                        r.Attractions.Select(a => a.Subcategory.Name).Contains(subcategoryName))
-                    .OrderBy(x => x.Name)
-                    .To<T>().ToListAsync();
+            return await regions
+                .OrderBy(r => r.Name)
+                .To<T>().ToListAsync();
         }
     }
 }
