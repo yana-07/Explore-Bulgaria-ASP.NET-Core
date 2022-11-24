@@ -59,7 +59,7 @@ namespace ExploreBulgaria.Web.Controllers
 
                 await usersService.AddLastNameClaimAsync(user!);
 
-                return this.RedirectTo<UsersController>(c => c.Login());
+                return RedirectToAction(nameof(Login));
             }
 
             foreach (var error in resultAwaited.Errors)
@@ -88,6 +88,9 @@ namespace ExploreBulgaria.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                model.ExternalLogins = (await signInManager
+                      .GetExternalAuthenticationSchemesAsync()).ToList();
+
                 return View(model);
             }
 
@@ -99,6 +102,8 @@ namespace ExploreBulgaria.Web.Controllers
                 return this.RedirectTo<HomeController>(c => c.Index());
             }
 
+            model.ExternalLogins = (await signInManager
+                      .GetExternalAuthenticationSchemesAsync()).ToList();
             ModelState.AddModelError(string.Empty, "Неуспешен опит.");
 
             return View(model);

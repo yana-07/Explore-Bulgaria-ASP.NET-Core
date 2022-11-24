@@ -28,38 +28,36 @@
                                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
                             </fieldset>
                         </div>
-                        <div class="col-lg-4 offset-lg-4">
-                            <fieldset>
-                                <button class="main-button">Влез</button>
-                            </fieldset>
+                        <div class="d-grid mb-2 col-lg-4 offset-lg-4">
+                            <button class="main-button btn fw-bold" type="submit">Влез</button>
                         </div>
                     </div>
                 </form>
                 @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                 {                   
-                            <form id="external-account" asp-action="ExternalLogin" method="post">
-                                <div class="row">
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    if (provider.Name == "Google")
-                                    {
-                                        <div class="d-grid mb-2 col-lg-4 offset-lg-4">
-                                            <button name="provider" value="@provider.Name" class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-                                                <i class="fab fa-google me-2"></i> Sign in with @provider.DisplayName
-                                            </button>
-                                        </div>
-                                    }
-                                    else if (provider.Name == "Facebook")
-                                    {
-                                    <div class="d-grid mb-2 col-lg-4 offset-lg-4">
-                                            <button name="provider" value="@provider.Name" class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
-                                                <i class="fab fa-facebook-f me-2"></i> Sign in with @provider.DisplayName
-                                            </button>
-                                        </div>
-                                    }
-                                }
+                    <form id="external-account" asp-action="ExternalLogin" method="post">
+                        <div class="row">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            if (provider.Name == "Google")
+                            {
+                                <div class="d-grid mb-2 col-lg-4 offset-lg-4">
+                                    <button name="provider" value="@provider.Name" class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+                                        <i class="fab fa-google me-2"></i> Sign in with @provider.DisplayName
+                                    </button>
                                 </div>
-                            </form>         
+                            }
+                            else if (provider.Name == "Facebook")
+                            {
+                            <div class="d-grid mb-2 col-lg-4 offset-lg-4">
+                                    <button name="provider" value="@provider.Name" class="btn btn-facebook btn-login text-uppercase fw-bold" type="submit">
+                                        <i class="fab fa-facebook-f me-2"></i> Sign in with @provider.DisplayName
+                                    </button>
+                                </div>
+                            }
+                        }
+                        </div>
+                    </form>         
                 }              
             </div>                  
         </div>
