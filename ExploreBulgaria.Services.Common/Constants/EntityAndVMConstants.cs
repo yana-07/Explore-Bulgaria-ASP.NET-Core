@@ -8,6 +8,8 @@
 
         public class User
         {
+            public const int NameMaxLength = 50;
+            public const int NameMinLength = 3;
             public const int UserNameMaxLength = 40;
             public const int UserNameMinLength = 5;
             public const int EmailMaxLength = 60;
