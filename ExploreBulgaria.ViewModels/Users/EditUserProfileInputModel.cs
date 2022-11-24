@@ -4,7 +4,6 @@
     using ExploreBulgaria.Services.Mapping;
     using Microsoft.AspNetCore.Http;
     using System.ComponentModel.DataAnnotations;
-    using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants;
     using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.User;
 
     public class EditUserProfileInputModel : IMapFrom<ApplicationUser>
