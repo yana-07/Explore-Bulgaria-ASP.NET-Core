@@ -1,8 +1,9 @@
 ﻿@model BaseListViewModel
 <div class="col-lg-12">
-    <ul class="page-numbers">
+    <ul class="page-numbers @(Model.Area == "Administration" ? "pagination justify-content-center mt-5" : string.Empty)">
         <li class="@(Model.HasPreviousPage == false ? "disabled" : string.Empty)">
-            <a asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action" 
+            <a class="@(Model.Area == "Administration" ? "page-link text-secondary" : string.Empty)" 
+                 asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action" 
                  asp-route-page="@Model.PreviousPageNumber" 
                  asp-route-categoryName="@Model.FilterModel.CategoryName"
                  asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
@@ -15,8 +16,9 @@
         {
             if (i > 0)
             {
-                <li>
-                    <a asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"
+                <li class="@(Model.Area == "Administration" ? "page-item" : string.Empty)">
+                    <a class="@(Model.Area == "Administration" ? "page-link text-secondary" : string.Empty)"
+                        asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"
                         asp-route-page="@i"
                         asp-route-categoryName="@Model.FilterModel.CategoryName"
                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
@@ -27,13 +29,16 @@
                 </li>
             }
         }
-        <li class="active"><a href="#">@Model.PageNumber</a></li>
+        <li class="active @(Model.Area == "Administration" ? "page-item active" : string.Empty)">
+            <a href="#" class="@(Model.Area == "Administration" ? "page-link text-white" : string.Empty)">@Model.PageNumber</a>
+        </li>
         @for (int i = Model.PageNumber + 1; i < Model.PageNumber + 4; i++)
         {
             if (i <= Model.PagesCount)
             {
-                <li>
-                    <a asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"  
+                <li class="@(Model.Area == "Administration" ? "page-item" : string.Empty)">
+                    <a class="@(Model.Area == "Administration" ? "page-link text-secondary" : string.Empty)"
+                        asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"
                         asp-route-page="@i" 
                         asp-route-categoryName="@Model.FilterModel.CategoryName"
                         asp-route-subcategoryName="@Model.FilterModel.SubcategoryName"
@@ -45,12 +50,13 @@
             }
         }
         <li class="@(Model.HasNextPage == false ? "disabled" : string.Empty)">
-            <a asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"
-                 asp-route-page="@Model.NextPageNumber" 
-                 asp-route-categoryName="@Model.FilterModel.CategoryName" 
-                 asp-route-subcategoryName="@Model.FilterModel.SubcategoryName" 
-                 asp-route-regionName="@Model.FilterModel.RegionName"
-                 asp-route-searchTerm="@Model.FilterModel.SearchTerm">
+            <a class="@(Model.Area == "Administration" ? "page-link text-secondary" : string.Empty)"
+                asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action"
+                asp-route-page="@Model.NextPageNumber" 
+                asp-route-categoryName="@Model.FilterModel.CategoryName" 
+                asp-route-subcategoryName="@Model.FilterModel.SubcategoryName" 
+                asp-route-regionName="@Model.FilterModel.RegionName"
+                asp-route-searchTerm="@Model.FilterModel.SearchTerm">
                 <i class="fa fa-arrow-right"></i>
             </a>
         </li>
