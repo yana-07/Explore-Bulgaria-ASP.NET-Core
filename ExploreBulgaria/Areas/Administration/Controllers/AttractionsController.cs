@@ -1,19 +1,18 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Services.Data;
-using ExploreBulgaria.Web.Controllers;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ExploreBulgaria.Common.GlobalConstants;
+using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
     [Authorize(Roles = AdministratorRoleName)]
     [Area("Administration")]
-    public class AttractionsController : BaseController
+    public class AttractionsController : Controller
     {
         private readonly ITemporaryAttractionsService attractionsService;
         private readonly ICategoriesService categoriesService;

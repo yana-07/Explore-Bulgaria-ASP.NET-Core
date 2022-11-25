@@ -4,57 +4,56 @@
     ViewData["Title"] = "Предложени обекти";
 }
 
-<div class="search-form pt-5">
+<div class="row pt-5 pb-5">
     <div class="container p-0">
         <form name="gs" method="get" asp-area="Administration" asp-controller="Attractions" asp-action="All">
             <div class="row">
                 <input name="searchTerm" value="@Model.FilterModel.SearchTerm" 
                        placeholder="Търсене" class="col-md-3 offset-md-3 form-control-md" />
-                <button type="submit" class="col-md-2 offset-md-1 border-button text-center main-button">Търси</button>
+                <button type="submit" class="col-md-2 offset-md-1 text-center btn btn-outline-secondary">Търси</button>
             </div>
         </form>
     </div>
 </div>
 
-<div class="amazing-deals">
-    <div class="container">
-        <div class="row all-items">
-            @foreach (var attraction in Model.Attractions)
-            {
-                <div class="col-lg-6 @if(Model.Attractions.Count() <= 6){<text>offset-lg-3</text>} col-sm-6 card-outer">
-                    <div class="item card-inner" style="padding-left: 30px">
-                        <div class="row">                               
-                            <div class="align-self-center">
-                                <div class="content">
-                                    <span class="info">*@attraction.Region</span>
-                                    <h4 class="lh-1">@attraction.Name</h4>                         
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <i class="fa-regular fa-images"></i>
-                                            <span class="list">@attraction.BlobNames.Split(", ").Length</span>
-                                        </div>
-                                        <div class="col-6">
-                                            <i class="fa-regular fa-calendar-days"></i>
-                                            <span class="list">@attraction.CreatedOn.ToShortDateString()</span>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        <i class="fa-regular fa-user"></i>
-                                        @attraction.CreatedByVisitorId
-                                    </p>
-                                    <p>@attraction.Description.Substring(0, 50)...</p>
-                                    <a asp-area="Administration" asp-controller="Attractions" 
-                                       asp-action="Details" asp-route-id="@attraction.Id" class="main-button">
-                                    Разгледай
-                                   </a>
-                                </div>
-                            </div>
-                        </div>                                                                       
+
+<div class="row">
+    @foreach (var attraction in Model.Attractions)
+    {
+        <div class="card card-dark col-lg-6 @if(Model.Attractions.Count() <= 6){<text>offset-lg-3</text>}">
+            <div class="card-header">
+                <h3 class="card-title">@attraction.Name</h3>
+                <div class="card-tools">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row pb-3">
+                    <h6 class="text-secondary">*@attraction.Region</h6>
+                </div>
+                <div class="row pb-3">
+                    <div class="col-6">
+                        <i class="fa-regular fa-images text-secondary"></i>
+                        <span class="list">@attraction.BlobNames.Split(", ").Length</span>
+                    </div>
+                    <div class="col-6">
+                        <i class="fa-regular fa-calendar-days text-secondary"></i>
+                        <span class="list">@attraction.CreatedOn.ToShortDateString()</span>
                     </div>
                 </div>
-            }  
-            <form id="antiForgeryForm" method="post"></form>
-            @(await Html.PartialAsync("~/Views/Shared/_PagingPartial.cshtml", Model))
+                <p>
+                    <i class="fa-regular fa-user text-secondary"></i>
+                    @attraction.CreatedByVisitorId
+                </p>
+                <p class="text-secondary">@attraction.Description.Substring(0, 100)...</p>
+            </div>
+            <div class="card-footer">
+                <a asp-area="Administration" asp-controller="Attractions"
+                    asp-action="Details" asp-route-id="@attraction.Id" class="btn btn-secondary">
+                    Разгледай
+                </a>
+            </div>
         </div>
-    </div>
+    }  
+    <form id="antiForgeryForm" method="post"></form>
+    @(await Html.PartialAsync("~/Views/Shared/_PagingPartial.cshtml", Model))
 </div>
