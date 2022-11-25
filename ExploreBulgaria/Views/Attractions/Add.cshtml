@@ -1,6 +1,6 @@
 ﻿@model AddAttractionViewModel
 @{
-    ViewData["Title"] = "Добави обект";
+    ViewData["Title"] = "Предложи обект";
 }
 
 <div>
@@ -110,7 +110,7 @@
                     fileReader.onload = function (event) {
                         var imgElement = document.createElement('img');
                         imgElement.setAttribute('class', 'img-thumbnail m-2');
-                        imgElement.setAttribute('style', 'height: 150px; width: 150px;');
+                        imgElement.setAttribute('style', 'height: 250px; width: 250px;');
                         imgElement.setAttribute('src', event.target.result);
                         imageContainer.appendChild(imgElement);
                     }
