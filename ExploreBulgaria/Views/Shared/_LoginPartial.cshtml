@@ -7,7 +7,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li>
-        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей, @((User?.FirstName() + " " +  @User?.LastName()) ?? @User?.Identity?.Name)</a>
+        <a>Здравей, @((User?.FirstName() + " " +  @User?.LastName()) ?? @User?.Identity?.Name)</a>
     </li>
     @if(User?.AvatarUrl() != null)
     {
@@ -16,7 +16,7 @@
         </li>
     }   
     <li>
-        <a asp-area="" asp-controller="Users" asp-action="Profile">Моят профил</a>
+        <a asp-area="" asp-controller="Users" asp-action="Profile">Профил</a>
     </li>
     <li>
         <a asp-area="" asp-controller="Users" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Изход</a>
