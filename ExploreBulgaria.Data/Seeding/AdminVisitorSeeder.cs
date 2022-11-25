@@ -1,6 +1,7 @@
 ﻿using ExploreBulgaria.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 
 namespace ExploreBulgaria.Data.Seeding
 {
@@ -24,6 +25,8 @@ namespace ExploreBulgaria.Data.Seeding
 
                 await dbContext.Visitors.AddAsync(adminVisitor);
                 await dbContext.SaveChangesAsync();
+
+                await userManager.AddClaimAsync(adminUser, new Claim("urn:exploreBulgaria:visitorId", adminVisitor.Id));
             }
         }
     }
