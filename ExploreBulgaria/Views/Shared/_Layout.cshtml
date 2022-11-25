@@ -35,6 +35,15 @@
                        </a>
                         <ul class="nav">
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">Начало</a></li>
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <li><a asp-area="" asp-controller="Attractions" asp-action="Add">Предложи обект</a></li>
+
+                                @if (User.IsInRole(AdministratorRoleName))
+                                {
+                                    <li><a asp-area="Administration" asp-controller="Home" asp-action="Index">Панел</a></li>
+                                }
+                            }
                             <partial name="_LoginPartial" />
                         </ul>
                         <a class='menu-trigger'>
