@@ -1,4 +1,4 @@
-﻿namespace ExploreBulgaria.Common
+﻿namespace ExploreBulgaria.Services.Common.Constants
 {
     public static class GlobalConstants
     {

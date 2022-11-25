@@ -1,4 +1,4 @@
-﻿using ExploreBulgaria.Common;
+﻿using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
 using ExploreBulgaria.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +11,8 @@ namespace ExploreBulgaria.Data.Seeding
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
-            await SeedRoleAsync(roleManager, GlobalConstants.LocalGuideRoleName);
+            await SeedRoleAsync(roleManager, AdministratorRoleName);
+            await SeedRoleAsync(roleManager, LocalGuideRoleName);
 
             await dbContext.SaveChangesAsync();
         }
