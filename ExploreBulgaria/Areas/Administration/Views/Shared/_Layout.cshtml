@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExploreBulgaria.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.0.5/dist/css/adminlte.min.css">
     <script src="https://kit.fontawesome.com/307eb2164d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" asp-append-version="true" />
     @await RenderSectionAsync("Links", required: false)
@@ -31,7 +31,7 @@
                         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                             <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
                                 <li class="nav-item">
-                                    <a class="nav-link text-white">Здравей, @((User?.FirstName() + " " + @User?.LastName()) ?? @User?.Identity?.Name)</a>
+                                    <a class="nav-link text-white">Здравей, @((User?.FirstName() + " " + @User?.LastName()) ?? @User?.Identity?.Name) (Администратор)</a>
                                 </li>
                                 @if (User?.AvatarUrl() != null)
                                 {
@@ -86,7 +86,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.0.5/dist/js/adminlte.min.js"></script>
     <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
     <script src="~/js/sidebars.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
