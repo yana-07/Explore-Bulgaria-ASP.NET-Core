@@ -1,16 +1,23 @@
 ﻿using AutoMapper;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services;
 using ExploreBulgaria.Services.Mapping;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
-    public class AttractionInListViewModel : IMapFrom<Attraction>, IHaveCustomMappings
+    public class AttractionInListViewModel : IMapFrom<Attraction>, IHaveCustomMappings, IAttractionModel
     {
         public string Id { get; set; } = null!;
 
         public string Name { get; set; } = null!;
 
-        public string? RegionName { get; set; }
+        public string CategoryName { get; set; } = null!;
+
+        public string? SubcategoryName { get; set; }
+
+        public string RegionName { get; set; } = null!;
+
+        public string? LocationName { get; set; }
 
         public string Description { get; set; } = null!;
 

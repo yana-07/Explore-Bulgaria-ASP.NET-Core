@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
@@ -7,7 +8,7 @@ using NetTopologySuite.Geometries;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
-    public class AttractionDetailsViewModel : IMapFrom<Attraction>, IHaveCustomMappings
+    public class AttractionDetailsViewModel : IMapFrom<Attraction>, IHaveCustomMappings, IAttractionModel
     {
         public string Id { get; set; } = null!;
 
@@ -15,13 +16,15 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public string CategoryName { get; set; } = null!;
 
-        public string SubcategoryName { get; set; } = null!;
+        public string? SubcategoryName { get; set; }
 
-        public string? RegionName { get; set; }
+        public string RegionName { get; set; } = null!;
+
+        public string? LocationName { get; set; }
 
         public string Description { get; set; } = null!;
 
-        public Point Location { get; set; } = null!;
+        public Point Coordinates { get; set; } = null!;
 
         public VisitorGenericViewModel AddedByVisitor { get; set; } = null!;
 
