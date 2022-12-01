@@ -14,10 +14,18 @@
                         <h2><em>@Model.Name</em></h2>
                           <div class="mb-3">
                             <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName">@Model.CategoryName ></a>
-                            <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName"
-                               asp-route-subcategoryName="@Model.SubcategoryName">@Model.SubcategoryName ></a>
+                            @if(!string.IsNullOrEmpty(Model.SubcategoryName))
+                            {
+                                <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName"
+                                   asp-route-subcategoryName="@Model.SubcategoryName">@Model.SubcategoryName ></a>
+                            }
+                            
                             <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName" 
                                   asp-route-subcategoryName="@Model.SubcategoryName" asp-route-regionName="@Model.RegionName">@Model.RegionName</a>
+                            @if(!string.IsNullOrEmpty(Model.LocationName))
+                            {
+                                <a class="text-secondary">@Model.LocationName</a>
+                            }
                         </div>
                         <ul class="item-rating" onclick="postVote(event)">
                             <li class="star-@if(Model.AverageVote >= 1) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="1"></i></li>
@@ -66,8 +74,8 @@
                             </p>
                         </div>
                     </div>
-                    <input id="latitude" type="hidden" value="@Model.Location.Y"/>
-                    <input id="longitude" type="hidden" value="@Model.Location.X"/>
+                    <input id="latitude" type="hidden" value="@Model.Coordinates.Y"/>
+                    <input id="longitude" type="hidden" value="@Model.Coordinates.X"/>
                     <input id="description" type="hidden" value="@Model.Description.Substring(0, 100)"/>
                     <div id="map" style="width: 1200px; height: 300px;" class="card mb-0 mt-5"></div>
                 </div>

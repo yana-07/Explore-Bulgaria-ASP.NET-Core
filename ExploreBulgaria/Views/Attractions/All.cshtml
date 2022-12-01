@@ -70,10 +70,7 @@
                                         @attraction.CreatedByVisitor
                                     </p>
                                     <p>@attraction.Description ...</p>
-                                    <form id="form" asp-controller="Attractions" asp-action="Details" method="post">
-                                        <input type="hidden" name="attractionId" value="@attraction.Id">
-                                        <button type="submit" class="main-button">Разгледай</button>
-                                    </form>
+                                    <a class="main-button" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()">Разгледай</a>
                                 </div>
                             </div>
                         </div>                                                                       

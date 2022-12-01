@@ -1,4 +1,5 @@
 ﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Services.Extensions;
 using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
@@ -69,12 +70,19 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Details(string attractionId)
+        public async Task<IActionResult> Details(string id, [FromRoute]string information)
         {
             try
             {
                 var attraction = await attractionsService
-                    .GetByIdAsync<AttractionDetailsViewModel>(attractionId);
+                    .GetByIdAsync<AttractionDetailsViewModel>(id);
+
+                if (information != attraction.GenerateSlug())
+                {
+                    TempData[ErrorMessage] = "Моля, не променяйте информацията в адреса!";
+
+                    return RedirectToAction(nameof(All));
+                }
 
                 return View(attraction);
             }
@@ -125,5 +133,10 @@ namespace ExploreBulgaria.Web.Controllers
 
             return RedirectToAction(nameof(All));
         }
+
+        //public async Task<IActionResult> Mine()
+        //{
+        //    var model = await attractionsService.GetByVisitorIdAsync<>(User.VisitorId());
+        //}
     }
 }
