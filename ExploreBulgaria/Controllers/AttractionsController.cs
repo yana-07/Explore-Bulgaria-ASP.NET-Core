@@ -3,6 +3,7 @@ using ExploreBulgaria.Services.Extensions;
 using ExploreBulgaria.Web.Common;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
+using ExploreBulgaria.Web.ViewModels.Locations;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
@@ -17,18 +18,21 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
+        private readonly ILocationsService locationsService;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
             IAttractionsService attractionsService,
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
-            IRegionsService regionsService)
+            IRegionsService regionsService,
+            ILocationsService locationsService)
         {
             this.attractionsService = attractionsService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
+            this.locationsService = locationsService;
         }
 
         [AllowAnonymous]
@@ -47,7 +51,8 @@ namespace ExploreBulgaria.Web.Controllers
                 {                   
                     Categories = await categoriesService.GetAllAsync<CategorySelectViewModel>(),
                     Subcategories = await subcategoriesService.GetAllAsync<SubcategorySelectViewModel>(),
-                    Regions = await regionsService.GetAllAsync<RegionSelectViewModel>()
+                    Regions = await regionsService.GetAllAsync<RegionSelectViewModel>(),
+                    Locations = await locationsService.GetAllAsync<LocationSelectViewModel>()
                 },
                 Area = "",
                 Controller = "Attractions",
@@ -64,6 +69,7 @@ namespace ExploreBulgaria.Web.Controllers
             model.FilterModel.CategoryName = filterModel.CategoryName;
             model.FilterModel.SubcategoryName = filterModel.SubcategoryName;
             model.FilterModel.RegionName = filterModel.RegionName;
+            model.FilterModel.LocationName = filterModel.LocationName;
             model.FilterModel.SearchTerm = filterModel.SearchTerm;
 
             return View(model);

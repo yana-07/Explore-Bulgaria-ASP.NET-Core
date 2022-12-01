@@ -11,6 +11,7 @@ namespace ExploreBulgaria.Data.Models
         public Location()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.Attractions = new HashSet<Attraction>();
         }
 
         [Required]
@@ -22,5 +23,7 @@ namespace ExploreBulgaria.Data.Models
         public string RegionId { get; set; } = null!;
 
         public virtual Region Region { get; set; } = null!;
+
+        public virtual ICollection<Attraction> Attractions { get; set; }
     }
 }

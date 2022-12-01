@@ -1,6 +1,7 @@
 ﻿const categorySelectEl = document.getElementById('chooseCategory');
 const subcategorySelectEl = document.getElementById('chooseSubcategory');
 const regionSelectEl = document.getElementById('chooseRegion');
+const locationSelectEl = document.getElementById('chooseLocation');
 const antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
 
 categorySelectEl.addEventListener('change', () => {
@@ -15,10 +16,10 @@ categorySelectEl.addEventListener('change', () => {
         body: JSON.stringify({ categoryName })
     })
         .then(response => response.json())
-        .then(categories => {
+        .then(subcategories => {
             subcategorySelectEl.innerHTML = '';
             subcategorySelectEl.appendChild(new Option(''));
-            var childElements = categories.map(c => new Option(c.name, c.id));
+            let childElements = subcategories.map(c => new Option(c.name));
             childElements.forEach(c => subcategorySelectEl.appendChild(c));
         })
 
@@ -34,8 +35,24 @@ categorySelectEl.addEventListener('change', () => {
         .then(regions => {
             regionSelectEl.innerHTML = '';
             regionSelectEl.appendChild(new Option(''));
-            var childElements = regions.map(r => new Option(r.name, r.id));
+            let childElements = regions.map(r => new Option(r.name));
             childElements.forEach(c => regionSelectEl.appendChild(c));
+        })
+
+    fetch("/api/AttractionsApi/locations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
+        },
+        body: JSON.stringify({ categoryName })
+    })
+        .then(response => response.json())
+        .then(locations => {
+            locationSelectEl.innerHTML = '';
+            locationSelectEl.appendChild(new Option(''));
+            let childElements = locations.map(l => new Option(l.name));
+            childElements.forEach(l => locationSelectEl.appendChild(l));
         })
 
 })
@@ -56,8 +73,46 @@ subcategorySelectEl.addEventListener('change', () => {
         .then(regions => {
             regionSelectEl.innerHTML = '';
             regionSelectEl.appendChild(new Option(''));
-            var childElements = regions.map(r => new Option(r.name, r.id));
+            let childElements = regions.map(r => new Option(r.name));
             childElements.forEach(c => regionSelectEl.appendChild(c));
         })
 
+    fetch("/api/AttractionsApi/locations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
+        },
+        body: JSON.stringify({ categoryName, subcategoryName })
+    })
+        .then(response => response.json())
+        .then(locations => {
+            locationSelectEl.innerHTML = '';
+            locationSelectEl.appendChild(new Option(''));
+            let childElements = locations.map(l => new Option(l.name));
+            childElements.forEach(l => locationSelectEl.appendChild(l));
+        })
+
+})
+
+regionSelectEl.addEventListener('change', () => {
+    const regionName = regionSelectEl.value;
+    const categoryName = categorySelectEl.value;
+    const subcategoryName = subcategorySelectEl.value;
+
+    fetch("/api/AttractionsApi/locations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': antiForgeryToken,
+        },
+        body: JSON.stringify({ categoryName, subcategoryName, regionName })
+    })
+        .then(response => response.json())
+        .then(locations => {
+            locationSelectEl.innerHTML = '';
+            locationSelectEl.appendChild(new Option(''));
+            let childElements = locations.map(l => new Option(l.name));
+            childElements.forEach(l => locationSelectEl.appendChild(l));
+        })
 })

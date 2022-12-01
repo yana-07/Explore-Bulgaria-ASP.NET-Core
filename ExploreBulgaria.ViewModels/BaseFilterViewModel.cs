@@ -8,6 +8,8 @@
 
         public string? RegionName { get; set; }
 
+        public string? LocationName { get; set; }
+
         public string? SearchTerm { get; set; }
     }
 }

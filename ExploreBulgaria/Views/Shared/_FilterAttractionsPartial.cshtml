@@ -9,7 +9,7 @@
                         <div class="col-lg-2">
                             <h4>Филтрирай обектите по:</h4>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4 offset-lg-1">
                             <fieldset>
                                 <label asp-for="CategoryName">1. Избери категория</label>
                                 <select asp-for="CategoryName" class="form-select" aria-label="Default select example" id="chooseCategory">
@@ -21,7 +21,7 @@
                                 </select>
                             </fieldset>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <fieldset>
                                 <label asp-for="SubcategoryName">2. Избери подкатегория</label>
                                 <select asp-for="SubcategoryName" class="form-select" aria-label="Default select example" id="chooseSubcategory">
@@ -32,11 +32,18 @@
                                     }
                                 </select>
                             </fieldset>
-                        </div>
+                        </div>                      
+                    </div>
+                    <div class="row mt-5">
                         <div class="col-lg-2">
                             <fieldset>
+                                <button id="filterBtn" class="border-button text-center">Търси</button>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-4 offset-lg-1">
+                            <fieldset>
                                 <label asp-for="RegionName">3. Избери регион</label>
-                                <select asp-for="RegionName" class="form-select" aria-label="Default select example" id="chooseRegion" onChange="this.form.click()">
+                                <select asp-for="RegionName" class="form-select" aria-label="Default select example" id="chooseRegion">
                                     <option></option>
                                     @foreach (var region in Model.Regions)
                                     {
@@ -44,10 +51,17 @@
                                     }
                                 </select>
                             </fieldset>
-                        </div>                        
-                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-4">
                             <fieldset>
-                                <button id="filterBtn" class="border-button text-center">Търси</button>
+                                <label asp-for="LocationName">4. Избери локация</label>
+                                <select asp-for="LocationName" class="form-select" aria-label="Default select example" id="chooseLocation">
+                                    <option></option>
+                                    @foreach (var location in Model.Locations)
+                                    {
+                                        <option value="@location.Name">@location.Name</option>
+                                    }
+                                </select>
                             </fieldset>
                         </div>
                     </div>

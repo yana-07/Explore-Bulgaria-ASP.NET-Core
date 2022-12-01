@@ -41,7 +41,7 @@ namespace ExploreBulgaria.Services.Data
 
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
-                filterModel.RegionName, filterModel.SearchTerm);
+                filterModel.RegionName, filterModel.LocationName, filterModel.SearchTerm);
 
             return await attractions
                 .To<T>()
@@ -54,7 +54,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
-                filterModel.RegionName, filterModel.SearchTerm);
+                filterModel.RegionName, filterModel.LocationName, filterModel.SearchTerm);
 
             return await attractions.CountAsync();
         }
@@ -75,6 +75,7 @@ namespace ExploreBulgaria.Services.Data
             string? categoryName = null,
             string? subcategoryName = null,
             string? regionName = null,
+            string? locationName = null,
             string? searchTerm = null)
         {
             var result = repo
@@ -89,13 +90,21 @@ namespace ExploreBulgaria.Services.Data
             if (string.IsNullOrEmpty(subcategoryName) == false)
             {
                 result = result
-                    .Where(a => a.Subcategory.Name == subcategoryName);
+                    .Where(a => a.Subcategory != null && 
+                           a.Subcategory.Name == subcategoryName);
             }
 
             if (string.IsNullOrEmpty(regionName) == false)
             {
                 result = result
-                    .Where(a => a.Region != null && a.Region.Name == regionName);
+                    .Where(a => a.Region.Name == regionName);
+            }
+
+            if (string.IsNullOrEmpty(locationName) == false)
+            {
+                result = result
+                    .Where(a => a.Location != null &&
+                           a.Location.Name == locationName);
             }
 
             if (string.IsNullOrEmpty(searchTerm) == false)
@@ -155,6 +164,14 @@ namespace ExploreBulgaria.Services.Data
             {
                 await blobClient.UploadAsync(stream);
             }
+        }
+
+        public async Task<IEnumerable<T>> GetByVisitorIdAsync<T>(string visitorId)
+        {
+            return await repo.AllAsNoTracking()
+                .Where(a => a.CreatedByVisitorId == visitorId)
+                .To<T>()
+                .ToListAsync();
         }
     }
 }
