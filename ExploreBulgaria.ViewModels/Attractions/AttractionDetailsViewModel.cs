@@ -3,7 +3,6 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
-using ExploreBulgaria.Web.ViewModels.Votes;
 using NetTopologySuite.Geometries;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
