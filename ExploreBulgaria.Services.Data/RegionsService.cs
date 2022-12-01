@@ -24,11 +24,11 @@ namespace ExploreBulgaria.Services.Data
                    .Where(r => r.Attractions
                      .Select(a => a.Category.Name).Contains(categoryName));
 
-            if (subcategoryName != null)
+            if (!string.IsNullOrEmpty(subcategoryName))
             {
                 regions = regions
-                    .Where(r => r.Attractions
-                       .Select(a => a.Subcategory.Name).Contains(subcategoryName));
+                    .Where(r => r.Attractions.Any(a => a.Subcategory != null &&
+                       a.Subcategory.Name.Contains(subcategoryName)));
             }
 
             return await regions

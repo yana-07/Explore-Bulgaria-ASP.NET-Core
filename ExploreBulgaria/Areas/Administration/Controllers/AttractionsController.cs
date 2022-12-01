@@ -105,7 +105,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             model.Categories = await categoriesService
                 .GetAllAsync<CategoryOptionViewModel>();
             model.Subcategories = await subcategoriesService
-                .GetAllForCategoryAndRegionAsync<SubcategoryOptionViewModel>(model.CategoryModel!.Name);
+                .GetAllForCategory<SubcategoryOptionViewModel>(model.CategoryModel!.Name);
             model.Regions = await regionsService
                 .GetAllAsync<RegionOptionViewModel>();
         }
