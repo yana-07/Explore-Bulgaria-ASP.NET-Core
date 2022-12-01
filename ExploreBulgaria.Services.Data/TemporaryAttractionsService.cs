@@ -32,7 +32,7 @@ namespace ExploreBulgaria.Services.Data
                 CategoryId = model.CategoryId,
                 CreatedByVisitorId = model.CreatedByVisitorId,
                 Description = model.Description,
-                Location = new Point(model.Longitude, model.Latitude)
+                Coordinates = new Point(model.Longitude, model.Latitude)
                 { SRID = 4326 },
                 Name = model.Name,
                 RegionId = model.RegionId,
