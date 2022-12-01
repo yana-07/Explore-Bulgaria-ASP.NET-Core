@@ -9,14 +9,14 @@ namespace ExploreBulgaria.Services
     {
         private static IConfiguration config = Configuration.Default.WithDefaultLoader();
         private static IBrowsingContext context = BrowsingContext.New(config);
-        private static ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 2 };
+        private static ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 4 };
         public static string BaseUrl { get; } = "https://opoznai.bg/all/sort:newest/page:{0}";
 
-        public IEnumerable<AttractionDto> ScrapeAttractions()
+        public IEnumerable<AttractionDto> ScrapeAttractions(int start, int end)
         {
             var attractions = new List<AttractionDto>();
 
-            for (int i = 1; i <= 214; i++)
+            for (int i = start; i <= end; i++)
             {
                 try
                 {
@@ -64,20 +64,29 @@ namespace ExploreBulgaria.Services
 
             string areaName = "", categoryName = "", subCategoryName = "", attractionName = "";
 
+            if (data.Length == 3)
+            {
+                areaName = data[1];
+            }
+            if (data.Length == 4)
+            {
+                areaName = data[1];
+                categoryName = data[2];
+            }
             if (data.Length == 5)
             {
                 areaName = data[1];
                 categoryName = data[2];
                 subCategoryName = data[3];
-                attractionName = data[4];
             }
             else if (data.Length == 6)
             {
                 areaName = data[1];
                 categoryName = data[3];
                 subCategoryName = data[4];
-                attractionName = data[5];
             }
+
+            attractionName = document.GetElementById("viewpage_guide_name")!.TextContent;
 
             var location = document.QuerySelector(
                 "span.location a")

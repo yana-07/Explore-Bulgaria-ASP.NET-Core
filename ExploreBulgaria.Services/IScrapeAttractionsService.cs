@@ -4,7 +4,8 @@ namespace ExploreBulgaria.Services
 {
     public interface IScrapeAttractionsService
     {
-        static string BaseUrl { get; }
-        IEnumerable<AttractionDto> ScrapeAttractions();
+        static string BaseUrl { get; } = null!;
+
+        IEnumerable<AttractionDto> ScrapeAttractions(int start, int end);
     }
 }
