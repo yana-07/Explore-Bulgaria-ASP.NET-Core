@@ -8,6 +8,8 @@ namespace ExploreBulgaria.Data.Seeding
 {
     public class CategoriesSeeder : ISeeder
     {
+        private static string[] categoriesNotAllowed = new[] 
+           { "село Нисово", "село Турия", "село Ново село (Област Пловдив)", "село Беброво", "село Гаврил Геново", "село Аврен (Област Варна)" };
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext.Categories.Any())
@@ -22,7 +24,8 @@ namespace ExploreBulgaria.Data.Seeding
 
                 var attractionsJson = File.ReadAllText(path);
                 var attractionDtos = JsonConvert.DeserializeObject<AttractionDto[]>(attractionsJson)
-                    .Where(x => x.CategoryName != "");
+                    .Where(dto => !string.IsNullOrEmpty(dto.CategoryName) && 
+                           !categoriesNotAllowed.Contains(dto.CategoryName));
 
                 var categories = attractionDtos
                     .DistinctBy(dto => dto.CategoryName)

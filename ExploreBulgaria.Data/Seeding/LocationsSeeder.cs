@@ -1,23 +1,24 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace ExploreBulgaria.Data.Seeding
 {
-    public class RegionsSeeder : ISeeder
+    public class LocationsSeeder : ISeeder
     {
         private static string[] categoriesNotAllowed = new[]
            { "село Нисово", "село Турия", "село Ново село (Област Пловдив)", "село Беброво", "село Гаврил Геново", "село Аврен (Област Варна)" };
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            if (dbContext.Regions.Any())
+            if (dbContext.Locations.Any())
             {
                 return;
             }
 
-            using (var serviceScope = serviceProvider.CreateScope())
+            using (var serviceScope = serviceProvider.CreateAsyncScope())
             {
                 var environment = serviceScope.ServiceProvider.GetRequiredService<IHostingEnvironment>();
                 var path = environment.WebRootPath + "/attractions/attractions.json";
@@ -25,15 +26,24 @@ namespace ExploreBulgaria.Data.Seeding
                 var attractionsJson = File.ReadAllText(path);
                 var attractionDtos = JsonConvert.DeserializeObject<AttractionDto[]>(attractionsJson)
                     .Where(dto => !string.IsNullOrEmpty(dto.CategoryName) &&
-                                !string.IsNullOrEmpty(dto.AreaName) &&
-                                !categoriesNotAllowed.Contains(dto.CategoryName));
+                                  !string.IsNullOrEmpty(dto.Location) &&
+                                  !categoriesNotAllowed.Contains(dto.CategoryName) &&
+                                  dto.AreaName != dto.Location)
+                    .DistinctBy(dto => dto.Location)
+                    .ToArray();
 
-                var regions = attractionDtos
-                    .DistinctBy(dto => dto.AreaName)
-                    .Select(dto => new Region { Name = dto.AreaName });
-
-                await dbContext.Regions.AddRangeAsync(regions);
+                await dbContext.Locations.AddRangeAsync(GetLocations(attractionDtos, dbContext));
                 await dbContext.SaveChangesAsync();
+            }
+        }
+
+        private IEnumerable<Location> GetLocations(AttractionDto[] dtos, ApplicationDbContext dbContext)
+        {
+            foreach (var dto in dtos)
+            {
+                var region = dbContext.Regions.FirstOrDefaultAsync(r => r.Name == dto.AreaName).GetAwaiter().GetResult();
+
+                yield return new Location { Name = dto.Location, RegionId = region.Id };
             }
         }
     }

@@ -10,6 +10,8 @@ namespace ExploreBulgaria.Data.Seeding
 {
     public class AttractionsSeeder : ISeeder
     {
+        private static string[] categoriesNotAllowed = new[]
+           { "село Нисово", "село Турия", "село Ново село (Област Пловдив)", "село Беброво", "село Гаврил Геново", "село Аврен (Област Варна)" };
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext.Attractions.Any())
@@ -24,7 +26,9 @@ namespace ExploreBulgaria.Data.Seeding
 
                 var attractionsJson = File.ReadAllText(path);
                 var attractionDtos = JsonConvert.DeserializeObject<AttractionDto[]>(attractionsJson)
-                    .Where(dto => dto.CategoryName != "")
+                    .Where(dto => !string.IsNullOrEmpty(dto.CategoryName) &&
+                                  !string.IsNullOrEmpty(dto.AttractionName) &&
+                                  !categoriesNotAllowed.Contains(dto.CategoryName))
                     .DistinctBy(dto => dto.AttractionName);
 
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -39,6 +43,8 @@ namespace ExploreBulgaria.Data.Seeding
 
                     var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Name == dto.AreaName); 
 
+                    var location = await dbContext.Locations.FirstOrDefaultAsync(l => l.Name == dto.Location); 
+
                     var images = dto.ImagesUrls
                            .Select(url =>
                            {
@@ -49,15 +55,16 @@ namespace ExploreBulgaria.Data.Seeding
                     var attraction = new Attraction
                     {
                         Name = dto.AttractionName,
-                        CategoryId = category.Id,
-                        SubcategoryId = subcategory.Id,
-                        Region = region,
-                        Location = new NetTopologySuite.Geometries.Point(
+                        CategoryId = category!.Id,
+                        SubcategoryId = subcategory?.Id,
+                        RegionId = region!.Id,
+                        LocationId = location?.Id,
+                        Coordinates = new NetTopologySuite.Geometries.Point(
                             Convert.ToDouble(dto.Longitude),
                             Convert.ToDouble(dto.Latitude))
                         { SRID = 4326 },
                         Description = dto.Description,
-                        CreatedByVisitorId = visitor.Id,
+                        CreatedByVisitorId = visitor!.Id,
                         Images = images
                     };
 
