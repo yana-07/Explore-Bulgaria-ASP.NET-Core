@@ -26,11 +26,10 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual Category Category { get; set; } = null!;
 
-        [Required]
         [ForeignKey(nameof(Subcategory))]
-        public string SubcategoryId { get; set; } = null!;
+        public string? SubcategoryId { get; set; }
 
-        public virtual Subcategory Subcategory { get; set; } = null!;
+        public virtual Subcategory? Subcategory { get; set; }
 
         [Required]
         [ForeignKey(nameof(Region))]
@@ -38,8 +37,13 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual Region Region { get; set; } = null!;
 
+        [ForeignKey(nameof(Location))]
+        public string? LocationId { get; set; }
+
+        public virtual Location? Location { get; set; }
+
         [Required]
-        public Point Location { get; set; } = null!;
+        public Point Coordinates { get; set; } = null!;
 
         [Required]
         [MaxLength(DescriptionMaxLength)]

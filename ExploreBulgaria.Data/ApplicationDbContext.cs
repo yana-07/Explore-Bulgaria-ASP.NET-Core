@@ -26,6 +26,8 @@ namespace ExploreBulgaria.Data
 
         public DbSet<Region> Regions { get; set; } = null!;
 
+        public DbSet<Location> Locations { get; set; } = null!;
+
         public DbSet<Image> Images { get; set; } = null!;
 
         public DbSet<Comment> Comments { get; set; } = null!;
