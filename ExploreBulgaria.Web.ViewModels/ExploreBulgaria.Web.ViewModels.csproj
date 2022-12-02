@@ -16,6 +16,7 @@
     <ProjectReference Include="..\ExploreBulgaria.Data.Models\ExploreBulgaria.Data.Models.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services.Common\ExploreBulgaria.Services.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Services\ExploreBulgaria.Services.csproj" />
   </ItemGroup>
 
 </Project>
