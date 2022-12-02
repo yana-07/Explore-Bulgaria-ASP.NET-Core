@@ -24,6 +24,7 @@
     <ProjectReference Include="..\ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services\ExploreBulgaria.Services.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.ViewModels\ExploreBulgaria.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Web.ViewModels\ExploreBulgaria.Web.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
