@@ -1,4 +1,4 @@
-﻿namespace ExploreBulgaria.Services.Common.Constants
+﻿namespace ExploreBulgaria.Data.Common.Constants
 {
     public static class EntityAndVMConstants
     {

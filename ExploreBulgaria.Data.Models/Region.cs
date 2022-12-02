@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Models;
 using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Region;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Region;
 
 namespace ExploreBulgaria.Data.Models
 {

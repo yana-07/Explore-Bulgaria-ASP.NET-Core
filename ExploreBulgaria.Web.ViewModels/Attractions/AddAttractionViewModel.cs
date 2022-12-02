@@ -4,8 +4,8 @@ using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using static ExploreBulgaria.Services.Common.Constants.UIConstants;
-using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Attraction;
-using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.Region;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Attraction;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Region;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
