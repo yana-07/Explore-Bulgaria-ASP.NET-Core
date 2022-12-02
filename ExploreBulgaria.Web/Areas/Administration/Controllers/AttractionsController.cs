@@ -4,15 +4,11 @@ using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
-    [Area(AdministrationAreaName)]
-    public class AttractionsController : Controller
+    public class AttractionsController : BaseController
     {
         private readonly ITemporaryAttractionsService attractionsService;
         private readonly ICategoriesService categoriesService;

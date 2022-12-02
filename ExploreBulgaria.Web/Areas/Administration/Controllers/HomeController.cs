@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
-    [Area("Administration")]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {
