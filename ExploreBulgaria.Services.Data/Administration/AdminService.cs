@@ -9,7 +9,7 @@ using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data.Administration
 {
-    public class AdminService
+    public class AdminService : IAdminService
     {
         private readonly IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
         private readonly IDeletableEnityRepository<Attraction> attrRepo;
