@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" Version="8.0.601" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
@@ -19,12 +22,18 @@
   <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Data\ExploreBulgaria.Data.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Services\ExploreBulgaria.Services.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.ViewModels\ExploreBulgaria.Web.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Administration\Views\" />
-    <Folder Include="Areas\Administration\ViewModels\" />
+    <Folder Include="wwwroot\images\avatars\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\attractions\attractions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
