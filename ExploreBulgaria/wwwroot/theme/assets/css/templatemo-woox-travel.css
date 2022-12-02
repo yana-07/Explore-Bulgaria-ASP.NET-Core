@@ -1068,6 +1068,7 @@ Call To Action Style
   background-size: cover;
   background-position: center center;
   padding: 75px 0px;
+  position: page;
 }
 
 .call-to-action h2 {
@@ -2114,7 +2115,8 @@ Reservation Page Style
   color: #8ed397;
 }
 
-.registration-form {
+.registration-form,
+.generic-form {
   margin: 0px 0px;
 }
 
@@ -2122,7 +2124,8 @@ Reservation Page Style
   margin-bottom: -6px;
 }
 
-.registration-form #registration-form h4 {
+.registration-form #registration-form h4,
+.generic-form h4 {
   font-size: 30px;
   text-align: center;
   margin-bottom: 50px;
@@ -2133,20 +2136,24 @@ Reservation Page Style
   color: #8ed397;
 }
 
-.registration-form #registration-form, .login {
+.registration-form #registration-form,
+.login, .generic-form {
   padding: 60px 120px;
   background-color: #f9f9f9;
   border-bottom-right-radius: 23px;
   border-bottom-left-radius: 23px;
 }
 
-.registration-form #registration-form label {
+.registration-form #registration-form label,
+.generic-form label {
   font-size: 15px;
   color: #afafaf;
 }
 
 .registration-form #registration-form input,
-.registration-form #registration-form select {
+.registration-form #registration-form select ,
+.generic-form input, 
+.generic-form select {
   width: 100%;
   height: 46px;
   background-color: transparent;
@@ -2157,11 +2164,22 @@ Reservation Page Style
   margin-bottom: 30px;
 }
 
+.generic-form textarea {
+    width: 100%;
+    background-color: transparent;
+    border-radius: 23px;
+    border: 1px solid #e0e0e0;
+    padding: 0px 20px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
 .registration-form #registration-form input.date {
   color: #aaa;
 }
 
-.registration-form #registration-form button {
+.registration-form #registration-form button
+.generic-form button {
   font-size: 14px;
   color: #fff;
   background-color: #8ed397;
