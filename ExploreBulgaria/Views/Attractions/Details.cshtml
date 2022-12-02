@@ -21,10 +21,11 @@
                             }
                             
                             <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName" 
-                                  asp-route-subcategoryName="@Model.SubcategoryName" asp-route-regionName="@Model.RegionName">@Model.RegionName</a>
+                                  asp-route-subcategoryName="@Model.SubcategoryName" asp-route-regionName="@Model.RegionName">@Model.RegionName ></a>
                             @if(!string.IsNullOrEmpty(Model.LocationName))
                             {
-                                <a class="text-secondary">@Model.LocationName</a>
+                                <a class="text-secondary" asp-controller="Attractions" asp-action="All" asp-route-categoryName="@Model.CategoryName"
+                                   asp-route-subcategoryName="@Model.SubcategoryName" asp-route-regionName="@Model.RegionName" asp-route-locationName="@Model.LocationName">@Model.LocationName</a>
                             }
                         </div>
                         <ul class="item-rating" onclick="postVote(event)">
