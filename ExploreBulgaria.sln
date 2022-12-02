@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{38D7D70C-934
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{12730275-A231-4952-A0FE-1D496A3F82BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web.ViewModels", "ExploreBulgaria.ViewModels\ExploreBulgaria.Web.ViewModels.csproj", "{BFA7CBDF-0982-4E80-B6A7-367E7B553807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web.ViewModels", "ExploreBulgaria.Web.ViewModels\ExploreBulgaria.Web.ViewModels.csproj", "{BFA7CBDF-0982-4E80-B6A7-367E7B553807}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Data", "ExploreBulgaria.Data\ExploreBulgaria.Data.csproj", "{DF462CC3-A9C9-4337-AE06-B6FD05BE35D1}"
 EndProject
