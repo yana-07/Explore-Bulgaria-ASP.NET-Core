@@ -1,7 +1,6 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Data;
-using ExploreBulgaria.Web.Common;
-using ExploreBulgaria.Web.Infrastructure;
+using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

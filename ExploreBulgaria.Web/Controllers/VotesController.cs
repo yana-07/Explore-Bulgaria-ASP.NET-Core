@@ -1,5 +1,5 @@
 ﻿using ExploreBulgaria.Services.Data;
-using ExploreBulgaria.Web.Common;
+using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Votes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

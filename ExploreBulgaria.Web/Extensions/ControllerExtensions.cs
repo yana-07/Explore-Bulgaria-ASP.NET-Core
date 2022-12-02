@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
-namespace ExploreBulgaria.Web.Infrastructure
+namespace ExploreBulgaria.Web.Extensions
 {
     public static class ControllerExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace ExploreBulgaria.Web.Common
+namespace ExploreBulgaria.Web.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {

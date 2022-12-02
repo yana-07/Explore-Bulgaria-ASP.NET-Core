@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Extensions;
-using ExploreBulgaria.Web.Common;
+using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Locations;
