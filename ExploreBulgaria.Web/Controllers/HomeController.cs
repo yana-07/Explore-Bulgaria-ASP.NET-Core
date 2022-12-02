@@ -1,6 +1,7 @@
 ﻿using ExploreBulgaria.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -15,6 +16,14 @@ namespace ExploreBulgaria.Web.Controllers
 
         public IActionResult Index()
         {
+            if (User.IsInRole(AdministratorRoleName))
+            {
+                return RedirectToAction(
+                    nameof(Areas.Administration.Controllers.HomeController.Index),
+                    "Home",
+                    new { area = AdministrationAreaName });
+            }
+
             return View();
         }
 
