@@ -4,7 +4,7 @@ using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Services.Common.Constants.UIConstants;
+using static ExploreBulgaria.Services.Constants.UIConstants;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Attraction;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Region;
 

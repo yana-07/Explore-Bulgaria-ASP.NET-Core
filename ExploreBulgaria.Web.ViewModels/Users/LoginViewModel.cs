@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using static ExploreBulgaria.Services.Common.Constants.UIConstants;
+using static ExploreBulgaria.Services.Constants.UIConstants;
 
 namespace ExploreBulgaria.Web.ViewModels.Users
 {

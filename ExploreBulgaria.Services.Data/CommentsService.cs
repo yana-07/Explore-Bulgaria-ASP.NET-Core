@@ -1,10 +1,10 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Services.Common.Guards;
+using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
 using Microsoft.EntityFrameworkCore;
-using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
+using static ExploreBulgaria.Services.Constants.GlobalConstants;
 
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers

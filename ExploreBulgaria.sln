@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web", "ExploreBulgaria\ExploreBulgaria.Web.csproj", "{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Web", "ExploreBulgaria.Web\ExploreBulgaria.Web.csproj", "{8C3309FC-11C7-4AA8-A6FA-E02179A1DD05}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{38D7D70C-9343-42FC-BBB6-B347E696A01B}"
 EndProject
@@ -22,8 +22,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Data", "ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj", "{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Mapping", "ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj", "{182DE5DB-5508-4218-8B93-25735FBA7563}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Common", "ExploreBulgaria.Services.Common\ExploreBulgaria.Services.Common.csproj", "{701C3758-986C-4640-B9B0-47A22270B08C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services", "ExploreBulgaria.Services\ExploreBulgaria.Services.csproj", "{B150AF19-2308-4477-AB25-5B062802D4B0}"
 EndProject
@@ -63,10 +61,6 @@ Global
 		{182DE5DB-5508-4218-8B93-25735FBA7563}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{182DE5DB-5508-4218-8B93-25735FBA7563}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{182DE5DB-5508-4218-8B93-25735FBA7563}.Release|Any CPU.Build.0 = Release|Any CPU
-		{701C3758-986C-4640-B9B0-47A22270B08C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{701C3758-986C-4640-B9B0-47A22270B08C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{701C3758-986C-4640-B9B0-47A22270B08C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{701C3758-986C-4640-B9B0-47A22270B08C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B150AF19-2308-4477-AB25-5B062802D4B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B150AF19-2308-4477-AB25-5B062802D4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B150AF19-2308-4477-AB25-5B062802D4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,7 +81,6 @@ Global
 		{00FEC566-AA91-4E74-A31C-01E7DEA8FC92} = {12730275-A231-4952-A0FE-1D496A3F82BD}
 		{ADB5BA02-F346-4E3F-A3B6-5D27029D3EF9} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
 		{182DE5DB-5508-4218-8B93-25735FBA7563} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
-		{701C3758-986C-4640-B9B0-47A22270B08C} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
 		{B150AF19-2308-4477-AB25-5B062802D4B0} = {CE6CCD8B-D738-43D7-ACAD-E66EA7A5CCE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

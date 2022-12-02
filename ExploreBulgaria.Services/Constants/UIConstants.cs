@@ -1,4 +1,4 @@
-﻿namespace ExploreBulgaria.Services.Common.Constants
+﻿namespace ExploreBulgaria.Services.Constants
 {
     public static class UIConstants
     {

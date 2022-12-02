@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Repositories;
-using ExploreBulgaria.Services.Common.Guards;
+using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Data.Administration;
 using ExploreBulgaria.Web.ViewModels.Users;

@@ -1,7 +1,7 @@
 ﻿using ExploreBulgaria.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
+using static ExploreBulgaria.Services.Constants.GlobalConstants;
 
 namespace ExploreBulgaria.Web.Controllers
 {

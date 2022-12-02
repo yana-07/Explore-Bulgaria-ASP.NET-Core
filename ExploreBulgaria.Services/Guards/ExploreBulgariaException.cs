@@ -1,4 +1,4 @@
-﻿namespace ExploreBulgaria.Services.Common.Guards
+﻿namespace ExploreBulgaria.Services.Guards
 {
     public class ExploreBulgariaException : ApplicationException
     {

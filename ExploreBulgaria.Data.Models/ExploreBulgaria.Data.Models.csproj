@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Data.Common\ExploreBulgaria.Data.Common.csproj" />
-    <ProjectReference Include="..\ExploreBulgaria.Services.Common\ExploreBulgaria.Services.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services.Mapping\ExploreBulgaria.Services.Mapping.csproj" />
   </ItemGroup>
 

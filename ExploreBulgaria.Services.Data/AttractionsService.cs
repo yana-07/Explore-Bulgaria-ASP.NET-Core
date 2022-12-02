@@ -1,14 +1,14 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Services.Common.Guards;
+using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
-using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
