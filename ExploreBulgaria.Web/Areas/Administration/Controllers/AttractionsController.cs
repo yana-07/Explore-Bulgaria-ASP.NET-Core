@@ -11,7 +11,7 @@ using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
     [Authorize(Roles = AdministratorRoleName)]
-    [Area("Administration")]
+    [Area(AdministrationAreaName)]
     public class AttractionsController : Controller
     {
         private readonly ITemporaryAttractionsService attractionsService;
