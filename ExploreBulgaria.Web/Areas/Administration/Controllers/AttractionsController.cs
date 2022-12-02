@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Services.Data;
-using ExploreBulgaria.Services.Data.Admin;
+using ExploreBulgaria.Services.Data.Administration;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;

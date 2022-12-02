@@ -1,6 +1,6 @@
 ﻿using ExploreBulgaria.Web.ViewModels.Administration;
 
-namespace ExploreBulgaria.Services.Data.Admin
+namespace ExploreBulgaria.Services.Data.Administration
 {
     public interface IAdminService
     {

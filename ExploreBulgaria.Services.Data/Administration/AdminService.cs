@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
 
-namespace ExploreBulgaria.Services.Data.Admin
+namespace ExploreBulgaria.Services.Data.Administration
 {
     public class AdminService
     {
