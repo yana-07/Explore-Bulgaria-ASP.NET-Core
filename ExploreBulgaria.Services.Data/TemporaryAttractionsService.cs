@@ -1,114 +1,72 @@
-﻿using ExploreBulgaria.Data.Common.Repositories;
+﻿using Azure.Storage.Blobs;
+using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Services.Common.Guards;
-using ExploreBulgaria.Services.Mapping;
-using ExploreBulgaria.Web.ViewModels.Administration;
-using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
-using static ExploreBulgaria.Services.Common.Constants.ExceptionConstants;
+using ExploreBulgaria.Web.ViewModels.Attractions;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace ExploreBulgaria.Services.Data
 {
     public class TemporaryAttractionsService : ITemporaryAttractionsService
     {
-        private readonly IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
-        private readonly IDeletableEnityRepository<Attraction> attrRepo;
-        private readonly IGuard guard;
+        private readonly string[] allowedExtensions = new[] { "jpg", "png", "gif" };
+
+        private readonly IDeletableEnityRepository<AttractionTemporary> repo;
+        private readonly BlobServiceClient blobServiceClient;
 
         public TemporaryAttractionsService(
-            IDeletableEnityRepository<AttractionTemporary> attrTempRepo,
-            IDeletableEnityRepository<Attraction> attrRepo,
-            IGuard guard)
+            IDeletableEnityRepository<AttractionTemporary> repo,
+            BlobServiceClient blobServiceClient)
         {
-            this.attrTempRepo = attrTempRepo;
-            this.attrRepo = attrRepo;
-            this.guard = guard;
-        }
+            this.repo = repo;
+            this.blobServiceClient = blobServiceClient;
+        }    
 
-        public async Task ApproveAsync(AttractionTempDetailsViewModel model)
+        public async Task SaveTemporaryAsync(AddAttractionViewModel model, string visitorId)
         {
-            var attraction = new Attraction
+            var attractionTemp = new AttractionTemporary
             {
-                CategoryId = model.CategoryId,
-                CreatedByVisitorId = model.CreatedByVisitorId,
-                Description = model.Description,
-                Coordinates = new Point(model.Longitude, model.Latitude)
-                { SRID = 4326 },
                 Name = model.Name,
-                RegionId = model.RegionId,
-                SubcategoryId = model.SubcategoryId,
+                Description = model.Description,
+                Region = model.Region,
+                CategoryId = model.CategoryId,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
+                CreatedByVisitorId = visitorId
             };
 
-            foreach (var blob in model.BlobNames.Split(", "))
+            var sb = new StringBuilder();
+
+            foreach (var image in model.Images)
             {
-                attraction.Images.Add(new Image
+                var extension = Path.GetExtension(image.FileName).TrimStart('.');
+                if (!allowedExtensions.Any(x => extension.EndsWith(x)))
                 {
-                     AddedByVisitorId = model.CreatedByVisitorId,
-                     BlobStorageUrl = blob.TrimEnd(','),
-                     Extension = Path.GetExtension(blob).Trim('.', ',')
-                });
+                    throw new Exception($"Invalid image extension {extension}");
+                }
+
+                var blobName = $"{Guid.NewGuid()}.{extension}";
+                sb.Append($"{blobName}, ");
+
+                await UploadImageAsync(image, blobName);
             }
 
-            var attrTempToDelete = await attrTempRepo
-                .All().FirstOrDefaultAsync(at => at.Id == model.Id);
+            attractionTemp.BlobNames = sb.ToString().Trim();
 
-            await attrRepo.AddAsync(attraction);
-            await attrRepo.SaveChangesAsync();
+            await repo.AddAsync(attractionTemp);
 
-            attrTempRepo.Delete(attrTempToDelete!);
-            await attrTempRepo.SaveChangesAsync();
+            await repo.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(int page,
-            AttractionTemporaryFilterModel filterModel,
-            int itemsPerPage)
+        private async Task UploadImageAsync(IFormFile image, string blobName)
         {
-            var skip = (page - 1) * itemsPerPage;
+            var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
+            var blobClient = containerClient.GetBlobClient(blobName);
 
-            var attractionsTemp = ApplyFilter(filterModel);
-
-            return await attractionsTemp
-                .Skip(skip)
-                .Take(itemsPerPage)
-                .To<T>()
-                .ToListAsync();
-        }
-
-        public async Task<T> GetByIdAsync<T>(int id)
-        {
-            var attraction = await attrTempRepo
-                .AllAsNoTracking()
-                .Where(at => at.Id == id)
-                .To<T>()
-                .FirstOrDefaultAsync();
-
-            guard.AgainstNull(attraction, InvalidAttractionTemporaryId);
-
-            return attraction!;
-        }
-
-        public async Task<int> GetCountAsync(AttractionTemporaryFilterModel filterModel)
-        {
-            var attractionsTemp = ApplyFilter(filterModel);
-
-            return await attractionsTemp.CountAsync();
-        }
-
-        private IQueryable<AttractionTemporary> ApplyFilter(AttractionTemporaryFilterModel filterModel)
-        {
-            var result = attrTempRepo.AllAsNoTracking();
-
-            var searchTerm = filterModel.SearchTerm;
-
-            if (string.IsNullOrEmpty(searchTerm) == false)
+            using (var stream = image.OpenReadStream())
             {
-                searchTerm = $"%{searchTerm.ToLower()}%";
-
-                result = result.Where(at => EF.Functions.Like(at.Name.ToLower(), searchTerm) ||
-                        EF.Functions.Like(at.Description.ToLower(), searchTerm));
+                await blobClient.UploadAsync(stream);
             }
-
-            return result;
-        }
+        }        
     }
 }

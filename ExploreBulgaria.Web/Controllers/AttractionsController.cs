@@ -15,6 +15,7 @@ namespace ExploreBulgaria.Web.Controllers
     public class AttractionsController : BaseController
     {
         private readonly IAttractionsService attractionsService;
+        private readonly ITemporaryAttractionsService temporaryAttractionsService;
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
@@ -23,12 +24,14 @@ namespace ExploreBulgaria.Web.Controllers
 
         public AttractionsController(
             IAttractionsService attractionsService,
+            ITemporaryAttractionsService temporaryAttractionsService,
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
             ILocationsService locationsService)
         {
             this.attractionsService = attractionsService;
+            this.temporaryAttractionsService = temporaryAttractionsService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
@@ -123,7 +126,7 @@ namespace ExploreBulgaria.Web.Controllers
 
             try
             {
-                await attractionsService.SaveTemporaryAsync(model, User.VisitorId());
+                await temporaryAttractionsService.SaveTemporaryAsync(model, User.VisitorId());
             }
             catch (Exception ex)
             {

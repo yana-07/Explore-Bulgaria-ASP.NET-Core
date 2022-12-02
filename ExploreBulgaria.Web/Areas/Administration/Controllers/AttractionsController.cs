@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Services.Data.Admin;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
@@ -10,7 +11,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
     public class AttractionsController : BaseController
     {
-        private readonly ITemporaryAttractionsService attractionsService;
+        private readonly IAdminService adminService;
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
@@ -18,13 +19,13 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
-            ITemporaryAttractionsService attractionsService,
+            IAdminService adminService,
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
             BlobServiceClient blobContainerClient)
         {
-            this.attractionsService = attractionsService;
+            this.adminService = adminService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
@@ -37,8 +38,8 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             {
                 PageNumber = page,
                 ItemsPerPage = ItemsPerPage,
-                ItemsCount = await attractionsService.GetCountAsync(filterModel),
-                Attractions = await attractionsService
+                ItemsCount = await adminService.GetCountAsync(filterModel),
+                Attractions = await adminService
                    .GetAllAsync<AttractionTemporaryViewModel>(
                        page, filterModel, ItemsPerPage),
                 FilterModel = filterModel,
@@ -54,7 +55,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
         {
             try
             {
-                var model = await attractionsService
+                var model = await adminService
                     .GetByIdAsync<AttractionTempDetailsViewModel>(id);
 
                 await PopulateModel(model!);
@@ -88,7 +89,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                 return View(nameof(Details), model);
             }
 
-            await attractionsService.ApproveAsync(model);
+            await adminService.ApproveAsync(model);
 
             return RedirectToAction(nameof(All));
         }
