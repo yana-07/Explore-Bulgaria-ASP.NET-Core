@@ -5,31 +5,39 @@
     const locationSelectEl = document.getElementById('chooseLocation');
     const antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
 
-    categorySelectEl.addEventListener('change', () => {
-        const categoryName = categorySelectEl.value;
+    let categoryName = categorySelectEl.value;
+    let subcategoryName = subcategorySelectEl.value;
+    let regionName = regionSelectEl.value;
 
-        getSubcategories(categoryName);
-        getRegions(categoryName);
-        getLocations(categoryName);
+    //getSubcategories(null, categoryName);
+    //getRegions(null, categoryName, subcategoryName);
+    //getLocations(null, categoryName, subcategoryName, regionName);
+
+    categorySelectEl.addEventListener('change', (event) => {
+        categoryName = categorySelectEl.value;
+
+        getSubcategories(event, categoryName);
+        getRegions(event, categoryName);
+        getLocations(event, categoryName);
     })
 
-    subcategorySelectEl.addEventListener('change', () => {
-        const categoryName = categorySelectEl.value;
-        const subcategoryName = subcategorySelectEl.value;
+    subcategorySelectEl.addEventListener('change', (event) => {
+        categoryName = categorySelectEl.value;
+        subcategoryName = subcategorySelectEl.value;
 
-        getRegions(categoryName, subcategoryName);
-        getLocations(categoryName, subcategoryName);
+        getRegions(event, categoryName, subcategoryName);
+        getLocations(event, categoryName, subcategoryName);
     })
 
-    regionSelectEl.addEventListener('change', () => {
-        const regionName = regionSelectEl.value;
-        const categoryName = categorySelectEl.value;
-        const subcategoryName = subcategorySelectEl.value;
+    regionSelectEl.addEventListener('change', (event) => {
+        regionName = regionSelectEl.value;
+        categoryName = categorySelectEl.value;
+        subcategoryName = subcategorySelectEl.value;
 
-        getLocations(categoryName, subcategoryName, regionName);
+        getLocations(event, categoryName, subcategoryName, regionName);
     })
 
-    function getSubcategories(categoryName) {
+    function getSubcategories(event, categoryName) {
         fetch("/api/AttractionsApi/subcategories", {
             method: "POST",
             headers: {
@@ -42,12 +50,13 @@
             .then(subcategories => {
                 subcategorySelectEl.innerHTML = '';
                 subcategorySelectEl.appendChild(new Option(''));
+
                 let childElements = subcategories.map(c => new Option(c.name));
                 childElements.forEach(c => subcategorySelectEl.appendChild(c));
             })
     }
 
-    function getRegions(categoryName, subcategoryName) {
+    function getRegions(event, categoryName, subcategoryName) {
         fetch("/api/AttractionsApi/regions", {
             method: "POST",
             headers: {
@@ -60,12 +69,13 @@
             .then(regions => {
                 regionSelectEl.innerHTML = '';
                 regionSelectEl.appendChild(new Option(''));
+
                 let childElements = regions.map(r => new Option(r.name));
                 childElements.forEach(c => regionSelectEl.appendChild(c));
             })
     }
 
-    function getLocations(categoryName, subcategoryName, regionName) {
+    function getLocations(event, categoryName, subcategoryName, regionName) {
         fetch("/api/AttractionsApi/locations", {
             method: "POST",
             headers: {
@@ -78,6 +88,7 @@
             .then(locations => {
                 locationSelectEl.innerHTML = '';
                 locationSelectEl.appendChild(new Option(''));
+
                 let childElements = locations.map(l => new Option(l.name));
                 childElements.forEach(l => locationSelectEl.appendChild(l));
             })
