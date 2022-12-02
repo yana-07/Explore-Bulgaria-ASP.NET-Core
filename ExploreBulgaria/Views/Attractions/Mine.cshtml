@@ -1,0 +1,68 @@
+﻿@model AttractionMineListViewModel
+@{
+    ViewData["Title"] = "Предложени обекти";
+}
+
+<div class="amazing-deals">
+            <div class="row all-items">
+                <div class="col-lg-3 card bg-secondary p-4 rounded-4" style="margin: 20px;">
+                    <partial name="_ProfilePartial" />
+                </div>
+                @foreach (var attraction in Model.Attractions)
+                {
+                    <div class="col-lg-4 col-sm-4 card-outer">
+                        <div class="item card-inner p-3">
+                            <div class="row">
+                                <div class="align-self-center">
+                                    <div class="content">
+                                        <span class="info">*@attraction.Region</span>
+                                        <span class="list">@attraction.CategoryName</span>
+                                        <h4 class="lh-1 mt-4">@attraction.Name</h4>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <i class="fa-regular fa-images"></i>
+                                                <span class="list">@attraction.ImagesCount</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <i class="fa-regular fa-calendar-days"></i>
+                                                <span class="list">@attraction.CreatedOn.ToShortDateString()</span>
+                                            </div>
+                                            <div class="col-lg-5 text-primary">
+                                                <i class="fa-regular fa-user"></i>
+                                                @User.FirstName() @User.LastName()
+                                            </div>
+                                        </div>
+                                        <hr class="text-secondary" />
+                                        <div class="row">
+                                            <div class="col-lg-4 offset-lg-1">
+                                                <span class="list">@(Math.Round(attraction.Latitude, 4)) г.ш.</span>
+                                            </div>
+                                            <div class="col-lg-4 offset-lg-2">
+                                                <span class="list">@(Math.Round(attraction.Longitude, 4)) г.д.</span>
+                                            </div>
+                                        </div>
+                                        <p>@attraction.Description.Substring(0, Math.Min(100, attraction.Description.Length)) ...</p>
+                                        <div class="col-lg-6 offset-lg-3">
+                                            @if (attraction.IsApproved)
+                                            {
+                                                <button class="btn btn-success">Одобрен</button>
+                                            }
+                                            else if (attraction.IsRejected)
+                                            {
+                                                <button class="btn btn-danger">Отказан</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-primary">Чака разглеждане</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <form id="antiForgeryForm" method="post"></form>
+                <partial name="_PagingPartial" model="@Model" />
+            </div>
+</div>

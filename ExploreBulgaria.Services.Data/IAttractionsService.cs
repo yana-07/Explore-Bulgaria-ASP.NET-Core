@@ -14,5 +14,10 @@ namespace ExploreBulgaria.Services.Data
         Task<T> GetByIdAsync<T>(string id);
 
         Task SaveTemporaryAsync(AddAttractionViewModel model, string visitorId);
+
+        Task<IEnumerable<AttractionMineViewModel>> GetByVisitorIdAsync(
+            string visitorId, int page, int itemsPerPage = 12);
+
+        Task<int> GetCountByVisitorIdAsync(string visitorId);
     }
 }

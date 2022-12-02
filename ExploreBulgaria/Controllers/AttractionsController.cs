@@ -140,9 +140,23 @@ namespace ExploreBulgaria.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        //public async Task<IActionResult> Mine()
-        //{
-        //    var model = await attractionsService.GetByVisitorIdAsync<>(User.VisitorId());
-        //}
+        public async Task<IActionResult> Mine(AttractionMineFilterModel filterModel, int page = 1)
+        {
+            var visitorId = User.VisitorId();
+
+            var model = new AttractionMineListViewModel
+            {
+                PageNumber = page,
+                ItemsCount = await attractionsService.GetCountByVisitorIdAsync(visitorId),
+                ItemsPerPage = ItemsPerPage,
+                Attractions = await attractionsService.GetByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                FilterModel = filterModel,
+                Area = "",
+                Controller = "Attractions",
+                Action = "Mine"
+            };
+
+            return View(model);
+        }
     }
 }
