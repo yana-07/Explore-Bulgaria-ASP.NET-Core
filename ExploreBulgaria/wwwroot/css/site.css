@@ -14,7 +14,22 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;  
+}
+
+header {
+    min-height: 50px;
+}
+
+main {
+    min-height: 100vh;
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+footer {
+    min-height: 50px;
 }
 
 .all-items {
