@@ -1,4 +1,4 @@
-﻿using static ExploreBulgaria.Services.Common.Constants.GlobalConstants;
+﻿using static ExploreBulgaria.Services.Constants.GlobalConstants;
 using ExploreBulgaria.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

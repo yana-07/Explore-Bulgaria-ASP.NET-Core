@@ -1,7 +1,7 @@
 ﻿using ExploreBulgaria.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static ExploreBulgaria.Services.Common.Constants.EntityAndVMConstants.User;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.User;
 
 namespace ExploreBulgaria.Data.Configurations
 {
