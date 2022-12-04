@@ -13,14 +13,12 @@ namespace ExploreBulgaria.Web.Controllers
     public class CommentsApiController : ControllerBase
     {
         private readonly ICommentsService commentsService;
-        private readonly IVisitorsService visitorsService;
 
         public CommentsApiController(
             ICommentsService commentsService,
             IVisitorsService visitorsService)
         {
             this.commentsService = commentsService;
-            this.visitorsService = visitorsService;
         }
 
         [HttpPost("add")]
