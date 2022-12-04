@@ -83,7 +83,9 @@
         </div>
     </div>
 </div>
-<div class="container mt-5">
+@if (Model.Comments.Any())
+{
+    <div class="container mt-5">
     <div class="row  d-flex justify-content-center">
         <div id="commentsContainer" class="col-md-8">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
@@ -142,6 +144,8 @@
         </div>      
     </div>
 </div>
+}
+
 
 @section Links {
     <link rel="stylesheet" href="~/css/comments.css" />
