@@ -10,6 +10,7 @@ namespace ExploreBulgaria.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CommentsApiController : ControllerBase
     {
         private readonly ICommentsService commentsService;
@@ -22,7 +23,6 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize]
         public async Task<IActionResult> PostComment(CommentInputModel model)
         {
             HtmlSanitizer sanitizer = new HtmlSanitizer();
@@ -48,7 +48,6 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("like")]
-        [Authorize]
         public async Task<IActionResult> Like(CommentLikeDislikeInputModel model)
         {
             var likesCount = await commentsService.LikeCommentAsync(model.CommentId, User.VisitorId());
@@ -57,7 +56,6 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("dislike")]
-        [Authorize]
         public async Task<IActionResult> Dislike(CommentLikeDislikeInputModel model)
         {
             var dislikesCount = await commentsService.DislikeCommentAsync(model.CommentId, User.VisitorId());
@@ -66,7 +64,6 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("addReply")]
-        [Authorize]
         public async Task<IActionResult> AddReply(ReplyInputModel model)
         {
             HtmlSanitizer sanitizer = new HtmlSanitizer();
@@ -89,7 +86,6 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost("getReplies")]
-        [Authorize]
         public async Task<IActionResult> GetReplies(ShortReplyInputModel model)
         {
             return Ok(await commentsService.GetRepliesAsync(model));

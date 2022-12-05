@@ -8,6 +8,8 @@
 
         public const string InvalidCommentId = "Invalid Comment ID.";
 
+        public const string InvalidVisitorId = "Invalid Visitor ID.";
+
         public const string InvalidAttractionTemporaryId = "Invalid AttractionTemporary ID.";
     }
 }

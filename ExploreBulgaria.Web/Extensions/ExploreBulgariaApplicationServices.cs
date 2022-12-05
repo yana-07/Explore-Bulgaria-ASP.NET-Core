@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICommentsService, CommentsService>();
             services.AddScoped<IVisitorsService, VisitorsService>();
             services.AddScoped<IVotesService, VotesService>();
+            services.AddScoped<IVisitorsService, VisitorsService>();
             services.AddScoped<IGuard, Guard>();
             services.AddScoped<IAdminService, AdminService>();
 

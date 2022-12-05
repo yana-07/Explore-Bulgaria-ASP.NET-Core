@@ -30,6 +30,12 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public double AverageVote { get; set; }
 
+        public bool AddedToFavorites { get; set; }
+
+        public bool AddedToVisited { get; set; }
+
+        public bool WantToVisit { get; set; }
+
         public IEnumerable<string> RemoteImageUrls { get; set; } 
             = Enumerable.Empty<string>();
 

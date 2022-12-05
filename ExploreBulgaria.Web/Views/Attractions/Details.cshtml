@@ -34,9 +34,20 @@
                             <li class="star-@if(Model.AverageVote >= 4) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="4"></i></li>
                             <li class="star-@if(Model.AverageVote == 5) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="5"></i></li>
                             <li><span id="averageVoteValue">@Model.AverageVote.ToString("0.0")</span><span> / 5.0</span></li>
-                        </ul>                 
+                        </ul>
+                        <div class="user-actions text-secondary mt-3">
+                            <span class="pe-3">
+                                  <i id="addToFavorites" class="fa-regular fa-heart pe-2 @if(Model.AddedToFavorites == true) {<text>fill-red</text>}"></i>Добави в любими
+                            </span>
+                            <span class="pe-3">
+                                  <i id="wantToVisit" class="fa-regular fa-square-plus pe-2 @if(Model.WantToVisit == true) {<text>fill-green</text>}"></i>Искам да посетя
+                            </span>
+                            <span class="pe-3">
+                                <i id="addToVisited" class="fa-regular fa-circle-check pe-2 @if(Model.AddedToVisited == true) {<text>fill-green</text>}"></i>Бил съм тук
+                            </span>
+                        </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 mt-4">
                         <div class="owl-cites-town owl-carousel">
                             @foreach (var url in Model.RemoteImageUrls)
                             {
@@ -83,84 +94,93 @@
         </div>
     </div>
 </div>
-@if (Model.Comments.Any())
-{
-    <div class="container mt-5">
-    <div class="row  d-flex justify-content-center">
+<input id="attractionId" type="hidden" name="attractionId" value="@Model.Id" />
+<form method="post" id="antiForgeryForm"></form>
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
         <div id="commentsContainer" class="col-md-8">
-            <div class="headings d-flex justify-content-between align-items-center mb-3">
-                <h5>Коментари</h5>
-            </div>
             @if (User.Identity?.IsAuthenticated ?? false)
             {
+                <div class="headings d-flex justify-content-between align-items-center mb-3">
+                    <h5>Коментари</h5>
+                </div>
                 <div id="addComment" class="card p-3 mt-2">
                     <div class="row">
                         <form method="post">
-                            <input id="attractionId" type="hidden" name="attractionId" value="@Model.Id" />
                             <textarea id="commentText" class="text-secondary col-lg-9" placeholder="Напиши коментар..."></textarea>
                             <button type="submit" onclick="addComment(event)" class="main-button col-lg-3" style="width: 115px; margin: 4px">Добави</button>
                         </form>
                     </div>
                 </div>
             }
-            @foreach (var comment in Model.Comments)
+            @if(Model.Comments.Any())
             {
-                <div class="card p-3 mt-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="user d-flex flex-row align-items-center">
-                            <img src="@comment.AddedByVisitor.UserAvatarUrl" class="user-img rounded-circle mr-2">
-                            <div class="row">
-                                <small class="font-weight-bold text-primary">@comment.AddedByVisitor.UserFirstName @comment.AddedByVisitor.UserLastName</small>
-                                <small class="font-weight-bold text-secondary">@Html.Raw(comment.Text)</small>
-                            </div>
-                        </div>
-                        <small class="text-secondary">@comment.CreatedOn.ToShortDateString()</small>
+                @if(!User.Identity?.IsAuthenticated ?? false)
+                {
+                    <div class="headings d-flex justify-content-between align-items-center mb-3">
+                        <h5>Коментари</h5>
                     </div>
-                    <div class="action d-flex justify-content-between mt-2 align-items-center">
-                        <div class="reply px-4">
-                            <small>Remove</small>
+                }
+
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="card p-3 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="user d-flex flex-row align-items-center">
+                                <img src="@comment.AddedByVisitor.UserAvatarUrl" class="user-img rounded-circle mr-2">
+                                <div class="row">
+                                    <small class="font-weight-bold text-primary">@comment.AddedByVisitor.UserFirstName @comment.AddedByVisitor.UserLastName</small>
+                                    <small class="font-weight-bold text-secondary">@Html.Raw(comment.Text)</small>
+                                </div>
+                            </div>
+                            <small class="text-secondary">@comment.CreatedOn.ToShortDateString()</small>
                         </div>
-                        <input type="hidden" name="commentId" value="@comment.Id">
-                        <div class="d-flex flex-row align-items-center like">
-                            <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
-                            <p class="small text-muted mb-0 likes">@comment.LikedByVisitors.Count()</p>
-                        </div>
-                        <div class="d-flex flex-row align-items-center dislike">
-                            <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
-                            <p class="small text-muted mb-0 dislikes">@comment.DislikedByVisitors.Count()</p>
-                        </div>
-                        <div class="d-flex flex-row align-items-center">
-                            <i onclick="appendReplySection(event)" class="far fa-comment mx-2 fa-xs text-black @if(!User.Identity?.IsAuthenticated ?? false) {<text>disabled</text>}"></i>
-                            <p class="small text-muted mb-0 replies">@comment.Replies.Count()</p>
-                        </div>
-                        <div class="icons align-items-center">
-                            <i class="fa fa-check-circle-o check-icon text-primary"></i>
-                        </div>                        
-                    </div>  
-                    <div class="row replies-container">Отговори</div>
-                </div>
-            }
-            <form method="post" id="antiForgeryForm"></form>
+                        <div class="action d-flex justify-content-between mt-2 align-items-center">
+                            <div class="reply px-4">
+                                <small>Remove</small>
+                            </div>
+                            <input type="hidden" name="commentId" value="@comment.Id">
+                            <div class="d-flex flex-row align-items-center like">
+                                <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                                <p class="small text-muted mb-0 likes">@comment.LikedByVisitors.Count()</p>
+                            </div>
+                            <div class="d-flex flex-row align-items-center dislike">
+                                <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                                <p class="small text-muted mb-0 dislikes">@comment.DislikedByVisitors.Count()</p>
+                            </div>
+                            <div class="d-flex flex-row align-items-center">
+                                <i onclick="appendReplySection(event)" class="far fa-comment mx-2 fa-xs text-black @if(!User.Identity?.IsAuthenticated ?? false) {<text>disabled</text>}"></i>
+                                <p class="small text-muted mb-0 replies">@comment.Replies.Count()</p>
+                            </div>
+                            <div class="icons align-items-center">
+                                <i class="fa fa-check-circle-o check-icon text-primary"></i>
+                            </div>                        
+                        </div>  
+                        <div class="row replies-container">Отговори</div>
+                    </div>
+                }
+            }          
         </div>      
     </div>
 </div>
-}
-
 
 @section Links {
-    <link rel="stylesheet" href="~/css/comments.css" />
-    <link rel="stylesheet" href="~/css/votes.css" />
+    <link rel="stylesheet" href="~/css/comments.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/votes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/user-actions.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" 
         integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" 
         crossorigin="" />
 }
 
 @section Scripts {
-    <script src="~/js/comments-ajax.js"></script>
+    <script src="~/js/comments-ajax.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
         integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
         crossorigin=""></script>
-    <script src="~/js/leaflet.js"></script>   
-    <script src="~/js/votes-ajax.js"></script>
+    <script src="~/js/leaflet.js" asp-append-version="true"></script>   
+    <script src="~/js/votes-ajax.js" asp-append-version="true"></script>
+    <script src="~/js/user-actions.js" asp-append-version="true"></script>
 }
 

@@ -1,0 +1,12 @@
+﻿.user-actions i.fill-red,
+.user-actions i.fa-heart:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.user-actions i.fill-green,
+.user-actions i.fa-square-plus:hover,
+.user-actions i.fa-circle-check:hover {
+    color: lawngreen;
+    cursor: pointer;
+}

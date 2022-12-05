@@ -20,6 +20,7 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
         private readonly ILocationsService locationsService;
+        private readonly IVisitorsService visitorsService;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
@@ -28,7 +29,8 @@ namespace ExploreBulgaria.Web.Controllers
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
-            ILocationsService locationsService)
+            ILocationsService locationsService,
+            IVisitorsService visitorsService)
         {
             this.attractionsService = attractionsService;
             this.temporaryAttractionsService = temporaryAttractionsService;
@@ -36,6 +38,7 @@ namespace ExploreBulgaria.Web.Controllers
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
             this.locationsService = locationsService;
+            this.visitorsService = visitorsService;
         }
 
         [AllowAnonymous]
@@ -92,6 +95,10 @@ namespace ExploreBulgaria.Web.Controllers
 
                     return RedirectToAction(nameof(All));
                 }
+
+                attraction.AddedToFavorites = await visitorsService.IsAddedToFavorites(User.VisitorId(), attraction.Id);
+                attraction.AddedToVisited = await visitorsService.IsAddedToVisited(User.VisitorId(), attraction.Id);
+                attraction.WantToVisit = await visitorsService.WantToVisit(User.VisitorId(), attraction.Id);
 
                 return View(attraction);
             }
