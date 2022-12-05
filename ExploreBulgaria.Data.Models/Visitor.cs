@@ -11,6 +11,9 @@ namespace ExploreBulgaria.Data.Models
             this.CreatedAttractions = new HashSet<Attraction>();
             this.LikedComments = new HashSet<VisitorLikedComment>();
             this.DislikedComments = new HashSet<VisitorDislikedComment>();
+            this.FavoriteAttractions = new HashSet<VisitorFavoriteAttraction>();
+            this.WantToVisitAttractions = new HashSet<VisitorWantToVisitAttraction>();
+            this.VisitedAttractions = new HashSet<VisitorVisitedAttraction>();
         }
 
         [Required]
@@ -23,5 +26,11 @@ namespace ExploreBulgaria.Data.Models
         public virtual ICollection<VisitorLikedComment> LikedComments { get; set; }
 
         public virtual ICollection<VisitorDislikedComment> DislikedComments { get; set; }
+
+        public virtual ICollection<VisitorFavoriteAttraction> FavoriteAttractions { get; set; }
+
+        public virtual ICollection<VisitorWantToVisitAttraction> WantToVisitAttractions { get; set; }
+
+        public virtual ICollection<VisitorVisitedAttraction> VisitedAttractions { get; set; }
     }
 }
