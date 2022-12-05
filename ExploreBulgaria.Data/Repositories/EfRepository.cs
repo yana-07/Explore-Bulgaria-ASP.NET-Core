@@ -35,6 +35,9 @@ namespace ExploreBulgaria.Data.Repositories
 
         public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
 
+        public Task<TEntity?> GetByIdAsync(object id)
+            => this.DbSet.FindAsync(id).AsTask();
+
         public void Dispose()
         {
 
