@@ -1,4 +1,6 @@
 ﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Web.Extensions;
+using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Locations;
 using ExploreBulgaria.Web.ViewModels.Regions;
@@ -11,17 +13,20 @@ namespace ExploreBulgaria.Web.Controllers
     [Route("api/[controller]")]
     public class AttractionsApiController : ControllerBase
     {
+        private readonly IAttractionsService attractionsService;
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
         private readonly ILocationsService locationsService;
 
         public AttractionsApiController(
+            IAttractionsService attractionsService, 
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
             ILocationsService locationsService)
         {
+            this.attractionsService = attractionsService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
@@ -43,5 +48,54 @@ namespace ExploreBulgaria.Web.Controllers
         [HttpPost("locations")]
         public async Task<IActionResult> GetLocations(LocationFilterViewModel model)
             => Ok(await this.locationsService.GetAllForCategorySubcategoryAndRegionAsync<LocationSelectViewModel>(model.CategoryName, model.SubcategoryName, model.RegionName));
+
+        [HttpPost("addToFavorites")]
+        public async Task<IActionResult> AddAttractionToFavorites(AttractionIdInputModel model)
+        {
+            try
+            {
+                await attractionsService
+                    .AddAttractionToFavorites(User.VisitorId(), model.AttractionId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("addToVisited")]
+        public async Task<IActionResult> AddAttractionToVisited(AttractionIdInputModel model)
+        {
+            try
+            {
+                await attractionsService
+                    .AddAttractionToVisited(User.VisitorId(), model.AttractionId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+            return NoContent();
+        }
+
+        [HttpPost("wantToVisit")]
+        public async Task<IActionResult> WantToVisitAttraction(AttractionIdInputModel model)
+        {
+            try
+            {
+                await attractionsService
+                    .WantToVisitAttraction(User.VisitorId(), model.AttractionId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return NoContent();
+        }
     }
 }

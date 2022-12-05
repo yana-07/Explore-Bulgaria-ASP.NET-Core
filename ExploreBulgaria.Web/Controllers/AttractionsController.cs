@@ -96,9 +96,9 @@ namespace ExploreBulgaria.Web.Controllers
                     return RedirectToAction(nameof(All));
                 }
 
-                attraction.AddedToFavorites = await visitorsService.IsAddedToFavorites(User.VisitorId(), attraction.Id);
-                attraction.AddedToVisited = await visitorsService.IsAddedToVisited(User.VisitorId(), attraction.Id);
-                attraction.WantToVisit = await visitorsService.WantToVisit(User.VisitorId(), attraction.Id);
+                attraction.AddedToFavorites = await attractionsService.IsAddedToFavorites(User.VisitorId(), attraction.Id);
+                attraction.AddedToVisited = await attractionsService.IsAddedToVisited(User.VisitorId(), attraction.Id);
+                attraction.WantToVisit = await attractionsService.WantToVisit(User.VisitorId(), attraction.Id);
 
                 return View(attraction);
             }

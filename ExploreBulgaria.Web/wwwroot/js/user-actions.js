@@ -5,7 +5,7 @@
     const addToVisitedEl = document.getElementById('addToVisited');
 
     addToFavEl.addEventListener('click', function (event) {
-        fetch('/api/VisitorsApi/addToFavorites', {
+        fetch('/api/AttractionsApi/addToFavorites', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -28,7 +28,7 @@
     });
 
     wantToVisitEl.addEventListener('click', function (event) {
-        fetch('/api/VisitorsApi/wantToVisit', {
+        fetch('/api/AttractionsApi/wantToVisit', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -57,7 +57,7 @@
     });
 
     addToVisitedEl.addEventListener('click', function (event) {
-        fetch('/api/VisitorsApi/addToVisited', {
+        fetch('/api/AttractionsApi/addToVisited', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
