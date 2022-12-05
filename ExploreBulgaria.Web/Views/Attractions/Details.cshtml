@@ -37,13 +37,13 @@
                         </ul>
                         <div class="user-actions text-secondary mt-3">
                             <span class="pe-3">
-                                  <i id="addToFavorites" class="fa-regular fa-heart pe-2 @if(Model.AddedToFavorites == true) {<text>fill-red</text>}"></i>Добави в любими
+                                  <i id="addToFavorites" class="@(Model.AddedToFavorites == true ? "fa-solid fill-red" : "fa-regular") fa-heart pe-2"></i>Добави в любими
                             </span>
                             <span class="pe-3">
-                                  <i id="wantToVisit" class="fa-regular fa-square-plus pe-2 @if(Model.WantToVisit == true) {<text>fill-green</text>}"></i>Искам да посетя
+                                <i id="wantToVisit" class="@(Model.WantToVisit == true ? "fa-solid fill-green" : "fa-regular") fa-square-plus pe-2"></i>Искам да посетя
                             </span>
                             <span class="pe-3">
-                                <i id="addToVisited" class="fa-regular fa-circle-check pe-2 @if(Model.AddedToVisited == true) {<text>fill-green</text>}"></i>Бил съм тук
+                                <i id="addToVisited" class="@(Model.AddedToVisited == true ? "fa-solid fill-green" : "fa-regular") fa-circle-check pe-2"></i>Бил съм тук
                             </span>
                         </div>
                     </div>

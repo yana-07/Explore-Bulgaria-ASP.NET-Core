@@ -14,9 +14,13 @@
             body: JSON.stringify({ attractionId })
         })
             .then(() => {
-                if (event.target.classList.contains('fill-red')) {
-                    event.target.classList.remove('fill-red')
+                if (event.target.classList.contains('fa-solid') &&
+                    event.target.classList.contains('fill-red')) {
+                    event.target.classList.remove('fa-solid');
+                    event.target.classList.remove('fill-red');
+                    event.target.classList.add('fa-regular');
                 } else {
+                    event.target.classList.add('fa-solid');
                     event.target.classList.add('fill-red');
                 }
             })
@@ -33,12 +37,19 @@
             body: JSON.stringify({ attractionId })
         })
             .then(() => {
-                if (event.target.classList.contains('fill-green')) {
-                    event.target.classList.remove('fill-green')
+                if (event.target.classList.contains('fa-solid') &&
+                    event.target.classList.contains('fill-green')) {
+                    event.target.classList.remove('fa-solid');
+                    event.target.classList.remove('fill-green');
+                    event.target.classList.add('fa-regular');
                 } else {
-                    if (addToVisitedEl.classList.contains('fill-green')) {
-                        addToVisitedEl.classList.remove('fill-green')
+                    if (addToVisitedEl.classList.contains('fa-solid') &&
+                        addToVisitedEl.classList.contains('fill-green')) {
+                        addToVisitedEl.classList.remove('fa-solid');
+                        addToVisitedEl.classList.remove('fill-green');
+                        addToVisitedEl.classList.add('fa-regular');
                     }
+                    event.target.classList.add('fa-solid');
                     event.target.classList.add('fill-green');
                 }
             })
@@ -55,12 +66,19 @@
             body: JSON.stringify({ attractionId })
         })
             .then(() => {
-                if (event.target.classList.contains('fill-green')) {
-                    event.target.classList.remove('fill-green')
+                if (event.target.classList.contains('fa-solid') &&
+                    event.target.classList.contains('fill-green')) {
+                    event.target.classList.remove('fa-solid');
+                    event.target.classList.remove('fill-green');
+                    event.target.classList.add('fa-regular');
                 } else {
-                    if (wantToVisitEl.classList.contains('fill-green')) {
-                        wantToVisitEl.classList.remove('fill-green')
+                    if (wantToVisitEl.classList.contains('fa-solid') &&
+                        wantToVisitEl.classList.contains('fill-green')) {
+                        wantToVisitEl.classList.remove('fa-solid');
+                        wantToVisitEl.classList.remove('fill-green');
+                        wantToVisitEl.classList.add('fa-regular');
                     }
+                    event.target.classList.add('fa-solid');
                     event.target.classList.add('fill-green');
                 }
             })
