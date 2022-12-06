@@ -31,18 +31,18 @@
                                 <div class="image">
                                     @if (attraction.RemoteImageUrls.Any())
                                     {
-                                        <img src="@attraction.RemoteImageUrls.FirstOrDefault()" style="height: 350px"/>
+                                        <img src="@attraction.RemoteImageUrls.FirstOrDefault()" style="height: 300px"/>
                                     }
                                     else if (attraction.BlobStorageUrls.Any())
                                     {
-                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrls.FirstOrDefault()! })" style="height: 350px" />
+                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrls.FirstOrDefault()! })" style="height: 300px" />
                                     }
                                 </div>
                             </div>
                             <div class="col-lg-6 align-self-center">
                                 <div class="content">
                                     <span class="info">*@attraction.RegionName</span>
-                                    <h4 class="lh-1" @*style="height: 70px"*@>@attraction.Name</h4>
+                                    <h4 class="lh-1">@attraction.Name</h4>
                                     <ul class="item-rating">
                                         <li class="star-@if(attraction.AverageVote >= 1) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="1"></i></li>
                                         <li class="star-@if(attraction.AverageVote >= 2) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="2"></i></li>
@@ -69,9 +69,13 @@
                                         <i class="fa-regular fa-user"></i>
                                         @attraction.CreatedByVisitor
                                     </p>
-                                    <p>@attraction.Description ...</p>
-                                    <a class="main-button" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()">Разгледай</a>
                                 </div>
+                            </div>
+                            <dpan class="col-md-6 offset-md-1">
+                                <a class="main-button" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()">Разгледай</a>
+                            </dpan>              
+                            <div class="m-3">
+                                <p>@attraction.Description ...</p>
                             </div>
                         </div>                                                                       
                     </div>

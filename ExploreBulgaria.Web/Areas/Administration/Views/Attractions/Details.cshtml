@@ -83,7 +83,7 @@
                             @foreach (var blobName in Model.BlobNames.Split(", "))
                             {
                                 <div class="col-lg-3">
-                                    <img src="@Url.Action("GetImage", "Attractions", new { area = "Administration", blobName = blobName.TrimEnd(',') })" alt="" class="rounded" style="height: 250px; width: 250px;">
+                                    <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = blobName.TrimEnd(',') })" alt="" class="rounded" style="height: 250px; width: 250px;">
                                 </div>
                             }
                         </div>
