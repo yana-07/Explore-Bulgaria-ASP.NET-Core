@@ -15,21 +15,18 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
-        private readonly BlobServiceClient blobServiceClient;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
             IAdminService adminService,
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
-            IRegionsService regionsService,
-            BlobServiceClient blobContainerClient)
+            IRegionsService regionsService)
         {
             this.adminService = adminService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
-            this.blobServiceClient = blobContainerClient;
         }
 
         public async Task<IActionResult> All(AttractionTemporaryFilterModel filterModel, int page = 1)
@@ -67,16 +64,6 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                 // TODO: Toast message
                 return RedirectToAction(nameof(All));
             }
-        }
-
-        public async Task<IActionResult> GetImage(string blobName)
-        {
-            var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
-            var blobClient = containerClient.GetBlobClient(blobName);
-
-            var result = await blobClient.DownloadAsync();
-
-            return File(result.Value.Content, result.Value.ContentType);
         }
 
         [HttpPost]
