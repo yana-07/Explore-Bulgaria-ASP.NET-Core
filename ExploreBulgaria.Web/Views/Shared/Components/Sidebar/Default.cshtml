@@ -1,0 +1,88 @@
+﻿@model SidebarComponentViewModel
+
+<div>
+    <div class="headline headline-md">
+        <h5>Най-посещавани обекти</h5>
+    </div>
+    @foreach (var attraction in Model.MostVisited)
+    {
+        <div class="row mb-2">
+            <div class="col-md-3">
+                @if(!string.IsNullOrEmpty(attraction.BlobStorageUrl))
+                {
+                    <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrl })" style="height: 50px;"/>
+                }
+                else if(!string.IsNullOrEmpty(attraction.RemoteImageUrl))
+                {
+                    <img src="@attraction.RemoteImageUrl" style="height: 50px;" />
+                }
+            </div>
+            <div class="col-md-7">
+                <p>
+                    <a asp-area="" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id" 
+                       asp-route-information="@attraction.GenerateSlug()">@attraction.Name</a>
+                </p>
+            </div>
+            <div class="col-md-2">
+                <i class="fa-regular fa-circle-check text-success"></i>
+                <span class="text-secondary">@attraction.VisitedByVisitorsCount</span>
+            </div>
+        </div>
+    }
+
+    <div class="headline headline-md mt-3">
+        <h5>Най-харесвани обекти</h5>
+    </div>
+    @foreach (var attraction in Model.MostFavorite)
+    {
+        <div class="row mb-2">
+            <div class="col-md-3">
+                @if (!string.IsNullOrEmpty(attraction.BlobStorageUrl))
+                {
+                    <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrl })" style="height: 50px;" />
+                }
+                else if (!string.IsNullOrEmpty(attraction.RemoteImageUrl))
+                {
+                    <img src="@attraction.RemoteImageUrl" style="height: 50px;" />
+                }
+            </div>
+            <div class="col-md-7">
+                <p>
+                    <a asp-area="" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id"
+                       asp-route-information="@attraction.GenerateSlug()">@attraction.Name</a>
+                </p>
+            </div>
+            <div class="col-md-2">
+                <i class="fa-regular fa-heart text-danger"></i>
+                <span class="text-secondary">@attraction.AddedToFavoritesByVisitorsCount</span>
+            </div>
+        </div>
+    }
+
+    <div class="headline headline-md mt-3">
+        <h5>Новодобавени обекти</h5>
+    </div>
+    @foreach (var attraction in Model.Newest)
+    {
+        <div class="row mb-2">
+            <div class="col-md-3">
+                @if (!string.IsNullOrEmpty(attraction.BlobStorageUrl))
+                {
+                    <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrl })" style="height: 50px;" />
+                }
+                else if (!string.IsNullOrEmpty(attraction.RemoteImageUrl))
+                {
+                    <img src="@attraction.RemoteImageUrl" style="height: 50px;" />
+                }
+            </div>
+            <div class="col-md-9">
+                <p>
+                    <a asp-area="" asp-controller="Attractions" asp-action="Details" asp-route-id="@attraction.Id"
+                   asp-route-information="@attraction.GenerateSlug()">@attraction.Name</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>
+
+

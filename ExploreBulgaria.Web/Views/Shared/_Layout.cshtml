@@ -55,9 +55,16 @@
         </div>
     </header>
     <div class="container" style="margin-top: 70px">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <div class="row">
+            <div class="col-md-9">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+            <aside class="col-md-3 bg-gradient">
+                <vc:sidebar></vc:sidebar>
+            </aside>
+        </div>
     </div>
 
     <div class="call-to-action" style="margin-top: 0px">

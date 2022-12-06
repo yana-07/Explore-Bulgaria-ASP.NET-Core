@@ -1,4 +1,5 @@
-﻿using ExploreBulgaria.Web.ViewModels.Attractions;
+﻿using ExploreBulgaria.Services.Enums;
+using ExploreBulgaria.Web.ViewModels.Attractions;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -44,5 +45,7 @@ namespace ExploreBulgaria.Services.Data
         Task<int> GetVisitedByVisitorIdCountAsync(string visitorId);
 
         Task<int> GetWanToVisitByVisitorIdCount(string visitorId);
+
+        Task<IEnumerable<AttractionSidebarViewModel>> GetSidebarAttractions(SidebarOrderEnum orderBy);
     }
 }

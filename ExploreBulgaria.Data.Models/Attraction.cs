@@ -14,6 +14,8 @@ namespace ExploreBulgaria.Data.Models
             this.Images = new HashSet<Image>();
             this.Comments = new HashSet<Comment>();
             this.Votes = new HashSet<Vote>();
+            this.VisitedByVisitors = new HashSet<VisitorVisitedAttraction>();
+            this.AddedToFavoritesByVisitors = new HashSet<VisitorFavoriteAttraction>();
         }
 
         [Required]
@@ -60,5 +62,9 @@ namespace ExploreBulgaria.Data.Models
         public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual ICollection<Vote> Votes { get; set; }
+
+        public virtual ICollection<VisitorVisitedAttraction> VisitedByVisitors { get; set; }
+
+        public virtual ICollection<VisitorFavoriteAttraction> AddedToFavoritesByVisitors { get; set; }
     }
 }

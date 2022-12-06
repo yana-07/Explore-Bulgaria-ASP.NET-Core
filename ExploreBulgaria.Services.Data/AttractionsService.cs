@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Enums;
 using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
@@ -405,20 +406,46 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<int> GetFavoritesByVisitorIdCountAsync(string visitorId)
             => await visitorRepo.AllAsNoTracking()
-            .Where(v => v.Id == visitorId)
-            .Select(v => v.FavoriteAttractions)
-            .CountAsync();
+                .Where(v => v.Id == visitorId)
+                .Select(v => v.FavoriteAttractions)
+                .CountAsync();
 
         public async Task<int> GetVisitedByVisitorIdCountAsync(string visitorId)
             => await visitorRepo.AllAsNoTracking()
-            .Where(v => v.Id == visitorId)
-            .Select(v => v.VisitedAttractions)
-            .CountAsync();
+                .Where(v => v.Id == visitorId)
+                .Select(v => v.VisitedAttractions)
+                .CountAsync();
 
         public async Task<int> GetWanToVisitByVisitorIdCount(string visitorId)
             => await visitorRepo.AllAsNoTracking()
-            .Where(v => v.Id == visitorId)
-            .Select(v => v.WantToVisitAttractions)
-            .CountAsync();
+                .Where(v => v.Id == visitorId)
+                .Select(v => v.WantToVisitAttractions)
+                .CountAsync();
+
+        public async Task<IEnumerable<AttractionSidebarViewModel>> GetSidebarAttractions(SidebarOrderEnum orderBy)
+        {
+            var attractions = repo.AllAsNoTracking();
+
+            if (orderBy == SidebarOrderEnum.MostVisited)
+            {
+                attractions = attractions
+                    .OrderByDescending(a => a.VisitedByVisitors.Count);                                   
+            }
+            else if(orderBy == SidebarOrderEnum.MostFavorite)
+            {
+                attractions = attractions
+                    .OrderByDescending(a => a.AddedToFavoritesByVisitors.Count);
+            }
+            else if (orderBy == SidebarOrderEnum.Newest)
+            {
+                attractions = attractions
+                    .OrderByDescending(a => a.CreatedOn);
+            }
+
+            return await attractions
+                .To<AttractionSidebarViewModel>()
+                .Take(3)
+                .ToListAsync();
+        }
     }
 }
