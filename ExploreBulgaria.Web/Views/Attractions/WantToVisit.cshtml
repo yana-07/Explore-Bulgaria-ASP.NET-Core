@@ -1,13 +1,14 @@
 ﻿@model AttractionVisitorListViewModel
+
 @{
-    ViewData["Title"] = "Предложени обекти";
+    ViewData["Title"] = "Искам да посетя";
 }
 
 <div class="row mt-5">
-    <div class="col-md-2">
+    <div class="col-lg-2">
         <partial name="_ProfilePartial" />
     </div>
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <div class="row">
             @foreach (var attraction in Model.Attractions)
             {

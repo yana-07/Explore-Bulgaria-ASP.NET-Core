@@ -1,6 +1,6 @@
 ﻿namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
-    public class AttractionMineFilterModel : BaseFilterViewModel
+    public class AttractionVisitorFilterModel : BaseFilterViewModel
     {
     }
 }

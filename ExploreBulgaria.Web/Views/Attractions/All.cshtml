@@ -1,4 +1,4 @@
-﻿@model AttractionsListViewModel
+﻿@model AttractionListViewModel
 @{
     ViewData["Title"] = "Всички обекти | ExploreBulgaria";
 }
@@ -35,7 +35,7 @@
                                     }
                                     else if (attraction.BlobStorageUrls.Any())
                                     {
-                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "Administration", blobName = attraction.BlobStorageUrls.FirstOrDefault()! })" style="height: 350px" />
+                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrls.FirstOrDefault()! })" style="height: 350px" />
                                     }
                                 </div>
                             </div>

@@ -5,7 +5,7 @@ using ExploreBulgaria.Web.ViewModels.Subcategories;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
-    public class AttractionsFilterModel : BaseFilterViewModel
+    public class AttractionFilterModel : BaseFilterViewModel
     {
         public IEnumerable<CategorySelectViewModel> Categories { get; set; } 
             = Enumerable.Empty<CategorySelectViewModel>();

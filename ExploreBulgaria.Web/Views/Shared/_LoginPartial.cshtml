@@ -4,7 +4,7 @@
 @if (User.Identity?.IsAuthenticated ?? false)
 {
     <li>
-        <a>Здравей, @((User?.FirstName() + " " +  @User?.LastName()) ?? @User?.Identity?.Name)</a>
+        <a>Здравей, @(User?.FirstName())</a>
     </li>
     @if(User?.AvatarUrl() != null)
     {

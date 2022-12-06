@@ -1,0 +1,77 @@
+﻿@model AttractionSimpleViewModel
+
+<div class="card mb-3 col-md-6">
+    <div class="row g-0 pt-2">
+        @foreach (var url in Model.RemoteImageUrls)
+        {
+            <div class="col-md-3">
+                <img src="@url" class="card-img-top" alt="..." style="height: 135px;">
+            </div>
+        }
+        @foreach (var url in Model.BlobStorageUrls)
+        {
+            <div class="col-md-3">
+                <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = url })" class="card-img-top" alt="...">
+            </div>
+        }
+
+    </div>
+    <div>
+        <div class="card-body">
+            <h6 class="card-title mb-3">@Model.Name</h6>
+            <div class="text-secondary mb-3">
+                <span>@Model.CategoryName</span>
+                @if (Model.SubcategoryName != null)
+                {
+                    <span>> @Model.SubcategoryName</span>
+                }
+            </div>
+            <div class="text-secondary mb-3">
+                <span><i class="fa-solid fa-location-dot me-2"></i></span>
+                <span>@Model.RegionName</span>
+                @if (Model.LocationName != null)
+                {
+                    <span>> @Model.LocationName</span>
+                }
+            </div>
+            @if (ViewData["Title"] as string == "Предложени обекти")
+            {
+                if(Model.Description != null)
+                {
+                    <p>@Model.Description.Substring(0, Math.Min(100, Model.Description.Length)) ...</p>
+                }
+                if(Model.Latitude.HasValue && Model.Longitude.HasValue)
+                {
+                    <div class="row mt-2 mb-2">
+                        <p class="col-md-6">@Math.Round(Model.Latitude.Value, 5) г. ш.</p>
+                        <p class="col-md-6">@Math.Round(Model.Longitude.Value, 5) г. д.</p>
+                    </div>
+                }
+                if(Model.CreatedOn.HasValue)
+                {
+                    <p>@Model.CreatedOn.Value.ToShortDateString()</p>
+                }
+                if(Model.IsApproved.HasValue && Model.IsRejected.HasValue)
+                {
+                    if(Model.IsApproved.Value == false && Model.IsRejected.Value == false)
+                    {
+                        <button class="btn btn-primary">Очаква разглеждане</button>
+                    }
+                    else if(Model.IsApproved.Value == true)
+                    {
+                        <button class="btn btn-success">Одобрен</button>
+                    }
+                    else if(Model.IsRejected.Value == true)
+                    {
+                        <button class="btn btn-danger">Отхвърлен</button>
+                    }
+                }
+            }
+            else
+            {
+                <a class="main-button" asp-area="" asp-controller="Attractions" asp-action="Details"
+               asp-route-id="@Model.Id" asp-route-information="@Model.GenerateSlug()">Разгледай</a>
+            }
+        </div>
+    </div>
+</div>

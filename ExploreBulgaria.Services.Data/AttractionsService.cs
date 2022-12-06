@@ -34,7 +34,7 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(
             int page,
-            AttractionsFilterModel filterModel,
+            AttractionFilterModel filterModel,
             int itemsPerPage = 12)
         {
             var skip = (page - 1) * itemsPerPage;
@@ -50,7 +50,7 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();
         }
 
-        public async Task<int> GetCountAsync(AttractionsFilterModel filterModel)
+        public async Task<int> GetCountAsync(AttractionFilterModel filterModel)
         {
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
@@ -117,28 +117,29 @@ namespace ExploreBulgaria.Services.Data
             }
 
             return result;
-        }       
+        }
 
-        public async Task<IEnumerable<AttractionMineViewModel>> GetByVisitorIdAsync(string visitorId, int page, int itemsPerPage = 12)
+        public async Task<IEnumerable<AttractionSimpleViewModel>> GetByVisitorIdAsync(
+            string visitorId, int page, int itemsPerPage = 12)
         {
             var skip = (page - 1) * itemsPerPage;
 
             return await repoTemp.AllWithDeleted()
                 .Where(a => a.CreatedByVisitorId == visitorId)
-                .Select(a => new AttractionMineViewModel
+                .Select(a => new AttractionSimpleViewModel
                 {
                     CategoryName = categoriesService
                        .GetByIdAsync<CategorySelectViewModel>(a.CategoryId)
                        .GetAwaiter().GetResult().Name,
                     Description = a.Description,
-                    ImagesCount = a.BlobNames.Split(", ", StringSplitOptions.RemoveEmptyEntries).Length,
+                    BlobStorageUrls = a.BlobNames.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries),
                     IsApproved = a.IsApproved,
                     IsRejected = a.IsRejected,
                     Latitude = a.Latitude,
                     Longitude = a.Longitude,
                     Name = a.Name,
-                    Region = a.Region,
-                    CreatedOn = a.CreatedOn,    
+                    RegionName = a.Region,
+                    CreatedOn = a.CreatedOn,
                 })
                 .Skip(skip)
                 .Take(itemsPerPage)
@@ -153,7 +154,7 @@ namespace ExploreBulgaria.Services.Data
                 .CountAsync();
         }
 
-        public async Task AddAttractionToFavorites(string visitorId, string attractionId)
+        public async Task AddAttractionToFavoritesAsync(string visitorId, string attractionId)
         {
             var visitor = await visitorRepo
                 .All()
@@ -187,7 +188,7 @@ namespace ExploreBulgaria.Services.Data
             }
         }
 
-        public async Task AddAttractionToVisited(string visitorId, string attractionId)
+        public async Task AddAttractionToVisitedAsync(string visitorId, string attractionId)
         {
             var visitor = await visitorRepo.All()
                 .Include(v => v.VisitedAttractions)
@@ -230,7 +231,7 @@ namespace ExploreBulgaria.Services.Data
             }
         }
 
-        public async Task WantToVisitAttraction(string visitorId, string attractionId)
+        public async Task WantToVisitAttractionAsync(string visitorId, string attractionId)
         {
             var visitor = await visitorRepo.All()
                 .Include(v => v.WantToVisitAttractions)
@@ -273,9 +274,9 @@ namespace ExploreBulgaria.Services.Data
             }
         }
 
-        public async Task<bool> IsAddedToFavorites(string visitorId, string attractionId)
+        public async Task<bool> IsAddedToFavoritesAsync(string visitorId, string attractionId)
         {
-            var visitor = await visitorRepo.All()
+            var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.FavoriteAttractions)
                 .FirstOrDefaultAsync();
             guard.AgainstNull(visitor, InvalidVisitorId);
@@ -286,9 +287,9 @@ namespace ExploreBulgaria.Services.Data
             return visitor!.FavoriteAttractions.Any(a => a.AttractionId == attractionId);
         }
 
-        public async Task<bool> IsAddedToVisited(string visitorId, string attractionId)
+        public async Task<bool> IsAddedToVisitedAsync(string visitorId, string attractionId)
         {
-            var visitor = await visitorRepo.All()
+            var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.VisitedAttractions)
                 .FirstOrDefaultAsync();
             guard.AgainstNull(visitor, InvalidVisitorId);
@@ -299,9 +300,9 @@ namespace ExploreBulgaria.Services.Data
             return visitor!.VisitedAttractions.Any(a => a.AttractionId == attractionId);
         }
 
-        public async Task<bool> WantToVisit(string visitorId, string attractionId)
+        public async Task<bool> WantToVisitAsync(string visitorId, string attractionId)
         {
-            var visitor = await visitorRepo.All()
+            var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.WantToVisitAttractions)
                 .FirstOrDefaultAsync();
             guard.AgainstNull(visitor, InvalidVisitorId);
@@ -311,5 +312,113 @@ namespace ExploreBulgaria.Services.Data
 
             return visitor!.WantToVisitAttractions.Any(a => a.AttractionId == attractionId);
         }
+
+        public async Task<IEnumerable<AttractionSimpleViewModel>> GetFavoritesByVisitorIdAsync(
+            string visitorId, int page, int itemsPerPage = 12)
+        {
+            var visitor = await visitorRepo.AllAsNoTracking()
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Region)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Category)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Images)
+                .FirstOrDefaultAsync();
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
+            var skip = (page - 1) * itemsPerPage;
+            return visitor!.FavoriteAttractions
+                .Select(fa => new AttractionSimpleViewModel
+                {
+                     Name = fa.Attraction.Name,
+                     CategoryName = fa.Attraction.Category.Name,
+                     SubcategoryName = fa.Attraction.Subcategory?.Name,
+                     RegionName = fa.Attraction.Region.Name,
+                     LocationName = fa.Attraction.Location?.Name,
+                     Id = fa.Attraction.Id,
+                     RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
+                     BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
+                })
+                .Skip(skip)
+                .Take(itemsPerPage);
+        }
+
+        public async Task<IEnumerable<AttractionSimpleViewModel>> GetVisitedByVisitorIdAsync(
+            string visitorId, int page, int itemsPerPage = 12)
+        {
+            var visitor = await visitorRepo.AllAsNoTracking()
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Region)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Category)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Images)
+                .FirstOrDefaultAsync();
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
+            var skip = (page - 1) * itemsPerPage;
+            return visitor!.VisitedAttractions
+                .Select(fa => new AttractionSimpleViewModel
+                {
+                    Name = fa.Attraction.Name,
+                    CategoryName = fa.Attraction.Category.Name,
+                    SubcategoryName = fa.Attraction.Subcategory?.Name,
+                    RegionName = fa.Attraction.Region.Name,
+                    LocationName = fa.Attraction.Location?.Name,
+                    Id = fa.Attraction.Id,
+                    RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
+                    BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
+                })
+                .Skip(skip)
+                .Take(itemsPerPage);
+        }
+
+        public async Task<IEnumerable<AttractionSimpleViewModel>> GetWantToVisitByVisitorIdAsync(
+            string visitorId, int page, int itemsPerPage = 12)
+        {
+            var visitor = await visitorRepo.AllAsNoTracking()
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Region)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Category)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Images)
+                .FirstOrDefaultAsync();
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
+            var skip = (page - 1) * itemsPerPage;
+            return visitor!.WantToVisitAttractions
+                .Select(fa => new AttractionSimpleViewModel
+                {
+                    Name = fa.Attraction.Name,
+                    CategoryName = fa.Attraction.Category.Name,
+                    SubcategoryName = fa.Attraction.Subcategory?.Name,
+                    RegionName = fa.Attraction.Region.Name,
+                    LocationName = fa.Attraction.Location?.Name,
+                    Id = fa.Attraction.Id,
+                    RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
+                    BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
+                })
+                .Skip(skip)
+                .Take(itemsPerPage);
+        }
+
+        public async Task<int> GetFavoritesByVisitorIdCountAsync(string visitorId)
+            => await visitorRepo.AllAsNoTracking()
+            .Where(v => v.Id == visitorId)
+            .Select(v => v.FavoriteAttractions)
+            .CountAsync();
+
+        public async Task<int> GetVisitedByVisitorIdCountAsync(string visitorId)
+            => await visitorRepo.AllAsNoTracking()
+            .Where(v => v.Id == visitorId)
+            .Select(v => v.VisitedAttractions)
+            .CountAsync();
+
+        public async Task<int> GetWanToVisitByVisitorIdCount(string visitorId)
+            => await visitorRepo.AllAsNoTracking()
+            .Where(v => v.Id == visitorId)
+            .Select(v => v.WantToVisitAttractions)
+            .CountAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using ExploreBulgaria.Services.Data;
+﻿using Azure.Storage.Blobs;
+using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Extensions;
 using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Attractions;
@@ -21,6 +22,7 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly IRegionsService regionsService;
         private readonly ILocationsService locationsService;
         private readonly IVisitorsService visitorsService;
+        private readonly BlobServiceClient blobServiceClient;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
@@ -30,7 +32,8 @@ namespace ExploreBulgaria.Web.Controllers
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
             ILocationsService locationsService,
-            IVisitorsService visitorsService)
+            IVisitorsService visitorsService,
+            BlobServiceClient blobServiceClient)
         {
             this.attractionsService = attractionsService;
             this.temporaryAttractionsService = temporaryAttractionsService;
@@ -39,21 +42,22 @@ namespace ExploreBulgaria.Web.Controllers
             this.regionsService = regionsService;
             this.locationsService = locationsService;
             this.visitorsService = visitorsService;
+            this.blobServiceClient = blobServiceClient;
         }
 
         [AllowAnonymous]
-        public async Task <IActionResult> All(AttractionsFilterModel filterModel, int page = 1)
+        public async Task <IActionResult> All(AttractionFilterModel filterModel, int page = 1)
         {
             if (page <= 0)
             {
                 return NotFound();
             }
 
-            var model = new AttractionsListViewModel
+            var model = new AttractionListViewModel
             {
                 PageNumber = page,
                 ItemsPerPage = ItemsPerPage,
-                FilterModel = new AttractionsFilterModel
+                FilterModel = new AttractionFilterModel
                 {                   
                     Categories = await categoriesService.GetAllAsync<CategorySelectViewModel>(),
                     Subcategories = await subcategoriesService.GetAllAsync<SubcategorySelectViewModel>(),
@@ -96,9 +100,9 @@ namespace ExploreBulgaria.Web.Controllers
                     return RedirectToAction(nameof(All));
                 }
 
-                attraction.AddedToFavorites = await attractionsService.IsAddedToFavorites(User.VisitorId(), attraction.Id);
-                attraction.AddedToVisited = await attractionsService.IsAddedToVisited(User.VisitorId(), attraction.Id);
-                attraction.WantToVisit = await attractionsService.WantToVisit(User.VisitorId(), attraction.Id);
+                attraction.AddedToFavorites = await attractionsService.IsAddedToFavoritesAsync(User.VisitorId(), attraction.Id);
+                attraction.AddedToVisited = await attractionsService.IsAddedToVisitedAsync(User.VisitorId(), attraction.Id);
+                attraction.WantToVisit = await attractionsService.WantToVisitAsync(User.VisitorId(), attraction.Id);
 
                 return View(attraction);
             }
@@ -150,11 +154,11 @@ namespace ExploreBulgaria.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        public async Task<IActionResult> Mine(AttractionMineFilterModel filterModel, int page = 1)
+        public async Task<IActionResult> Mine(AttractionVisitorFilterModel filterModel, int page = 1)
         {
             var visitorId = User.VisitorId();
 
-            var model = new AttractionMineListViewModel
+            var model = new AttractionVisitorListViewModel
             {
                 PageNumber = page,
                 ItemsCount = await attractionsService.GetCountByVisitorIdAsync(visitorId),
@@ -167,6 +171,76 @@ namespace ExploreBulgaria.Web.Controllers
             };
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Favorites(AttractionVisitorFilterModel filterModel, int page = 1)
+        {
+            var visitorId = User.VisitorId();
+
+            var model = new AttractionVisitorListViewModel
+            {
+                Attractions = await attractionsService
+                .GetFavoritesByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                PageNumber = page,
+                ItemsCount = await attractionsService.GetWanToVisitByVisitorIdCount(visitorId),
+                ItemsPerPage = ItemsPerPage,
+                FilterModel = filterModel,
+                Area = "",
+                Controller = "Attractions",
+                Action = "Favorites"              
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> WantToVisit(AttractionVisitorFilterModel filterModel, int page = 1)
+        {
+            var visitorId = User.VisitorId();
+
+            var model = new AttractionVisitorListViewModel
+            {
+                Attractions = await attractionsService
+                .GetWantToVisitByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                PageNumber = page,
+                ItemsCount = await attractionsService.GetWanToVisitByVisitorIdCount(visitorId),
+                ItemsPerPage = ItemsPerPage,
+                FilterModel = filterModel,
+                Area = "",
+                Controller = "Attractions",
+                Action = "WantToVisit"
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Visited(AttractionVisitorFilterModel filterModel, int page = 1)
+        {
+            var visitorId = User.VisitorId();
+
+            var model = new AttractionVisitorListViewModel
+            {
+                Attractions = await attractionsService
+                .GetVisitedByVisitorIdAsync(User.VisitorId(), page, ItemsPerPage),
+                PageNumber = page,
+                ItemsCount = await attractionsService.GetVisitedByVisitorIdCountAsync(visitorId),
+                ItemsPerPage = ItemsPerPage,
+                FilterModel = filterModel,
+                Area = "",
+                Controller = "Attractions",
+                Action = "Visited"
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> GetImage(string blobName)
+        {
+            var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            var result = await blobClient.DownloadAsync();
+
+            return File(result.Value.Content, result.Value.ContentType);
         }
     }
 }

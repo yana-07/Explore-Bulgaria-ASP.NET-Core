@@ -55,7 +55,7 @@ namespace ExploreBulgaria.Web.Controllers
             try
             {
                 await attractionsService
-                    .AddAttractionToFavorites(User.VisitorId(), model.AttractionId);
+                    .AddAttractionToFavoritesAsync(User.VisitorId(), model.AttractionId);
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace ExploreBulgaria.Web.Controllers
             try
             {
                 await attractionsService
-                    .AddAttractionToVisited(User.VisitorId(), model.AttractionId);
+                    .AddAttractionToVisitedAsync(User.VisitorId(), model.AttractionId);
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace ExploreBulgaria.Web.Controllers
             try
             {
                 await attractionsService
-                    .WantToVisitAttraction(User.VisitorId(), model.AttractionId);
+                    .WantToVisitAttractionAsync(User.VisitorId(), model.AttractionId);
             }
             catch (Exception ex)
             {

@@ -1,26 +1,26 @@
 ﻿<ul class="list-group">
-    <li class="list-group-item @(ViewData["Title"] == "Лични данни" ? "bg-light" : "bg-secondary") border-0">
+    <li class="list-group-item @(ViewData["Title"] as string == "Лични данни" ? "bg-light" : "bg-secondary") border-0">
         <a asp-controller="Users" asp-action="Profile" 
-           class="@(ViewData["Title"] == "Лични данни" ? "text-secondary" : "text-light")">Лични данни</a>
+           class="@(ViewData["Title"] as string == "Лични данни" ? "text-secondary" : "text-light")">Лични данни</a>
     </li>
-    <li class="list-group-item @(ViewData["Title"] == "Предложени обекти" ? "bg-light" : "bg-secondary") border-0">
+    <li class="list-group-item @(ViewData["Title"] as string == "Предложени обекти" ? "bg-light" : "bg-secondary") border-0">
         <a asp-controller="Attractions" asp-action="Mine" 
-           class="@(ViewData["Title"] == "Предложени обекти" ? "text-secondary" : "text-light")">Предложени обекти</a>
+           class="@(ViewData["Title"] as string  == "Предложени обекти" ? "text-secondary" : "text-light")">Предложени обекти</a>
     </li>
-    <li class="list-group-item @(ViewData["Title"] == "Искам да посетя" ? "bg-light" : "bg-secondary") border-0">
-        <a asp-controller="" asp-action="" 
-           class="@(ViewData["Title"] == "Искам да посетя" ? "text-secondary" : "text-light")">Искам да посетя</a>
+    <li class="list-group-item @(ViewData["Title"] as string == "Любими обекти" ? "bg-light" : "bg-secondary") border-0">
+        <a asp-controller="Attractions" asp-action="Favorites"
+           class="@(ViewData["Title"] as string  == "Любими обекти" ? "text-secondary" : "text-light")">Добавени в любими</a>
     </li>
-    <li class="list-group-item @(ViewData["Title"] == "Добавени в любими" ? "bg-light" : "bg-secondary") border-0">
-        <a asp-controller="" asp-action="" 
-           class="@(ViewData["Title"] == "Добавени в любими" ? "text-secondary" : "text-light")">Добавени в любими</a>
+    <li class="list-group-item @(ViewData["Title"] as string  == "Искам да посетя" ? "bg-light" : "bg-secondary") border-0">
+        <a asp-controller="Attractions" asp-action="WantToVisit"
+           class="@(ViewData["Title"] as string  == "Искам да посетя" ? "text-secondary" : "text-light")">Искам да посетя</a>
     </li>
-    <li class="list-group-item @(ViewData["Title"] == "Посетени обекти" ? "bg-light" : "bg-secondary") border-0">
-        <a asp-controller="" asp-action="" 
-           class="@(ViewData["Title"] == "Посетени обекти" ? "text-secondary" : "text-light")">Посетени обекти</a>
+    <li class="list-group-item @(ViewData["Title"] as string  == "Посетени обекти" ? "bg-light" : "bg-secondary") border-0">
+        <a asp-controller="Attractions" asp-action="Visited"
+           class="@(ViewData["Title"] as string  == "Посетени обекти" ? "text-secondary" : "text-light")">Посетени обекти</a>
     </li>
-    <li class="list-group-item @(ViewData["Title"] == "Коментирани обекти" ? "bg-light" : "bg-secondary") border-0">
+    <li class="list-group-item @(ViewData["Title"] as string  == "Коментирани обекти" ? "bg-light" : "bg-secondary") border-0">
         <a asp-controller="" asp-action="" 
-           class="@(ViewData["Title"] == "Коментирани обекти" ? "text-secondary" : "text-light")">Коментирани обекти</a>
+           class="@(ViewData["Title"] as string  == "Коментирани обекти" ? "text-secondary" : "text-light")">Коментирани обекти</a>
     </li>
 </ul>
