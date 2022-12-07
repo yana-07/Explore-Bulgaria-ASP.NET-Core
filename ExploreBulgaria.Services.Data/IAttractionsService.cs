@@ -1,5 +1,7 @@
 ﻿using ExploreBulgaria.Services.Enums;
 using ExploreBulgaria.Web.ViewModels.Attractions;
+using NetTopologySuite.Geometries;
+using System.Collections.Generic;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -47,5 +49,9 @@ namespace ExploreBulgaria.Services.Data
         Task<int> GetWanToVisitByVisitorIdCount(string visitorId);
 
         Task<IEnumerable<AttractionSidebarViewModel>> GetSidebarAttractions(SidebarOrderEnum orderBy);
+
+        Task<IEnumerable<T>> GetByCategories<T>(params string[] categoryIds);
+
+        //Task<IEnumerable<T>> GetWithinPointRange<T>(Point startPoint, Point endPoint);
     }
 }

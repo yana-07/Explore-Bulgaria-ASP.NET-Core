@@ -1,0 +1,159 @@
+﻿@model AttractionByRouteViewModel
+
+@{
+    ViewData["Title"] = "Търсене на забележителности по маршрут";
+}
+
+<form class="generic-form" asp-controller="Attractions" asp-action="ByRoute" method="post">
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>@ViewData["Title"]</h4>
+        </div>
+        <div class="col-lg-6 offset-lg-3">
+            <fieldset>
+                <label class="form-label" asp-for="StartPointCoordinates">Начална точка (избери от картата)</label>
+                <input class="form-control" asp-for="StartPointCoordinates" />
+                <span asp-validation-for="StartPointCoordinates" class="text-danger"></span>
+            </fieldset>
+        </div>
+        <div class="col-lg-6 offset-lg-3">
+            <fieldset>
+                <label class="form-label" asp-for="EndPointCoordinates">Крайна точка (избери от картата)</label>
+                <input class="form-control" asp-for="EndPointCoordinates" />
+                <span asp-validation-for="EndPointCoordinates" class="text-danger"></span>
+            </fieldset>
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-lg-9 offset-lg-3">
+            @foreach (var category in Model.Categories)
+            {
+                <fieldset>
+                    <input type="checkbox"
+                       id="category_@category.Id"
+                       name="CategoriesInput"
+                       value="@category.Id" />
+                    <label for="category_@category.Id">@category.Name</label>
+                </fieldset>
+            }
+        </div>
+    </div>
+    <div class="row mt-5 mb-5">
+        <div id="map" class="col-lg-12" style="height: 300px"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <button type="submit" class="main-button w-100">Търси</button>
+        </div>
+    </div>
+</form>
+
+@section Links {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        const startPointEl = document.getElementById('StartPointCoordinates');
+        const endPointEl = document.getElementById('EndPointCoordinates');
+
+        const map = L.map('map').setView([42.754542, 25.243757], 7);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        map.attributionControl.addAttribution('<a href="https://www.flaticon.com/free-icons/point-a" title="point a icons">Point a icons created by Ajmal Naha - Flaticon</a>');
+
+        let startMarker = null;
+        let endMarker = null;
+
+        let startLat = null;
+        let startLng = null;
+        let endLat = null;
+        let endLng = null;
+
+        let control = null;
+
+        const onMapClick = function (event) {
+            let coordinates = event.latlng;
+
+            if (!startMarker && !endMarker) {
+                let startMarkerIcon = L.icon({
+                    iconUrl: '/images/markers/a-marker.png',
+                    iconSize: [38, 38],
+                    iconAnchor: [22, 37],
+                });
+                
+                startMarker = L.marker([coordinates.lat, coordinates.lng], { icon: startMarkerIcon, draggable: true }).addTo(map);
+                startPointEl.value = `${coordinates.lat}, ${coordinates.lng}`;
+                startLat = coordinates.lat;
+                startLng = coordinates.lng;
+
+                startMarker.on('moveend', () => {
+                    startLat = startMarker.getLatLng().lat;
+                    startLng = startMarker.getLatLng().lng;
+                    startPointEl.value = `${startLat}, ${startLng}`;
+
+                    if(endLat && endLng) {
+                        control.setWaypoints([
+                            L.latLng(startLat, startLng),
+                            L.latLng(endLat, endLng),
+                        ]);
+                    }
+                });
+                
+                return;
+            }
+
+            if(startMarker && !endMarker) {
+                let endMarkerIcon = L.icon({
+                    iconUrl: '/images/markers/b-marker.png',
+                    iconSize: [38, 38],
+                    iconAnchor: [22, 37],
+                });
+
+                endMarker = L.marker([coordinates.lat, coordinates.lng], { icon: endMarkerIcon, draggable: true }).addTo(map);
+                endPointEl.value = `${coordinates.lat}, ${coordinates.lng}`;
+                endLat = coordinates.lat;
+                endLng = coordinates.lng;
+
+                endMarker.on('moveend', () => {
+                    endLat = endMarker.getLatLng().lat;
+                    endLng = endMarker.getLatLng().lng;
+                    endPointEl.value = `${endLat}, ${endLng}`;
+
+                    control.setWaypoints([
+                        L.latLng(startLat, startLng),
+                        L.latLng(endLat, endLng),
+                    ]);
+                })
+
+                control = L.Routing.control({
+                    waypoints: [
+                        L.latLng(startLat, startLng),
+                        L.latLng(endLat, endLng)
+                    ],
+                    createMarker: function(){
+                        return null;
+                    }
+                }).addTo(map);
+                control.hide();
+
+                return;
+            }
+        }
+
+        map.on('click', onMapClick);
+    </script>
+
+}

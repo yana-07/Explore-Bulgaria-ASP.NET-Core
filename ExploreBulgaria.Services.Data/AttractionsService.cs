@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs;
-using ExploreBulgaria.Data.Common.Repositories;
+﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Enums;
 using ExploreBulgaria.Services.Guards;
@@ -7,6 +6,7 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
@@ -449,5 +449,19 @@ namespace ExploreBulgaria.Services.Data
                 .Take(3)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<T>> GetByCategories<T>(params string[] categoryIds)
+            => await repo.AllAsNoTracking()
+            .Where(a => categoryIds.Contains(a.CategoryId))
+            .To<T>()
+            .ToListAsync();
+
+        //public async Task<IEnumerable<T>> GetWithinPointRange<T>(Point startPoint, Point endPoint)
+        //{
+        //    var ls = new LineString(new Coordinate[] { new Coordinate(startPoint.X, startPoint.Y), new Coordinate(endPoint.X, endPoint.Y) });
+        //    //await repo.AllAsNoTracking()
+        //    //    .Where(a => a.Coordinates.)
+        //    return 
+        //}
     }
 }

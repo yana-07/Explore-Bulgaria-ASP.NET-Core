@@ -233,6 +233,22 @@ namespace ExploreBulgaria.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ByRoute()
+        {
+            var model = new AttractionByRouteViewModel
+            {
+                Categories = await categoriesService.GetAllAsync<CategoryOptionViewModel>()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ByRoute(AttractionByRouteViewModel model)
+        {
+            return View(model);
+        }
+
         public async Task<IActionResult> GetImage(string blobName)
         {
             var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
