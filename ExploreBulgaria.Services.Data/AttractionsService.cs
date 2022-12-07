@@ -429,11 +429,13 @@ namespace ExploreBulgaria.Services.Data
             if (orderBy == SidebarOrderEnum.MostVisited)
             {
                 attractions = attractions
+                    .Where(a => a.VisitedByVisitors.Any())
                     .OrderByDescending(a => a.VisitedByVisitors.Count);                                   
             }
             else if(orderBy == SidebarOrderEnum.MostFavorite)
             {
                 attractions = attractions
+                    .Where(a => a.AddedToFavoritesByVisitors.Any())
                     .OrderByDescending(a => a.AddedToFavoritesByVisitors.Count);
             }
             else if (orderBy == SidebarOrderEnum.Newest)
