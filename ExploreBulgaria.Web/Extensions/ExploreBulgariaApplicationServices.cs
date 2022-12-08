@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IVisitorsService, VisitorsService>();
             services.AddScoped<IGuard, Guard>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ISpatialDataService, SpatialDataService>();
 
             return services;
         }

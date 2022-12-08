@@ -9,6 +9,7 @@ using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NetTopologySuite.Geometries;
 using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Controllers
@@ -235,7 +236,7 @@ namespace ExploreBulgaria.Web.Controllers
 
         public async Task<IActionResult> ByRoute()
         {
-            var model = new AttractionByRouteViewModel
+            var model = new ByRouteViewModel
             {
                 Categories = await categoriesService.GetAllAsync<CategoryOptionViewModel>()
             };
@@ -244,9 +245,15 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ByRoute(AttractionByRouteViewModel model)
+        public async Task<IActionResult> ByRoute(ByRouteViewModel model)
         {
-            return View(model);
+            var viewModel = new AttractionByRouteListViewModel
+            {
+                Attractions = await attractionsService
+                   .GetByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput)
+            };
+
+            return View("VisualizeByRoute", viewModel);
         }
 
         public async Task<IActionResult> GetImage(string blobName)

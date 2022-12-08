@@ -1,4 +1,5 @@
-﻿using ExploreBulgaria.Services.Enums;
+﻿using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Enums;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using NetTopologySuite.Geometries;
 using System.Collections.Generic;
@@ -52,6 +53,7 @@ namespace ExploreBulgaria.Services.Data
 
         Task<IEnumerable<T>> GetByCategories<T>(params string[] categoryIds);
 
-        //Task<IEnumerable<T>> GetWithinPointRange<T>(Point startPoint, Point endPoint);
+        Task<IEnumerable<AttractionByRouteViewModel>> GetByRouteAndCategoriesAsync(
+            string coordinates, IEnumerable<string> categoryIds);
     }
 }

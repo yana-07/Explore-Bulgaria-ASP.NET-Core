@@ -6,8 +6,8 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
+using System.Device.Location;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -17,6 +17,7 @@ namespace ExploreBulgaria.Services.Data
         private readonly IDeletableEnityRepository<AttractionTemporary> repoTemp;
         private readonly IGuard guard;
         private readonly ICategoriesService categoriesService;
+        private readonly ISpatialDataService spatialDataService;
         private readonly IDeletableEnityRepository<Visitor> visitorRepo;
 
         public AttractionsService(
@@ -24,12 +25,14 @@ namespace ExploreBulgaria.Services.Data
             IDeletableEnityRepository<AttractionTemporary> repoTemp,
             IGuard guard,
             ICategoriesService categoriesService,
+            ISpatialDataService spatialDataService,
             IDeletableEnityRepository<Visitor> visitorRepo)
         {
             this.repo = repo;
             this.repoTemp = repoTemp;
             this.guard = guard;
             this.categoriesService = categoriesService;
+            this.spatialDataService = spatialDataService;
             this.visitorRepo = visitorRepo;
         }
 
@@ -331,14 +334,14 @@ namespace ExploreBulgaria.Services.Data
             return visitor!.FavoriteAttractions
                 .Select(fa => new AttractionSimpleViewModel
                 {
-                     Name = fa.Attraction.Name,
-                     CategoryName = fa.Attraction.Category.Name,
-                     SubcategoryName = fa.Attraction.Subcategory?.Name,
-                     RegionName = fa.Attraction.Region.Name,
-                     LocationName = fa.Attraction.Location?.Name,
-                     Id = fa.Attraction.Id,
-                     RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
-                     BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
+                    Name = fa.Attraction.Name,
+                    CategoryName = fa.Attraction.Category.Name,
+                    SubcategoryName = fa.Attraction.Subcategory?.Name,
+                    RegionName = fa.Attraction.Region.Name,
+                    LocationName = fa.Attraction.Location?.Name,
+                    Id = fa.Attraction.Id,
+                    RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
+                    BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
                 })
                 .Skip(skip)
                 .Take(itemsPerPage);
@@ -430,9 +433,9 @@ namespace ExploreBulgaria.Services.Data
             {
                 attractions = attractions
                     .Where(a => a.VisitedByVisitors.Any())
-                    .OrderByDescending(a => a.VisitedByVisitors.Count);                                   
+                    .OrderByDescending(a => a.VisitedByVisitors.Count);
             }
-            else if(orderBy == SidebarOrderEnum.MostFavorite)
+            else if (orderBy == SidebarOrderEnum.MostFavorite)
             {
                 attractions = attractions
                     .Where(a => a.AddedToFavoritesByVisitors.Any())
@@ -456,12 +459,46 @@ namespace ExploreBulgaria.Services.Data
             .To<T>()
             .ToListAsync();
 
-        //public async Task<IEnumerable<T>> GetWithinPointRange<T>(Point startPoint, Point endPoint)
-        //{
-        //    var ls = new LineString(new Coordinate[] { new Coordinate(startPoint.X, startPoint.Y), new Coordinate(endPoint.X, endPoint.Y) });
-        //    //await repo.AllAsNoTracking()
-        //    //    .Where(a => a.Coordinates.)
-        //    return 
-        //}
+        public async Task<IEnumerable<AttractionByRouteViewModel>> GetByRouteAndCategoriesAsync(
+            string coordinates,
+            IEnumerable<string> categoryIds)
+        {
+            var points = spatialDataService
+                .GetGeometryPointsByStringCoordinates(coordinates.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            var result = repo
+                .AllAsNoTracking().Include(a => a.Images)
+                .Include(a => a.Category).Include(a => a.Subcategory)
+                .Include(a => a.Region).Include(a => a.Location)
+                .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
+
+            var attractions = await result.ToListAsync();
+
+            return attractions
+                .Where(a => points.Any(p =>
+                {
+                    var geoAttr = new GeoCoordinate(a.Coordinates.Y, a.Coordinates.X);
+
+                    return p.GetDistanceTo(geoAttr) <= 15000 ? true : false;
+                }))
+                .Select(a =>
+                {
+                    var geo = new GeoCoordinate(a.Coordinates.Y, a.Coordinates.X);
+
+                    return new AttractionByRouteViewModel
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        RemoteImageUrl = a.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).FirstOrDefault()!,
+                        BlobStorageUrl = a.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).FirstOrDefault()!,
+                        DistanceFromRoad = points.Min(p => p.GetDistanceTo(geo)),
+                        DistanceFromStartPoint = geo.GetDistanceTo(points[0]),
+                        CategoryName = a.Category.Name,
+                        LocationName = a.Location?.Name,
+                        RegionName = a.Region.Name,
+                        SubcategoryName = a.Subcategory?.Name
+                    };
+                }).ToList();
+        }
     }
 }

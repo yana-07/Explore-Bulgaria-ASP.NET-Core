@@ -1,4 +1,4 @@
-﻿@model AttractionByRouteViewModel
+﻿@model ByRouteViewModel
 
 @{
     ViewData["Title"] = "Търсене на забележителности по маршрут";
@@ -11,18 +11,17 @@
         </div>
         <div class="col-lg-6 offset-lg-3">
             <fieldset>
-                <label class="form-label" asp-for="StartPointCoordinates">Начална точка (избери от картата)</label>
-                <input class="form-control" asp-for="StartPointCoordinates" />
-                <span asp-validation-for="StartPointCoordinates" class="text-danger"></span>
+                <label class="form-label" for="startpoint-coordinates">Начална точка (избери от картата)</label>
+                <input class="form-control" id="startpoint-coordinates" disabled />
             </fieldset>
         </div>
         <div class="col-lg-6 offset-lg-3">
             <fieldset>
-                <label class="form-label" asp-for="EndPointCoordinates">Крайна точка (избери от картата)</label>
-                <input class="form-control" asp-for="EndPointCoordinates" />
-                <span asp-validation-for="EndPointCoordinates" class="text-danger"></span>
+                <label class="form-label" for="endpoint-coordinates">Крайна точка (избери от картата)</label>
+                <input class="form-control" id="endpoint-coordinates" disabled />
             </fieldset>
-        </div>        
+        </div>
+        <input id="steps-coordinates" type="hidden" name="steps" />
     </div>
     <div class="row">
         <div class="col-lg-9 offset-lg-3">
@@ -62,8 +61,9 @@
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        const startPointEl = document.getElementById('StartPointCoordinates');
-        const endPointEl = document.getElementById('EndPointCoordinates');
+        const startPointEl = document.getElementById('startpoint-coordinates');
+        const endPointEl = document.getElementById('endpoint-coordinates');
+        const stepsEl = document.getElementById('steps-coordinates');
 
         const map = L.map('map').setView([42.754542, 25.243757], 7);
 
@@ -109,6 +109,16 @@
                             L.latLng(startLat, startLng),
                             L.latLng(endLat, endLng),
                         ]);
+
+                        fetch(`https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=false&alternatives=true&steps=true&hints=;`)
+                            .then(response => response.json()).then(data => {
+                                var steps = data.routes[0].legs[0].steps;
+                                var coordinates = steps.map(s => s.maneuver.location);
+                                coordinates.unshift([startLng, startLat]);
+                                coordinates.push([endLng, endLat]);
+                                console.log(coordinates);
+                                stepsEl.value = coordinates;
+                            });
                     }
                 });
                 
@@ -136,6 +146,16 @@
                         L.latLng(startLat, startLng),
                         L.latLng(endLat, endLng),
                     ]);
+
+                    fetch(`https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=false&alternatives=true&steps=true&hints=;`)
+                        .then(response => response.json()).then(data => {
+                            var steps = data.routes[0].legs[0].steps;
+                            var coordinates = steps.map(s => s.maneuver.location);
+                            coordinates.unshift([startLng, startLat]);
+                            coordinates.push([endLng, endLat]);
+                            console.log(coordinates);
+                            stepsEl.value = coordinates;
+                        });
                 })
 
                 control = L.Routing.control({
@@ -148,6 +168,16 @@
                     }
                 }).addTo(map);
                 control.hide();
+
+                fetch(`https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=false&alternatives=true&steps=true&hints=;`)
+                   .then(response => response.json()).then(data => {
+                       var steps = data.routes[0].legs[0].steps;
+                       var coordinates = steps.map(s => s.maneuver.location);
+                       coordinates.unshift([startLng, startLat]);
+                       coordinates.push([endLng, endLat]);
+                       console.log(coordinates);
+                       stepsEl.value = coordinates;
+                   });
 
                 return;
             }

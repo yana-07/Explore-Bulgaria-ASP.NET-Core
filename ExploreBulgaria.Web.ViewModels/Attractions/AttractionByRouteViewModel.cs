@@ -1,18 +1,27 @@
-﻿using ExploreBulgaria.Web.ViewModels.Categories;
-using NetTopologySuite.Geometries;
+﻿using ExploreBulgaria.Services;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
-    public class AttractionByRouteViewModel
+    public class AttractionByRouteViewModel : IAttractionModel
     {
-        public string StartPointCoordinates { get; set; }
+        public string Id { get; set; } = null!;
 
-        public string EndPointCoordinates { get; set; }
+        public string Name { get; set; } = null!;
 
-        public IEnumerable<CategoryOptionViewModel> Categories { get; set; }
-            = Enumerable.Empty<CategoryOptionViewModel>();
+        public double DistanceFromStartPoint { get; set; }
 
-        public IEnumerable<string> CategoriesInput { get; set; }
-            = new List<string>();
+        public double DistanceFromRoad { get; set; }
+
+        public string? RemoteImageUrl { get; set; } 
+
+        public string? BlobStorageUrl { get; set; }
+
+        public string CategoryName { get; set; } = null!;
+
+        public string? SubcategoryName { get; set; }
+
+        public string RegionName { get; set; } = null!;
+
+        public string? LocationName { get; set; }
     }
 }

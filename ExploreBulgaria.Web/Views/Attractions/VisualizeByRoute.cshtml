@@ -1,0 +1,39 @@
+﻿@model AttractionByRouteListViewModel
+
+@{
+    ViewData["Title"] = "Забележителности по маршрут";
+}
+
+<div class="row">
+    @foreach (var attraction in Model.Attractions)
+    {
+        <div class="card mb-3 col-md-6">
+            <div class="row g-0 pt-2">
+                @if (!string.IsNullOrEmpty(attraction.RemoteImageUrl))
+                {
+                    <div class="col-md-3">
+                        <img src="@attraction.RemoteImageUrl" class="card-img-top" alt="..." style="height: 135px;">
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(attraction.BlobStorageUrl))
+                {
+                    <div class="col-md-3">
+                        <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrl })" class="card-img-top" alt="...">
+                    </div>
+                }
+
+                <div class="card-body col-md-9">
+                    <h6 class="card-title mb-3">@attraction.Name</h6>
+                    <div class="text-secondary mb-3">
+                        <span><i class="fa-solid fa-location-dot me-2"></i></span>
+                        <span class="me-3">@(Math.Round(attraction.DistanceFromRoad / 1000, 2)) км от пътя</span>
+                        <span><i class="fa-solid fa-location-dot me-2"></i></span>
+                        <span>@(Math.Round(attraction.DistanceFromStartPoint / 1000, 2)) км от началната точка</span>
+                    </div>
+                    <a class="main-button" asp-area="" asp-controller="Attractions" asp-action="Details"
+                       asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()">Разгледай</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
