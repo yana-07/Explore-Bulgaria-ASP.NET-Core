@@ -236,7 +236,7 @@ namespace ExploreBulgaria.Web.Controllers
 
         public async Task<IActionResult> ByRoute()
         {
-            var model = new ByRouteViewModel
+            var model = new ByRouteInputModel
             {
                 Categories = await categoriesService.GetAllAsync<CategoryOptionViewModel>()
             };
@@ -245,12 +245,15 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ByRoute(ByRouteViewModel model)
+        public async Task<IActionResult> ByRoute(ByRouteInputModel model, int page = 1)
         {
             var viewModel = new AttractionByRouteListViewModel
             {
                 Attractions = await attractionsService
-                   .GetByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput)
+                   .GetByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput, page, ItemsPerPage),
+                Steps = model.Steps,
+                CategoriesInput = model.CategoriesInput,
+                Page = page,
             };
 
             return View("VisualizeByRoute", viewModel);

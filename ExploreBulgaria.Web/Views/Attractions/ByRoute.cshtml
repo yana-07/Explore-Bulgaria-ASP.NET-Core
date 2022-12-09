@@ -1,10 +1,10 @@
-﻿@model ByRouteViewModel
+﻿@model ByRouteInputModel
 
 @{
     ViewData["Title"] = "Търсене на забележителности по маршрут";
 }
 
-<form class="generic-form" asp-controller="Attractions" asp-action="ByRoute" method="post">
+<form class="generic-form" asp-controller="Attractions" asp-action="ByRoute" asp-route-page="1" method="post">
     <div class="row">
         <div class="col-lg-12">
             <h4>@ViewData["Title"]</h4>

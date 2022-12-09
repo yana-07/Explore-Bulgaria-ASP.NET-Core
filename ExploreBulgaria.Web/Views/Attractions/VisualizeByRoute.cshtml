@@ -24,11 +24,11 @@
 
                 <div class="card-body col-md-9">
                     <h6 class="card-title mb-3">@attraction.Name</h6>
-                    <div class="text-secondary mb-3">
-                        <span><i class="fa-solid fa-location-dot me-2"></i></span>
-                        <span class="me-3">@(Math.Round(attraction.DistanceFromRoad / 1000, 2)) км от пътя</span>
-                        <span><i class="fa-solid fa-location-dot me-2"></i></span>
-                        <span>@(Math.Round(attraction.DistanceFromStartPoint / 1000, 2)) км от началната точка</span>
+                    <div class="row text-secondary mb-3">
+                        <spanc class="col-md-1"><i class="fa-solid fa-location-dot me-2"></i></spanc>
+                        <span class="col-md-5">@(Math.Round(attraction.DistanceFromRoad / 1000, 2)) км от пътя</span>
+                        <span class="col-md-1"><i class="fa-solid fa-location-dot me-2"></i></span>
+                        <span class="col-md-5">@(Math.Round(attraction.DistanceFromStartPoint / 1000, 2)) км от началната точка</span>
                     </div>
                     <a class="main-button" asp-area="" asp-controller="Attractions" asp-action="Details"
                        asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()">Разгледай</a>
@@ -37,3 +37,16 @@
         </div>
     }
 </div>
+<form asp-area="" asp-controller="Attractions" asp-action="ByRoute" asp-route-page="@(Model.Page + 1)">
+    <div class="row">
+        <input type="hidden" name="Steps" value="@Model.Steps" />
+        @if(Model.CategoriesInput.Any())
+        {
+            @foreach (var categoryId in Model.CategoriesInput)
+            {
+                <input type="hidden" name="CategoriesInput" value="@categoryId" />
+            }
+        }
+        <button type="submit" class="main-button col-md-6 offset-md-3">Виж следващите</button>
+    </div>
+</form>

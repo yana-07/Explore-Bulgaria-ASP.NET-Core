@@ -2,7 +2,14 @@
 {
     public class AttractionByRouteListViewModel
     {
+        public string Steps { get; set; } = null!;
+
+        public int Page { get; set; }
+
         public IEnumerable<AttractionByRouteViewModel> Attractions { get; set; }
             = Enumerable.Empty<AttractionByRouteViewModel>();
+
+        public IEnumerable<string> CategoriesInput { get; set; }
+            = new List<string>();
     }
 }

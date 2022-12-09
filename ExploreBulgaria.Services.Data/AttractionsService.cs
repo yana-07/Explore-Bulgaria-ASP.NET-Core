@@ -8,6 +8,7 @@ using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.EntityFrameworkCore;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 using System.Device.Location;
+using ExploreBulgaria.Data;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -19,6 +20,7 @@ namespace ExploreBulgaria.Services.Data
         private readonly ICategoriesService categoriesService;
         private readonly ISpatialDataService spatialDataService;
         private readonly IDeletableEnityRepository<Visitor> visitorRepo;
+        private readonly ApplicationDbContext context;
 
         public AttractionsService(
             IDeletableEnityRepository<Attraction> repo,
@@ -26,7 +28,8 @@ namespace ExploreBulgaria.Services.Data
             IGuard guard,
             ICategoriesService categoriesService,
             ISpatialDataService spatialDataService,
-            IDeletableEnityRepository<Visitor> visitorRepo)
+            IDeletableEnityRepository<Visitor> visitorRepo,
+            ApplicationDbContext context)
         {
             this.repo = repo;
             this.repoTemp = repoTemp;
@@ -34,6 +37,7 @@ namespace ExploreBulgaria.Services.Data
             this.categoriesService = categoriesService;
             this.spatialDataService = spatialDataService;
             this.visitorRepo = visitorRepo;
+            this.context = context;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(
@@ -460,11 +464,13 @@ namespace ExploreBulgaria.Services.Data
             .ToListAsync();
 
         public async Task<IEnumerable<AttractionByRouteViewModel>> GetByRouteAndCategoriesAsync(
-            string coordinates,
-            IEnumerable<string> categoryIds)
+            string coordinates, IEnumerable<string> categoryIds,
+            int page, int itemsPerPage = 12)
         {
             var points = spatialDataService
                 .GetGeometryPointsByStringCoordinates(coordinates.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            var startPoint = points[0];
 
             var result = repo
                 .AllAsNoTracking().Include(a => a.Images)
@@ -472,15 +478,16 @@ namespace ExploreBulgaria.Services.Data
                 .Include(a => a.Region).Include(a => a.Location)
                 .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
 
-            var attractions = await result.ToListAsync();
+            foreach (var point in points)
+            {
+                result = result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000);
+            }
+
+            var attractions = await result
+                .Skip((page - 1) * itemsPerPage)
+                .Take(itemsPerPage).ToListAsync();
 
             return attractions
-                .Where(a => points.Any(p =>
-                {
-                    var geoAttr = new GeoCoordinate(a.Coordinates.Y, a.Coordinates.X);
-
-                    return p.GetDistanceTo(geoAttr) <= 15000 ? true : false;
-                }))
                 .Select(a =>
                 {
                     var geo = new GeoCoordinate(a.Coordinates.Y, a.Coordinates.X);
@@ -491,14 +498,14 @@ namespace ExploreBulgaria.Services.Data
                         Name = a.Name,
                         RemoteImageUrl = a.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).FirstOrDefault()!,
                         BlobStorageUrl = a.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).FirstOrDefault()!,
-                        DistanceFromRoad = points.Min(p => p.GetDistanceTo(geo)),
-                        DistanceFromStartPoint = geo.GetDistanceTo(points[0]),
+                        DistanceFromRoad = points.Min(p => geo.GetDistanceTo(new GeoCoordinate(p.Y, p.X))),
+                        DistanceFromStartPoint = geo.GetDistanceTo(new GeoCoordinate(startPoint.Y, startPoint.X)),
                         CategoryName = a.Category.Name,
                         LocationName = a.Location?.Name,
                         RegionName = a.Region.Name,
                         SubcategoryName = a.Subcategory?.Name
                     };
-                }).ToList();
+                });               
         }
     }
 }

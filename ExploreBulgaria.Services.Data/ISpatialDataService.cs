@@ -1,9 +1,10 @@
 ﻿using System.Device.Location;
+using NetTopologySuite.Geometries;
 
 namespace ExploreBulgaria.Services.Data
 {
     public interface ISpatialDataService
     {
-        public GeoCoordinate[] GetGeometryPointsByStringCoordinates(string[] coordinates);
+        public Point[] GetGeometryPointsByStringCoordinates(string[] coordinates);
     }
 }
