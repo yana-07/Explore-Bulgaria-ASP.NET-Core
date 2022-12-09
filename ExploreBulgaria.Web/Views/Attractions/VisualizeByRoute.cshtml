@@ -47,6 +47,6 @@
                 <input type="hidden" name="CategoriesInput" value="@categoryId" />
             }
         }
-        <button type="submit" class="main-button col-md-6 offset-md-3">Виж следващите</button>
+        <button type="submit" class="main-button col-md-6 offset-md-3 @(Model.Page >= Model.PagesCount ? "disabled" : string.Empty)">Виж следващите</button>
     </div>
 </form>

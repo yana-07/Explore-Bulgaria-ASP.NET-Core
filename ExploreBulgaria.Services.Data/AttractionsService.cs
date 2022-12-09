@@ -484,6 +484,7 @@ namespace ExploreBulgaria.Services.Data
             }
 
             var attractions = await result
+                .OrderBy(a => a.Id)
                 .Skip((page - 1) * itemsPerPage)
                 .Take(itemsPerPage).ToListAsync();
 
@@ -506,6 +507,24 @@ namespace ExploreBulgaria.Services.Data
                         SubcategoryName = a.Subcategory?.Name
                     };
                 });               
+        }
+
+        public async Task<int> GetCountByRouteAndCategoriesAsync(
+            string coordinates, IEnumerable<string> categoryIds)
+        {
+            var points = spatialDataService
+                .GetGeometryPointsByStringCoordinates(coordinates.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            var result = repo
+                .AllAsNoTracking()
+                .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
+
+            foreach (var point in points)
+            {
+                result = result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000);
+            }
+
+            return await result.CountAsync();
         }
     }
 }

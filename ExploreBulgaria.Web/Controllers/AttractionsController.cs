@@ -252,6 +252,8 @@ namespace ExploreBulgaria.Web.Controllers
                 Attractions = await attractionsService
                    .GetByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput, page, ItemsPerPage),
                 Steps = model.Steps,
+                PagesCount = (int)Math.Ceiling((decimal)(await attractionsService
+                   .GetCountByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput)) / ItemsPerPage),
                 CategoriesInput = model.CategoriesInput,
                 Page = page,
             };

@@ -9,6 +9,8 @@
         public IEnumerable<AttractionByRouteViewModel> Attractions { get; set; }
             = Enumerable.Empty<AttractionByRouteViewModel>();
 
+        public int PagesCount { get; set; }
+
         public IEnumerable<string> CategoriesInput { get; set; }
             = new List<string>();
     }
