@@ -85,7 +85,19 @@ namespace ExploreBulgaria.Data
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder
+                .HasDbFunction(typeof(ApplicationDbContext)
+                   .GetMethod(nameof(GetDistance),
+                   new[] { typeof(NetTopologySuite.Geometries.Point),
+                           typeof(NetTopologySuite.Geometries.Point) })!)
+                .HasName("ufn_GetGeographicDistance");
         }
+
+        public double GetDistance(
+            NetTopologySuite.Geometries.Point first,
+            NetTopologySuite.Geometries.Point second)
+            => throw new NotSupportedException();
 
         private static void SetIsDeletableQueryFilter<T>(ModelBuilder builder)
             where T : class, IDeletableEntity
