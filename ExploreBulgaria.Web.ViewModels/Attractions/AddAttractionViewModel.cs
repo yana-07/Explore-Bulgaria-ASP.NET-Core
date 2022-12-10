@@ -4,8 +4,10 @@ using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using static ExploreBulgaria.Services.Constants.UIConstants;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Attraction;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Region;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Village;
 
 namespace ExploreBulgaria.Web.ViewModels.Attractions
 {
@@ -22,9 +24,14 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
         public string Description { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [StringLength(RegionNameMaxLength,MinimumLength = RegionNameMinLength, ErrorMessage = FieldLength)]
+        [StringLength(RegionNameMaxLength, MinimumLength = RegionNameMinLength, ErrorMessage = FieldLength)]
         [Display(Name = DisplayRegion)]
         public string Region { get; set; } = null!;
+
+        [Required(ErrorMessage = FieldRequired)]
+        [StringLength(NameMaxLength, MinimumLength = VillageNameMinLength, ErrorMessage = FieldLength)]
+        [Display(Name = DisplayVillage)]
+        public string? Village { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
         public string CategoryId { get; set; } = null!;

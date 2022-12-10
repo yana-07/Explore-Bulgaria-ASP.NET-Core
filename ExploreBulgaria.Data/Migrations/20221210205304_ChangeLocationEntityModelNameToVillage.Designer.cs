@@ -4,6 +4,7 @@ using ExploreBulgaria.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,10 @@ using NetTopologySuite.Geometries;
 namespace ExploreBulgaria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221210205304_ChangeLocationEntityModelNameToVillage")]
+    partial class ChangeLocationEntityModelNameToVillage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +221,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("VillageId");
 
-                    b.ToTable("Attractions", (string)null);
+                    b.ToTable("Attractions");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.AttractionTemporary", b =>
@@ -286,7 +288,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("TemporaryAttractions", (string)null);
+                    b.ToTable("TemporaryAttractions");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Category", b =>
@@ -315,7 +317,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Comment", b =>
@@ -359,7 +361,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Image", b =>
@@ -406,7 +408,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Region", b =>
@@ -435,7 +437,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Regions", (string)null);
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Reply", b =>
@@ -478,7 +480,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Replies", (string)null);
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Subcategory", b =>
@@ -513,7 +515,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Subcategories", (string)null);
+                    b.ToTable("Subcategories");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Village", b =>
@@ -548,7 +550,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Villages", (string)null);
+                    b.ToTable("Villages");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Visitor", b =>
@@ -578,7 +580,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Visitors", (string)null);
+                    b.ToTable("Visitors");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.VisitorDislikedComment", b =>
@@ -593,7 +595,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("VisitorDislikedComment", (string)null);
+                    b.ToTable("VisitorDislikedComment");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.VisitorFavoriteAttraction", b =>
@@ -608,7 +610,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("AttractionId");
 
-                    b.ToTable("VisitorFavoriteAttraction", (string)null);
+                    b.ToTable("VisitorFavoriteAttraction");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.VisitorLikedComment", b =>
@@ -623,7 +625,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("VisitorLikedComment", (string)null);
+                    b.ToTable("VisitorLikedComment");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.VisitorVisitedAttraction", b =>
@@ -638,7 +640,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("AttractionId");
 
-                    b.ToTable("VisitorVisitedAttraction", (string)null);
+                    b.ToTable("VisitorVisitedAttraction");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.VisitorWantToVisitAttraction", b =>
@@ -653,7 +655,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("AttractionId");
 
-                    b.ToTable("VisitorWantToVisitAttraction", (string)null);
+                    b.ToTable("VisitorWantToVisitAttraction");
                 });
 
             modelBuilder.Entity("ExploreBulgaria.Data.Models.Vote", b =>
@@ -695,7 +697,7 @@ namespace ExploreBulgaria.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

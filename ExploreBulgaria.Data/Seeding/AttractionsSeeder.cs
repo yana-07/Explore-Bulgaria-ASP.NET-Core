@@ -43,7 +43,7 @@ namespace ExploreBulgaria.Data.Seeding
 
                     var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Name == dto.AreaName); 
 
-                    var location = await dbContext.Locations.FirstOrDefaultAsync(l => l.Name == dto.Location); 
+                    var village = await dbContext.Villages.FirstOrDefaultAsync(l => l.Name == dto.Location); 
 
                     var images = dto.ImagesUrls
                            .Select(url =>
@@ -58,7 +58,7 @@ namespace ExploreBulgaria.Data.Seeding
                         CategoryId = category!.Id,
                         SubcategoryId = subcategory?.Id,
                         RegionId = region!.Id,
-                        LocationId = location?.Id,
+                        VillageId = village?.Id,
                         Coordinates = new NetTopologySuite.Geometries.Point(
                             Convert.ToDouble(dto.Longitude),
                             Convert.ToDouble(dto.Latitude))

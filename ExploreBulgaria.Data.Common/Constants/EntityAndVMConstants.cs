@@ -32,6 +32,11 @@
             public const int RegionNameMinLength = 3;
         }
 
+        public class Village
+        {
+            public const int VillageNameMinLength = 8;
+        }
+
         public class Image
         {
             public const int ExtensionMaxLength = 7;

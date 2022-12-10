@@ -1,5 +1,5 @@
 ﻿using ExploreBulgaria.Web.ViewModels.Categories;
-using ExploreBulgaria.Web.ViewModels.Locations;
+using ExploreBulgaria.Web.ViewModels.Villages;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 
@@ -16,7 +16,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
         public IEnumerable<RegionSelectViewModel> Regions { get; set; } 
             = Enumerable.Empty<RegionSelectViewModel>();
 
-        public IEnumerable<LocationSelectViewModel> Locations { get; set; }
-            = Enumerable.Empty<LocationSelectViewModel>();
+        public IEnumerable<VillageSelectViewModel> Villages { get; set; }
+            = Enumerable.Empty<VillageSelectViewModel>();
     }
 }

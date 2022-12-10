@@ -2,7 +2,7 @@
     const categorySelectEl = document.getElementById('chooseCategory');
     const subcategorySelectEl = document.getElementById('chooseSubcategory');
     const regionSelectEl = document.getElementById('chooseRegion');
-    const locationSelectEl = document.getElementById('chooseLocation');
+    const villageSelectEl = document.getElementById('chooseVillage');
     const antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
 
     let categoryName = categorySelectEl.value;
@@ -76,7 +76,7 @@
     }
 
     function getLocations(event, categoryName, subcategoryName, regionName) {
-        fetch("/api/AttractionsApi/locations", {
+        fetch("/api/AttractionsApi/villages", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -86,11 +86,11 @@
         })
             .then(response => response.json())
             .then(locations => {
-                locationSelectEl.innerHTML = '';
-                locationSelectEl.appendChild(new Option(''));
+                villageSelectEl.innerHTML = '';
+                villageSelectEl.appendChild(new Option(''));
 
                 let childElements = locations.map(l => new Option(l.name));
-                childElements.forEach(l => locationSelectEl.appendChild(l));
+                childElements.forEach(l => villageSelectEl.appendChild(l));
             })
     }   
 })

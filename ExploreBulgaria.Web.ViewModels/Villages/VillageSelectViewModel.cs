@@ -1,9 +1,9 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Mapping;
 
-namespace ExploreBulgaria.Web.ViewModels.Locations
+namespace ExploreBulgaria.Web.ViewModels.Villages
 {
-    public class LocationSelectViewModel : IMapFrom<Location>
+    public class VillageSelectViewModel : IMapFrom<Village>
     {
         public string Name { get; set; } = null!;
     }

@@ -6,9 +6,9 @@ using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants;
 
 namespace ExploreBulgaria.Data.Models
 {
-    public class Location : BaseDeletableModel<string>
+    public class Village : BaseDeletableModel<string>
     {
-        public Location()
+        public Village()
         {
             this.Id = Guid.NewGuid().ToString();
             this.Attractions = new HashSet<Attraction>();

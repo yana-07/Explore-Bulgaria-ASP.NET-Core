@@ -10,6 +10,6 @@
 
         public string RegionName { get; set; }
 
-        public string? LocationName { get; set; }
+        public string? VillageName { get; set; }
     }
 }

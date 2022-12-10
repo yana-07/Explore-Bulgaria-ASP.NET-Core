@@ -13,7 +13,7 @@ namespace ExploreBulgaria.Services.Extensions
             sb.Append($"{model.CategoryName} ");
             sb.Append($"{model.SubcategoryName} ");
             sb.Append($"{model.RegionName} ");
-            sb.Append($"{model.LocationName} ");
+            sb.Append($"{model.VillageName} ");
 
             var str = sb.ToString().Trim();
             str = ConvertCyrilicToLatinLetters(str);

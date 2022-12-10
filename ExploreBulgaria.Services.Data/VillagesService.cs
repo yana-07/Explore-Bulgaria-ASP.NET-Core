@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExploreBulgaria.Services.Data
 {
-    public class LocationsService : ILocationsService
+    public class VillagesService : IVillagesService
     {
-        private readonly IDeletableEnityRepository<Location> repo;
+        private readonly IDeletableEnityRepository<Village> repo;
 
-        public LocationsService(IDeletableEnityRepository<Location> repo)
+        public VillagesService(IDeletableEnityRepository<Village> repo)
         {
             this.repo = repo;
         }
@@ -23,18 +23,18 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<IEnumerable<T>> GetAllForCategorySubcategoryAndRegionAsync<T>(string? categoryName = null, string? subcategoryName = null, string? regionName = null)
         {
-            var locations = repo.AllAsNoTracking();
+            var villages = repo.AllAsNoTracking();
 
             if (!string.IsNullOrEmpty(categoryName))
             {
-                locations = locations
+                villages = villages
                     .Where(l => l.Attractions
                        .Any(a => a.Category.Name == categoryName));
             }
 
             if (!string.IsNullOrEmpty(subcategoryName))
             {
-                locations = locations
+                villages = villages
                     .Where(l => l.Attractions
                        .Any(a => a.Subcategory != null && 
                             a.Subcategory.Name == subcategoryName));
@@ -42,12 +42,12 @@ namespace ExploreBulgaria.Services.Data
 
             if (!string.IsNullOrEmpty(regionName))
             {
-                locations = locations
+                villages = villages
                     .Where(l => l.Attractions
                        .Any(a => a.Region.Name == regionName));
             }
 
-            return await locations
+            return await villages
                 .OrderBy(l => l.Name)
                 .To<T>()
                 .ToListAsync();

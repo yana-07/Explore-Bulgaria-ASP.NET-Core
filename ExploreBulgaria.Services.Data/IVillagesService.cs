@@ -1,6 +1,6 @@
 ﻿namespace ExploreBulgaria.Services.Data
 {
-    public interface ILocationsService
+    public interface IVillagesService
     {
         Task<IEnumerable<T>> GetAllAsync<T>();
 

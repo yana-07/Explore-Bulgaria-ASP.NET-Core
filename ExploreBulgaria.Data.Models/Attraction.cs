@@ -39,10 +39,10 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual Region Region { get; set; } = null!;
 
-        [ForeignKey(nameof(Location))]
-        public string? LocationId { get; set; }
+        [ForeignKey(nameof(Village))]
+        public string? VillageId { get; set; }
 
-        public virtual Location? Location { get; set; }
+        public virtual Village? Village { get; set; }
 
         [Required]
         public Point Coordinates { get; set; } = null!;

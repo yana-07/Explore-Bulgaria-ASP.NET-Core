@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace ExploreBulgaria.Data.Seeding
 {
-    public class LocationsSeeder : ISeeder
+    public class VillagesSeeder : ISeeder
     {
         private static string[] categoriesNotAllowed = new[]
            { "село Нисово", "село Турия", "село Ново село (Област Пловдив)", "село Беброво", "село Гаврил Геново", "село Аврен (Област Варна)" };
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            if (dbContext.Locations.Any())
+            if (dbContext.Villages.Any())
             {
                 return;
             }
@@ -32,18 +32,18 @@ namespace ExploreBulgaria.Data.Seeding
                     .DistinctBy(dto => dto.Location)
                     .ToArray();
 
-                await dbContext.Locations.AddRangeAsync(GetLocations(attractionDtos, dbContext));
+                await dbContext.Villages.AddRangeAsync(GetLocations(attractionDtos, dbContext));
                 await dbContext.SaveChangesAsync();
             }
         }
 
-        private IEnumerable<Location> GetLocations(AttractionDto[] dtos, ApplicationDbContext dbContext)
+        private IEnumerable<Village> GetLocations(AttractionDto[] dtos, ApplicationDbContext dbContext)
         {
             foreach (var dto in dtos)
             {
                 var region = dbContext.Regions.FirstOrDefaultAsync(r => r.Name == dto.AreaName).GetAwaiter().GetResult();
 
-                yield return new Location { Name = dto.Location, RegionId = region.Id };
+                yield return new Village { Name = dto.Location, RegionId = region.Id };
             }
         }
     }

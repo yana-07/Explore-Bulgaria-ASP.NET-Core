@@ -54,10 +54,10 @@
                         </div>
                         <div class="col-lg-4">
                             <fieldset>
-                                <label asp-for="LocationName">4. Избери локация</label>
-                                <select asp-for="LocationName" class="form-select" aria-label="Default select example" id="chooseLocation">
+                                <label asp-for="VillageName">4. Избери село</label>
+                                <select asp-for="VillageName" class="form-select" aria-label="Default select example" id="chooseVillage">
                                     <option></option>
-                                    @foreach (var location in Model.Locations)
+                                    @foreach (var location in Model.Villages)
                                     {
                                         <option value="@location.Name">@location.Name</option>
                                     }

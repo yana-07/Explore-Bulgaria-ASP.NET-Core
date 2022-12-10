@@ -49,7 +49,7 @@ namespace ExploreBulgaria.Services.Data
 
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
-                filterModel.RegionName, filterModel.LocationName, filterModel.SearchTerm);
+                filterModel.RegionName, filterModel.VillageName, filterModel.SearchTerm);
 
             return await attractions
                 .To<T>()
@@ -62,7 +62,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var attractions = ApplyFilter(
                 filterModel.CategoryName, filterModel.SubcategoryName,
-                filterModel.RegionName, filterModel.LocationName, filterModel.SearchTerm);
+                filterModel.RegionName, filterModel.VillageName, filterModel.SearchTerm);
 
             return await attractions.CountAsync();
         }
@@ -83,7 +83,7 @@ namespace ExploreBulgaria.Services.Data
             string? categoryName = null,
             string? subcategoryName = null,
             string? regionName = null,
-            string? locationName = null,
+            string? villageName = null,
             string? searchTerm = null)
         {
             var result = repo
@@ -108,11 +108,11 @@ namespace ExploreBulgaria.Services.Data
                     .Where(a => a.Region.Name == regionName);
             }
 
-            if (string.IsNullOrEmpty(locationName) == false)
+            if (string.IsNullOrEmpty(villageName) == false)
             {
                 result = result
-                    .Where(a => a.Location != null &&
-                           a.Location.Name == locationName);
+                    .Where(a => a.Village != null &&
+                           a.Village.Name == villageName);
             }
 
             if (string.IsNullOrEmpty(searchTerm) == false)
@@ -326,7 +326,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction)
-                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Village)
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Region)
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
@@ -342,7 +342,7 @@ namespace ExploreBulgaria.Services.Data
                     CategoryName = fa.Attraction.Category.Name,
                     SubcategoryName = fa.Attraction.Subcategory?.Name,
                     RegionName = fa.Attraction.Region.Name,
-                    LocationName = fa.Attraction.Location?.Name,
+                    VillageName = fa.Attraction.Village?.Name,
                     Id = fa.Attraction.Id,
                     RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
                     BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
@@ -356,7 +356,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction)
-                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Village)
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Region)
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
@@ -372,7 +372,7 @@ namespace ExploreBulgaria.Services.Data
                     CategoryName = fa.Attraction.Category.Name,
                     SubcategoryName = fa.Attraction.Subcategory?.Name,
                     RegionName = fa.Attraction.Region.Name,
-                    LocationName = fa.Attraction.Location?.Name,
+                    VillageName = fa.Attraction.Village?.Name,
                     Id = fa.Attraction.Id,
                     RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
                     BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
@@ -386,7 +386,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction)
-                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Location)
+                .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Village)
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Region)
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
@@ -402,7 +402,7 @@ namespace ExploreBulgaria.Services.Data
                     CategoryName = fa.Attraction.Category.Name,
                     SubcategoryName = fa.Attraction.Subcategory?.Name,
                     RegionName = fa.Attraction.Region.Name,
-                    LocationName = fa.Attraction.Location?.Name,
+                    VillageName = fa.Attraction.Village?.Name,
                     Id = fa.Attraction.Id,
                     RemoteImageUrls = fa.Attraction.Images.Where(i => i.RemoteImageUrl != null).Select(i => i.RemoteImageUrl).Take(4)!,
                     BlobStorageUrls = fa.Attraction.Images.Where(i => i.BlobStorageUrl != null).Select(i => i.BlobStorageUrl).Take(4)!,
@@ -475,7 +475,7 @@ namespace ExploreBulgaria.Services.Data
             var result = repo
                 .AllAsNoTracking().Include(a => a.Images)
                 .Include(a => a.Category).Include(a => a.Subcategory)
-                .Include(a => a.Region).Include(a => a.Location)
+                .Include(a => a.Region).Include(a => a.Village)
                 .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
 
             foreach (var point in points)
@@ -502,7 +502,7 @@ namespace ExploreBulgaria.Services.Data
                         DistanceFromRoad = points.Min(p => geo.GetDistanceTo(new GeoCoordinate(p.Y, p.X))),
                         DistanceFromStartPoint = geo.GetDistanceTo(new GeoCoordinate(startPoint.Y, startPoint.X)),
                         CategoryName = a.Category.Name,
-                        LocationName = a.Location?.Name,
+                        VillageName = a.Village?.Name,
                         RegionName = a.Region.Name,
                         SubcategoryName = a.Subcategory?.Name
                     };

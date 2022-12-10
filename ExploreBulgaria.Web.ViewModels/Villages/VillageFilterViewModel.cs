@@ -1,6 +1,6 @@
-﻿namespace ExploreBulgaria.Web.ViewModels.Locations
+﻿namespace ExploreBulgaria.Web.ViewModels.Villages
 {
-    public class LocationFilterViewModel
+    public class VillageFilterViewModel
     {
         public string? CategoryName { get; set; }
 

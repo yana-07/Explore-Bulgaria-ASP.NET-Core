@@ -17,7 +17,7 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
 
         public string RegionName { get; set; } = null!;
 
-        public string? LocationName { get; set; }
+        public string? VillageName { get; set; }
 
         public string? Description { get; set; }
                      

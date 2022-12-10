@@ -14,5 +14,6 @@
         public const string DisplayName = "Заглавие";
         public const string DisplayDescription = "Описание";
         public const string DisplayRegion = "Регион";
+        public const string DisplayVillage = "Село";
     }
 }

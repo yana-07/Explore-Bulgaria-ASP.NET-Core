@@ -2,7 +2,7 @@
 using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
-using ExploreBulgaria.Web.ViewModels.Locations;
+using ExploreBulgaria.Web.ViewModels.Villages;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +17,14 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
-        private readonly ILocationsService locationsService;
+        private readonly IVillagesService locationsService;
 
         public AttractionsApiController(
             IAttractionsService attractionsService, 
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
-            ILocationsService locationsService)
+            IVillagesService locationsService)
         {
             this.attractionsService = attractionsService;
             this.categoriesService = categoriesService;
@@ -45,9 +45,9 @@ namespace ExploreBulgaria.Web.Controllers
         public async Task<IActionResult> GetCategories(CategoryFilterViewModel model)
             => Ok(await this.categoriesService.GetAllForRegionAsync<CategorySelectViewModel>(model.RegionName));
 
-        [HttpPost("locations")]
-        public async Task<IActionResult> GetLocations(LocationFilterViewModel model)
-            => Ok(await this.locationsService.GetAllForCategorySubcategoryAndRegionAsync<LocationSelectViewModel>(model.CategoryName, model.SubcategoryName, model.RegionName));
+        [HttpPost("villages")]
+        public async Task<IActionResult> GetVillages(VillageFilterViewModel model)
+            => Ok(await this.locationsService.GetAllForCategorySubcategoryAndRegionAsync<VillageSelectViewModel>(model.CategoryName, model.SubcategoryName, model.RegionName));
 
         [HttpPost("addToFavorites")]
         public async Task<IActionResult> AddAttractionToFavorites(AttractionIdInputModel model)
