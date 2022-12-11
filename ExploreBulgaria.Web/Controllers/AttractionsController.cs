@@ -234,6 +234,7 @@ namespace ExploreBulgaria.Web.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> ByRoute()
         {
             var model = new ByRouteInputModel
@@ -245,6 +246,7 @@ namespace ExploreBulgaria.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ByRoute(ByRouteInputModel model, int page = 1)
         {
             var viewModel = new AttractionByRouteListViewModel
