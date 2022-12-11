@@ -1,4 +1,6 @@
-﻿namespace ExploreBulgaria.Services.Guards
+﻿using ExploreBulgaria.Services.Exceptions;
+
+namespace ExploreBulgaria.Services.Guards
 {
     public class Guard : IGuard
     {
