@@ -35,11 +35,18 @@
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </fieldset>
             </div>
-            <div class="col-lg-6 offset-lg-3">
+            <div class="col-lg-6">
                 <fieldset>
-                    <label class="form-label" asp-for="Region">Предлаганият обект се намира в или в близост до следното населено място</label>
+                    <label class="form-label" asp-for="Region">Предлаганият обект се намира в или в близост до следния град:</label>
                     <input class="form-control" asp-for="Region" />
                     <span asp-validation-for="Region" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <label class="form-label" asp-for="Village">Предлаганият обект се намира в или в близост до следното село:</label>
+                    <input class="form-control" asp-for="Village" />
+                    <span asp-validation-for="Village" class="text-danger"></span>
                 </fieldset>
             </div>
             <div id="map" class="col-lg-12" style="height: 300px"></div>
