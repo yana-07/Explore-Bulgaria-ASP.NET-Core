@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Attraction;
 using ExploreBulgaria.Data.Common.Models;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,6 +26,9 @@ namespace ExploreBulgaria.Data.Models
         [Required]
         [MaxLength(AttractionNameMaxLength)]
         public string Region { get; set; } = null!;
+
+        [MaxLength(NameMaxLength)]
+        public string? Village { get; set; } = null!;
 
         [Required]
         [MaxLength(GuidMaxLength)]

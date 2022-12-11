@@ -5,8 +5,11 @@ using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using System.ComponentModel.DataAnnotations;
 using static ExploreBulgaria.Services.Constants.UIConstants;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Attraction;
 using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Region;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants.Village;
+using ExploreBulgaria.Web.ViewModels.Villages;
 
 namespace ExploreBulgaria.Web.ViewModels.Administration
 {
@@ -37,6 +40,12 @@ namespace ExploreBulgaria.Web.ViewModels.Administration
         [Required(ErrorMessage = FieldRequired)]
         public string RegionId { get; set; } = null!;
 
+        [StringLength(NameMaxLength, MinimumLength = VillageNameMinLength, ErrorMessage = FieldLength)]
+        [Display(Name = DisplayVillage)]
+        public string? Village { get; set; }
+
+        public string? VillageId { get; set; }
+
         [Required(ErrorMessage = FieldRequired)]
         public string SubcategoryId { get; set; } = null!;
 
@@ -58,5 +67,8 @@ namespace ExploreBulgaria.Web.ViewModels.Administration
 
         public IEnumerable<RegionOptionViewModel> Regions { get; set; } 
             = Enumerable.Empty<RegionOptionViewModel>();
+
+        public IEnumerable<VillageOptionViewModel> Villages { get; set; }
+            = Enumerable.Empty<VillageOptionViewModel>();
     }
 }

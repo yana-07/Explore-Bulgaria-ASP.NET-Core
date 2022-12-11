@@ -29,6 +29,7 @@ namespace ExploreBulgaria.Services.Data
                 Name = model.Name,
                 Description = model.Description,
                 Region = model.Region,
+                Village = model.Village,
                 CategoryId = model.CategoryId,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,

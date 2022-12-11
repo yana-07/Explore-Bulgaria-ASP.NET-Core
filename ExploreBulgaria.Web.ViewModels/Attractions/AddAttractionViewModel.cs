@@ -28,7 +28,6 @@ namespace ExploreBulgaria.Web.ViewModels.Attractions
         [Display(Name = DisplayRegion)]
         public string Region { get; set; } = null!;
 
-        [Required(ErrorMessage = FieldRequired)]
         [StringLength(NameMaxLength, MinimumLength = VillageNameMinLength, ErrorMessage = FieldLength)]
         [Display(Name = DisplayVillage)]
         public string? Village { get; set; }
