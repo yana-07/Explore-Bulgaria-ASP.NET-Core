@@ -10,6 +10,18 @@
 
         public const string InvalidVisitorId = "Invalid Visitor ID.";
 
+        public const string InvalidRegionId = "Invalid Region ID.";
+
         public const string InvalidAttractionTemporaryId = "Invalid AttractionTemporary ID.";
+
+        public const string SavingToDatabase = "Грешка в базата данни. Моля, опитайте отново.";
+
+        public const string CategoryAlreadyExists = "Категорията, която се опитвате да добавите, вече съществува.";
+
+        public const string SubcategoryAlreadyExists = "Подкатегорията, която се опитвате да добавите, вече съществува.";
+
+        public const string RegionAlreadyExists = "Регионът, който се опитвате да добавите, вече съществува.";
+
+        public const string VillageAlreadyExists = "Селото, което се опитвате да добавите, вече съществува.";
     }
 }
