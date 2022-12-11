@@ -16,5 +16,13 @@ namespace ExploreBulgaria.Services.Data.Administration
         Task ApproveAsync(AttractionTempDetailsViewModel model);
 
         Task RejectAsync(int id);
+
+        Task AddCategoryAsync(string categoryName);
+
+        Task AddSubcategoryAsync(string subcategoryName, string categoryId);
+
+        Task AddRegionAsync(string regionName);
+
+        Task AddVillageAsync(string villageName, string regionId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Administration;
@@ -13,16 +14,136 @@ namespace ExploreBulgaria.Services.Data.Administration
     {
         private readonly IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
         private readonly IDeletableEnityRepository<Attraction> attrRepo;
+        private readonly IDeletableEnityRepository<Category> categoriesRepo;
+        private readonly IDeletableEnityRepository<Subcategory> subcategoriesRepo;
+        private readonly IDeletableEnityRepository<Region> regionsRepo;
+        private readonly IDeletableEnityRepository<Village> villagesRepo;
         private readonly IGuard guard;
 
         public AdminService(
             IDeletableEnityRepository<AttractionTemporary> attrTempRepo,
             IDeletableEnityRepository<Attraction> attrRepo,
+            IDeletableEnityRepository<Category> categoriesRepo,
+            IDeletableEnityRepository<Subcategory> subcategoriesRepo,
+            IDeletableEnityRepository<Region> regionsRepo,
+            IDeletableEnityRepository<Village> villagesRepo,
             IGuard guard)
         {
             this.attrTempRepo = attrTempRepo;
             this.attrRepo = attrRepo;
+            this.categoriesRepo = categoriesRepo;
+            this.subcategoriesRepo = subcategoriesRepo;
+            this.regionsRepo = regionsRepo;
+            this.villagesRepo = villagesRepo;
             this.guard = guard;
+        }
+
+        public async Task AddCategoryAsync(string categoryName)
+        {
+            var exisitingCategory = await categoriesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name == categoryName);
+
+            if (exisitingCategory != null)
+            {
+                throw new ExploreBulgariaException(CategoryAlreadyExists);
+            }
+
+            try
+            {
+                await categoriesRepo.AddAsync(new Category { Name = categoryName });
+                await categoriesRepo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new DbException(SavingToDatabase);
+            }
+        }
+
+        public async Task AddRegionAsync(string regionName)
+        {
+            var exisitingRegion = await regionsRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(r => r.Name == regionName);
+
+            if (exisitingRegion != null)
+            {
+                throw new ExploreBulgariaException(RegionAlreadyExists);
+            }
+
+            try
+            {
+                await regionsRepo.AddAsync(new Region
+                {
+                    Name = regionName
+                });
+
+                await regionsRepo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new DbException(SavingToDatabase);
+            }
+        }
+
+        public async Task AddSubcategoryAsync(string subcategoryName, string categoryId)
+        {
+            var category = await categoriesRepo.GetByIdAsync(categoryId);
+            guard.AgainstNull(category, InvalidCategoryId);
+
+            var existingSubcategory = await subcategoriesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(sc => sc.Name == subcategoryName);
+
+            if (existingSubcategory != null)
+            {
+                throw new ExploreBulgariaException(SubcategoryAlreadyExists);
+            }
+
+            try
+            {
+                await subcategoriesRepo.AddAsync(new Subcategory
+                {
+                    CategoryId = categoryId,
+                    Name = subcategoryName
+                });
+
+                await subcategoriesRepo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new DbException(SavingToDatabase);
+            }
+        }
+
+        public async Task AddVillageAsync(string villageName, string regionId)
+        {
+            var region = await regionsRepo.GetByIdAsync(regionId);
+            guard.AgainstNull(region, InvalidRegionId);
+
+            var existingVillage = await villagesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(v => v.Name == villageName);
+
+            if (existingVillage != null)
+            {
+                throw new ExploreBulgariaException(VillageAlreadyExists);
+            }
+
+            try
+            {
+                await villagesRepo.AddAsync(new Village
+                {
+                    RegionId = regionId,
+                    Name = villageName
+                });
+
+                await villagesRepo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new DbException(SavingToDatabase);
+            }
         }
 
         public async Task ApproveAsync(AttractionTempDetailsViewModel model)

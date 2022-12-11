@@ -1,0 +1,15 @@
+﻿@model AddRegionViewModel
+
+@{
+    ViewData["Title"] = "Добави регион / град";
+}
+
+<form asp-area="Administration" asp-controller="Regions" asp-action="Add"
+      method="post" class="col-md-6 offset-md-3">
+    <div class="form-group">
+        <label asp-for="Name">Заглавие:</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-secondary">Добави</button>
+</form>

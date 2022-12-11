@@ -55,7 +55,6 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        @*<li class="nav-header">Обекти</li>*@
                         <li class="nav-item">
                             <a asp-area="Administration" asp-controller="Home" asp-action="Index" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
@@ -65,7 +64,31 @@
                         <li class="nav-item">
                             <a asp-area="Administration" asp-controller="Attractions" asp-action="All" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
-                                <p>Одобри обекти</p>
+                                <p>Предложени обекти</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Administration" asp-controller="Categories" asp-action="Add" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>Добави категория</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Administration" asp-controller="Subcategories" asp-action="Add" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>Добави подкатегория</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Administration" asp-controller="Regions" asp-action="Add" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>Добави регион / град</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Administration" asp-controller="Villages" asp-action="Add" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>Добави село</p>
                             </a>
                         </li>
                     </ul>
@@ -89,6 +112,7 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.0.5/dist/js/adminlte.min.js"></script>
     <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
     <script src="~/js/sidebars.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />"
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,25 @@
+﻿@model AddVillageViewModel
+
+@{
+    ViewData["Title"] = "Добави село";
+}
+
+<form asp-area="Administration" asp-controller="Villages" asp-action="Add"
+      method="post" class="col-md-6 offset-md-3">
+    <div class="form-group">
+        <label asp-for="Name">Заглавие:</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RegionId">Регион:</label>
+        <select asp-for="RegionId" class="form-select">
+            @foreach (var region in Model.Regions)
+            {
+                <option value="@region.Id">@region.Name</option>
+            }
+        </select>
+        <span asp-validation-for="RegionId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-secondary">Добави</button>
+</form>
