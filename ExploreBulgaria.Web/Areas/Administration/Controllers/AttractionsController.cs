@@ -5,6 +5,7 @@ using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
+using ExploreBulgaria.Web.ViewModels.Villages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
@@ -15,18 +16,21 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
         private readonly ICategoriesService categoriesService;
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
+        private readonly IVillagesService vilaggesService;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
             IAdminService adminService,
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
-            IRegionsService regionsService)
+            IRegionsService regionsService,
+            IVillagesService vilaggesService)
         {
             this.adminService = adminService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
+            this.vilaggesService = vilaggesService;
         }
 
         public async Task<IActionResult> All(AttractionTemporaryFilterModel filterModel, int page = 1)
@@ -76,7 +80,29 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                 return View(nameof(Details), model);
             }
 
-            await adminService.ApproveAsync(model);
+            try
+            {
+                await adminService.ApproveAsync(model);
+            }
+            catch (Exception ex)
+            {
+                // TODO: toast message
+            }
+
+            return RedirectToAction(nameof(All));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reject(int id)
+        {
+            try
+            {
+                await adminService.RejectAsync(id);
+            }
+            catch (Exception ex)
+            {
+                // TODO: toast message
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -92,6 +118,8 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                 .GetAllForCategory<SubcategoryOptionViewModel>(model.CategoryModel!.Name);
             model.Regions = await regionsService
                 .GetAllAsync<RegionOptionViewModel>();
+            model.Villages = await vilaggesService
+                .GetAllAsync<VillageOptionViewModel>();
         }
     }
 }

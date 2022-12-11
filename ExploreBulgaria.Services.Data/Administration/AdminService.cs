@@ -37,6 +37,7 @@ namespace ExploreBulgaria.Services.Data.Administration
                 Name = model.Name,
                 RegionId = model.RegionId,
                 SubcategoryId = model.SubcategoryId,
+                VillageId = model.VillageId
             };
 
             foreach (var blob in model.BlobNames.Split(", "))
@@ -49,12 +50,13 @@ namespace ExploreBulgaria.Services.Data.Administration
                 });
             }
 
-            var attrTempToDelete = await attrTempRepo
-                .All().FirstOrDefaultAsync(at => at.Id == model.Id);
-
             await attrRepo.AddAsync(attraction);
             await attrRepo.SaveChangesAsync();
 
+            var attrTempToDelete = await attrTempRepo
+                .All().FirstOrDefaultAsync(at => at.Id == model.Id);
+            guard.AgainstNull(attrTempToDelete, InvalidAttractionTemporaryId);
+            attrTempToDelete!.IsApproved = true;
             attrTempRepo.Delete(attrTempToDelete!);
             await attrTempRepo.SaveChangesAsync();
         }
@@ -92,6 +94,17 @@ namespace ExploreBulgaria.Services.Data.Administration
             var attractionsTemp = ApplyFilter(filterModel);
 
             return await attractionsTemp.CountAsync();
+        }
+
+        public async Task RejectAsync(int id)
+        {
+            var attraction = await attrTempRepo.GetByIdAsync(id);
+            guard.AgainstNull(attraction, InvalidAttractionTemporaryId);
+
+            attraction!.IsRejected = true;
+            attrTempRepo.Delete(attraction!);
+
+            await attrTempRepo.SaveChangesAsync();
         }
 
         private IQueryable<AttractionTemporary> ApplyFilter(AttractionTemporaryFilterModel filterModel)

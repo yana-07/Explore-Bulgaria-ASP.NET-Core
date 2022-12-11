@@ -14,5 +14,7 @@ namespace ExploreBulgaria.Services.Data.Administration
         Task<int> GetCountAsync(AttractionTemporaryFilterModel filterModel);
 
         Task ApproveAsync(AttractionTempDetailsViewModel model);
+
+        Task RejectAsync(int id);
     }
 }
