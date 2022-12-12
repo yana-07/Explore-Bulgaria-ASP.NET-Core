@@ -60,7 +60,9 @@ builder.Services.AddSingleton(builder.Configuration);
 
 builder.Services.AddSingleton(new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorageConnection")));
 
-// Data Repositories
+builder.Services.AddResponseCaching();
+
+// Data Services
 builder.Services.AddApplicationServices();
 
 var app = builder.Build();
@@ -69,8 +71,11 @@ var app = builder.Build();
 using (var serviceScope = app.Services.CreateScope())
 {
     var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    //dbContext.Database.Migrate();
-    new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+    if (dbContext.Database.IsSqlServer())
+    {
+        dbContext.Database.Migrate();
+        new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+    }
 }
 
 
@@ -92,6 +97,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseResponseCaching();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,4 +1,5 @@
 ﻿using ExploreBulgaria.Web.ViewModels;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using static ExploreBulgaria.Services.Constants.GlobalConstants;
@@ -7,11 +8,11 @@ namespace ExploreBulgaria.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public IActionResult Index()
@@ -32,10 +33,15 @@ namespace ExploreBulgaria.Web.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 30, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var traceIdentifier = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+            logger.LogError(feature?.Error, "TraceIdentifier: {0}", traceIdentifier);
+
+            return View(new ErrorViewModel { RequestId = traceIdentifier });
         }
 
         public IActionResult StatusCodeError(int statusCode)
