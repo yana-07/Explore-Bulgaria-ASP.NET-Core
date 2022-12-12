@@ -3,7 +3,6 @@ using ExploreBulgaria.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace ExploreBulgaria.Data
 {
@@ -86,12 +85,20 @@ namespace ExploreBulgaria.Data
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-            builder
-                .HasDbFunction(typeof(ApplicationDbContext)
-                   .GetMethod(nameof(GetDistance),
-                   new[] { typeof(NetTopologySuite.Geometries.Point),
-                           typeof(NetTopologySuite.Geometries.Point) })!)
-                .HasName("ufn_GetGeographicDistance");
+            if (Database.IsSqlServer())
+            {
+                builder
+                  .HasDbFunction(typeof(ApplicationDbContext)
+                     .GetMethod(nameof(GetDistance),
+                     new[] { typeof(NetTopologySuite.Geometries.Point),
+                                         typeof(NetTopologySuite.Geometries.Point) })!)
+                  .HasName("ufn_GetGeographicDistance");
+            }
+            else
+            {
+                builder.Entity<Attraction>()
+                    .Ignore(a => a.Coordinates);
+            }
         }
 
         public double GetDistance(
