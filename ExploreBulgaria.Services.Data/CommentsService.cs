@@ -1,5 +1,6 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
@@ -129,10 +130,7 @@ namespace ExploreBulgaria.Services.Data
             var user = await visitorsRepo.AllAsNoTracking()
                 .FirstOrDefaultAsync(v => v.Id == visitorId);
 
-            if (user == null)
-            {
-                throw new InvalidOperationException("Invalid user Id.");
-            }
+            guard.AgainstNull(user, InvalidUserId);
 
             comment!.Replies.Add(new Reply
             {
