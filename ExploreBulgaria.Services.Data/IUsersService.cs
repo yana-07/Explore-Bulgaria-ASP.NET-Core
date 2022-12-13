@@ -30,5 +30,5 @@ public interface IUsersService
 
     Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
 
-    Task SignAutAndInAsync(ClaimsPrincipal user);
+    Task SignOutAndInAsync(ClaimsPrincipal user);
 }

@@ -153,10 +153,17 @@ namespace ExploreBulgaria.Services.Data
                 await AddAvatarUrlClaimAsync(user);
             }
 
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
         }
 
-        public async Task SignAutAndInAsync(ClaimsPrincipal user)
+        public async Task SignOutAndInAsync(ClaimsPrincipal user)
         {
             await signInManager.SignOutAsync();
 
