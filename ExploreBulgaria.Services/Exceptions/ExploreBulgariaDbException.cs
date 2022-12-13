@@ -11,8 +11,9 @@
         {
         }
 
-        public ExploreBulgariaDbException(string message, Exception exception)
-            : base(message)
+        public ExploreBulgariaDbException(
+            string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

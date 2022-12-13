@@ -6,14 +6,14 @@
         {
         }
 
-        public ExploreBulgariaException(string errorMessage)
-            : base(errorMessage)
+        public ExploreBulgariaException(string message)
+            : base(message)
         {
         }
 
         public ExploreBulgariaException(
-            string errorMessage, Exception innerException)
-            : base(errorMessage, innerException)
+            string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }
