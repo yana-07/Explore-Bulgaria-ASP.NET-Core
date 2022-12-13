@@ -1,4 +1,5 @@
-﻿using ExploreBulgaria.Web.ViewModels;
+﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Web.ViewModels;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,13 +10,17 @@ namespace ExploreBulgaria.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
+        private readonly IAttractionsService attractionsService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IAttractionsService attractionsService)
         {
             this.logger = logger;
+            this.attractionsService = attractionsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (User.IsInRole(AdministratorRoleName))
             {
@@ -25,7 +30,9 @@ namespace ExploreBulgaria.Web.Controllers
                     new { area = AdministrationAreaName });
             }
 
-            return View();
+            var model = await attractionsService.GetForHomePageAsync();
+
+            return View(model);
         }
 
         public IActionResult Privacy()

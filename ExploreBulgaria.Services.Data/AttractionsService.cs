@@ -572,5 +572,12 @@ namespace ExploreBulgaria.Services.Data
 
             return await result.CountAsync();
         }
+
+        public async Task<IEnumerable<AttractionSidebarViewModel>> GetForHomePageAsync()
+            => await repo
+                .AllAsNoTracking()
+                .To<AttractionSidebarViewModel>()
+                .Take(5)
+                .ToListAsync();
     }
 }

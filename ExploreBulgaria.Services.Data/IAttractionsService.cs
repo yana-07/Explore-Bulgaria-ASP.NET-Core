@@ -57,5 +57,7 @@ namespace ExploreBulgaria.Services.Data
             string coordinates, IEnumerable<string> categoryIds, int page, int itemsPerPage = 12);
 
         Task<int> GetCountByRouteAndCategoriesAsync(string coordinates, IEnumerable<string> categoryIds);
+
+        Task<IEnumerable<AttractionSidebarViewModel>> GetForHomePageAsync();
     }
 }

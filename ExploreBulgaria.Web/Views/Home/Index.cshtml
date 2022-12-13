@@ -1,6 +1,54 @@
-﻿@{
+﻿@model IEnumerable<AttractionSidebarViewModel>
+
+@{
     ViewData["Title"] = "Начало";
+    bool first = true;
 }
-<div class="d-flex align-items-center justify-content-center">
-    <h1 class="display-4">Welcome</h1>
+
+<div class="page-heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>Опознай България с нас</h4>
+                <h2>Страхотни забележителности &amp; още</h2>
+                <div class="border-button">
+                    <a asp-controller="Attractions" asp-action="All">Разгледай</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="carousel" class="carousel slide carousel-fade mt-5" data-bs-ride="carousel">
+    <div class="carousel-inner" style="height: 600px;">
+        @foreach (var attraction in Model)
+        {
+            <div class="carousel-item @(first ? "active" : string.Empty) h-100">
+                @if (attraction.BlobStorageUrl != null)
+                {
+                    <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = attraction.BlobStorageUrl })" class="d-block w-100" alt="" />
+                }
+                else
+                {
+                    <img src="@attraction.RemoteImageUrl" class="d-block w-100 h-100" alt="" />
+                }
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 class="text-white">@attraction.Name</h5>
+                    <a asp-area="" asp-controller="Attractions" asp-action="Details"
+                       asp-route-id="@attraction.Id" asp-route-information="@attraction.GenerateSlug()"         
+                       class="main-button mt-4">Разгледай</a>
+                </div>                
+            </div>
+
+            first = false;
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
