@@ -40,7 +40,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 
                 return View(model);
             }
-            catch (DbException ex)
+            catch (ExploreBulgariaDbException ex)
             {
                 TempData[ErrorMessage] = ex.Message.ToString();
 

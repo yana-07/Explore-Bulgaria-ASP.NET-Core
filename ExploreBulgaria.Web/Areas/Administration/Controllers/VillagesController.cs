@@ -63,7 +63,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                    .GetAllAsync<RegionOptionViewModel>();
                 return View(model);
             }
-            catch (DbException ex)
+            catch (ExploreBulgariaDbException ex)
             {
                 TempData[ErrorMessage] = ex.Message.ToString();
 

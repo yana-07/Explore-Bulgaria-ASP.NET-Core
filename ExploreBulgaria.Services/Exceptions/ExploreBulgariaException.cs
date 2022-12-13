@@ -10,5 +10,11 @@
             : base(errorMessage)
         {
         }
+
+        public ExploreBulgariaException(
+            string errorMessage, Exception innerException)
+            : base(errorMessage, innerException)
+        {
+        }
     }
 }
