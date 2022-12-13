@@ -54,9 +54,9 @@ namespace ExploreBulgaria.Services.Data.Administration
                 await categoriesRepo.AddAsync(new Category { Name = categoryName });
                 await categoriesRepo.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DbException(SavingToDatabase);
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
         }
 
@@ -80,9 +80,9 @@ namespace ExploreBulgaria.Services.Data.Administration
 
                 await regionsRepo.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DbException(SavingToDatabase);
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
         }
 
@@ -110,9 +110,9 @@ namespace ExploreBulgaria.Services.Data.Administration
 
                 await subcategoriesRepo.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DbException(SavingToDatabase);
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
         }
 
@@ -140,9 +140,9 @@ namespace ExploreBulgaria.Services.Data.Administration
 
                 await villagesRepo.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DbException(SavingToDatabase);
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
         }
 
@@ -171,8 +171,15 @@ namespace ExploreBulgaria.Services.Data.Administration
                 });
             }
 
-            await attrRepo.AddAsync(attraction);
-            await attrRepo.SaveChangesAsync();
+            try
+            {
+                await attrRepo.AddAsync(attraction);
+                await attrRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             var attrTempToDelete = await attrTempRepo
                 .All().FirstOrDefaultAsync(at => at.Id == model.Id);
@@ -225,7 +232,15 @@ namespace ExploreBulgaria.Services.Data.Administration
             attraction!.IsRejected = true;
             attrTempRepo.Delete(attraction!);
 
-            await attrTempRepo.SaveChangesAsync();
+            try
+            {
+                await attrTempRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
+
         }
 
         private IQueryable<AttractionTemporary> ApplyFilter(AttractionTemporaryFilterModel filterModel)

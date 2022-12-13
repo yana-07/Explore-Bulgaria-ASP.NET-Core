@@ -1,7 +1,9 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.ViewModels.Votes;
 using Microsoft.EntityFrameworkCore;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -39,7 +41,14 @@ namespace ExploreBulgaria.Services.Data
 
             vote.Value = model.Value;
 
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 using System.Device.Location;
 using ExploreBulgaria.Data;
+using ExploreBulgaria.Services.Exceptions;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -182,7 +183,15 @@ namespace ExploreBulgaria.Services.Data
                 if (favoriteAttraction != null)
                 {
                     visitor.FavoriteAttractions.Remove(favoriteAttraction);
-                    await repo.SaveChangesAsync();
+                    try
+                    {
+                        await repo.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                    }
+
                     return;
                 }
 
@@ -192,7 +201,14 @@ namespace ExploreBulgaria.Services.Data
                     AttractionId = attractionId
                 });
 
-                await repo.SaveChangesAsync();
+                try
+                {
+                    await repo.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                }
             }
         }
 
@@ -216,7 +232,15 @@ namespace ExploreBulgaria.Services.Data
                 if (visitedAttraction != null)
                 {
                     visitor.VisitedAttractions.Remove(visitedAttraction);
-                    await repo.SaveChangesAsync();
+                    try
+                    {
+                        await repo.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                    }
+
                     return;
                 }
 
@@ -235,7 +259,14 @@ namespace ExploreBulgaria.Services.Data
                     AttractionId = attractionId
                 });
 
-                await repo.SaveChangesAsync();
+                try
+                {
+                    await repo.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                }
             }
         }
 
@@ -259,7 +290,15 @@ namespace ExploreBulgaria.Services.Data
                 if (wantToVisitAttraction != null)
                 {
                     visitor.WantToVisitAttractions.Remove(wantToVisitAttraction);
-                    await repo.SaveChangesAsync();
+                    try
+                    {
+                        await repo.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                    }
+
                     return;
                 }
 
@@ -278,7 +317,14 @@ namespace ExploreBulgaria.Services.Data
                     AttractionId = attractionId
                 });
 
-                await repo.SaveChangesAsync();
+                try
+                {
+                    await repo.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                }
             }
         }
 

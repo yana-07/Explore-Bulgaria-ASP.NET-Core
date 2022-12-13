@@ -27,6 +27,9 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task<int> PostCommentAsync(CommentInputModel model, string visitorId)
         {
+            var visitor = await visitorsRepo.GetByIdAsync(visitorId);
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
             var comment = new Comment
             {
                 AttractionId = model.AttractionId,
@@ -34,9 +37,15 @@ namespace ExploreBulgaria.Services.Data
                 Text = model.Text
             };
 
-            await commentsRepo.AddAsync(comment);
-
-            await commentsRepo.SaveChangesAsync();
+            try
+            {
+                await commentsRepo.AddAsync(comment);
+                await commentsRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             return comment.Id;
         }
@@ -49,13 +58,23 @@ namespace ExploreBulgaria.Services.Data
 
             guard.AgainstNull(comment, InvalidCommentId);
 
+            var visitor = await visitorsRepo.GetByIdAsync(visitorId);
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
             var visitorLikedComment = comment!.LikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (visitorLikedComment != null)
             {
                 comment.LikedByVisitors.Remove(visitorLikedComment);
 
-                await commentsRepo.SaveChangesAsync();
+                try
+                {
+                    await commentsRepo.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                }
 
                 return comment.LikedByVisitors.Count;
             }
@@ -75,7 +94,14 @@ namespace ExploreBulgaria.Services.Data
 
             comment.LikedByVisitors.Add(visitorLikedComment);
 
-            await commentsRepo.SaveChangesAsync();
+            try
+            {
+                await commentsRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             return comment.LikedByVisitors.Count;
         }
@@ -88,13 +114,23 @@ namespace ExploreBulgaria.Services.Data
 
             guard.AgainstNull(comment, InvalidCommentId);
 
+            var visitor = await visitorsRepo.GetByIdAsync(visitorId);
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
             var visitorDislikedComment = comment!.DislikedByVisitors.FirstOrDefault(x => x.VisitorId == visitorId);
 
             if (visitorDislikedComment != null)
             {
                 comment.DislikedByVisitors.Remove(visitorDislikedComment);
 
-                await commentsRepo.SaveChangesAsync();
+                try
+                {
+                    await commentsRepo.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+                }
 
                 return comment.DislikedByVisitors.Count;
             }
@@ -114,7 +150,14 @@ namespace ExploreBulgaria.Services.Data
 
             comment.DislikedByVisitors.Add(visitorDislikedComment);
 
-            await commentsRepo.SaveChangesAsync();
+            try
+            {
+                await commentsRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             return comment.DislikedByVisitors.Count;
         }
@@ -127,10 +170,10 @@ namespace ExploreBulgaria.Services.Data
 
             guard.AgainstNull(comment, InvalidCommentId);
 
-            var user = await visitorsRepo.AllAsNoTracking()
+            var visitor = await visitorsRepo.AllAsNoTracking()
                 .FirstOrDefaultAsync(v => v.Id == visitorId);
 
-            guard.AgainstNull(user, InvalidUserId);
+            guard.AgainstNull(visitor, InvalidUserId);
 
             comment!.Replies.Add(new Reply
             {
@@ -139,7 +182,14 @@ namespace ExploreBulgaria.Services.Data
                 Text = model.ReplyText
             });
 
-            await commentsRepo.SaveChangesAsync();
+            try
+            {
+                await commentsRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             return comment.Replies.Count;
         }

@@ -1,9 +1,11 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using Microsoft.AspNetCore.Http;
 using System.Text;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -43,7 +45,8 @@ namespace ExploreBulgaria.Services.Data
                 var extension = Path.GetExtension(image.FileName).TrimStart('.');
                 if (!allowedExtensions.Any(x => extension.EndsWith(x)))
                 {
-                    throw new Exception($"Invalid image extension {extension}");
+                    throw new InvalidImageExtensionException(
+                        string.Format(InvalidImageExtension, extension));
                 }
 
                 var blobName = $"{Guid.NewGuid()}.{extension}";
@@ -54,9 +57,15 @@ namespace ExploreBulgaria.Services.Data
 
             attractionTemp.BlobNames = sb.ToString().Trim();
 
-            await repo.AddAsync(attractionTemp);
-
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.AddAsync(attractionTemp);
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
         }
 
         private async Task UploadImageAsync(IFormFile image, string blobName)

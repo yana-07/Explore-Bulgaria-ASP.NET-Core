@@ -1,7 +1,7 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
-using Microsoft.EntityFrameworkCore;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
@@ -26,9 +26,15 @@ namespace ExploreBulgaria.Services.Data
                 UserId = userId
             };
 
-            await repo.AddAsync(visitor);
-
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.AddAsync(visitor);
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
 
             return visitor.Id;
         }        

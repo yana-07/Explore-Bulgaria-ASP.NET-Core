@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
+using ExploreBulgaria.Services.Exceptions;
+using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
-using System.Net.NetworkInformation;
 using System.Security.Claims;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
+using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -14,18 +17,21 @@ namespace ExploreBulgaria.Services.Data
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IDeletableEnityRepository<ApplicationUser> repo;
         private readonly IMapper mapper;
+        private readonly IGuard guard;
         private readonly string[] allowedExtensions = new[] { "jpg", "png", "gif" };
 
         public UsersService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IDeletableEnityRepository<ApplicationUser> repo,
-            IMapper mapper)
+            IMapper mapper,
+            IGuard guard)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.repo = repo;
             this.mapper = mapper;
+            this.guard = guard;
         }
 
         public Task<SignInResult> SignInAsync(LoginViewModel model)
@@ -49,7 +55,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 var error = new IdentityError
                 {
-                    Description = "Потребителското име е заето."
+                    Description = UserNameTaken
                 };
 
                 return (Task.FromResult(IdentityResult.Failed(error)), null);
@@ -59,7 +65,7 @@ namespace ExploreBulgaria.Services.Data
             {
                 var error = new IdentityError
                 {
-                    Description = "Имейлът е зает."
+                    Description = EmailTaken
                 };
 
                 return (Task.FromResult(IdentityResult.Failed(error)), null);
@@ -87,10 +93,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
-            if (user == null)
-            {
-                throw new ArgumentException("Invalid user ID");
-            }
+            guard.AgainstNull(user, InvalidUserId);
 
             return mapper.Map<T>(user);
         }
@@ -120,10 +123,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var user = await userManager.FindByIdAsync(userId);
 
-            if (user == null)
-            {
-                throw new ArgumentNullException("Invalid userId");
-            }
+            guard.AgainstNull(user, InvalidUserId);
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
@@ -137,7 +137,8 @@ namespace ExploreBulgaria.Services.Data
                 var extension = Path.GetExtension(model.AvatarUrlUploaded.FileName)?.TrimStart('.');
                 if (!allowedExtensions.Contains(extension))
                 {
-                    throw new Exception($"Invalid image extension {extension}");
+                    throw new InvalidImageExtensionException(
+                        string.Format(InvalidImageExtension, extension)); 
                 }
 
                 var physicalPath = $"{imagePath}/avatars/{userId}.{extension}";
