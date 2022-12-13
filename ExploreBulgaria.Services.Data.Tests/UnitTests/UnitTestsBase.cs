@@ -21,6 +21,8 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         protected IDeletableEnityRepository<Region> regionsRepo;
         protected IDeletableEnityRepository<Village> villagesRepo;
         protected IDeletableEnityRepository<Visitor> visitorsRepo;
+        protected IDeletableEnityRepository<ApplicationUser> usersRepo;
+        protected IDeletableEnityRepository<Vote> votesRepo;
         protected IGuard guard;
 
         [SetUp]
@@ -37,6 +39,8 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
             regionsRepo = new EfDeletableEntityRepository<Region>(context);
             villagesRepo = new EfDeletableEntityRepository<Village>(context);
             visitorsRepo = new EfDeletableEntityRepository<Visitor>(context);
+            usersRepo = new EfDeletableEntityRepository<ApplicationUser>(context);
+            votesRepo = new EfDeletableEntityRepository<Vote>(context);
             guard = new Guard();
         }
 
@@ -79,6 +83,15 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
                 Name = "TestRegion"
             });
             await regionsRepo.SaveChangesAsync();
+
+            await villagesRepo.AddAsync(new Village
+            {
+                Name = "TestVillage",
+                RegionId = (await regionsRepo
+                   .AllAsNoTracking()
+                   .FirstOrDefaultAsync())!.Id
+            });
+            await villagesRepo.SaveChangesAsync();
 
             await attrTempRepo.AddAsync(new AttractionTemporary
             {
@@ -137,7 +150,10 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
                     .FirstOrDefaultAsync(v => v.User.UserName == "TestUserName"))!.Id,
                 RegionId = (await regionsRepo
                     .AllAsNoTracking()
-                    .FirstOrDefaultAsync())!.Id
+                    .FirstOrDefaultAsync())!.Id,
+                VillageId = (await villagesRepo
+                    .AllAsNoTracking()
+                    .FirstOrDefaultAsync())!.Id,
             });
             await attrRepo.SaveChangesAsync();
         }
