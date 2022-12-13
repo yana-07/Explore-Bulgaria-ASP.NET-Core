@@ -263,6 +263,7 @@ namespace ExploreBulgaria.Web.Controllers
             return View("VisualizeByRoute", viewModel);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> GetImage(string blobName)
         {
             var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
