@@ -142,11 +142,11 @@
                             </div>
                             <input type="hidden" name="commentId" value="@comment.Id">
                             <div class="d-flex flex-row align-items-center like">
-                                <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                                <i onclick="likeComment(event)" class="far fa-thumbs-up mx-2 fa-xs text-black @if(comment.DislikedByVisitors.Any(v => v.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
                                 <p class="small text-muted mb-0 likes">@comment.LikedByVisitors.Count()</p>
                             </div>
                             <div class="d-flex flex-row align-items-center dislike">
-                                <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByVisitors.Any(v => v.Id == User.VisitorId()) || (comment.AddedByVisitor.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
+                                <i onclick="dislikeComment(event)" class="far fa-thumbs-down mx-2 fa-xs text-black @if(comment.LikedByVisitors.Any(v => v.Id == User.VisitorId()) || (!User.Identity?.IsAuthenticated ?? false)) {<text>disabled</text>}"></i>
                                 <p class="small text-muted mb-0 dislikes">@comment.DislikedByVisitors.Count()</p>
                             </div>
                             <div class="d-flex flex-row align-items-center">
