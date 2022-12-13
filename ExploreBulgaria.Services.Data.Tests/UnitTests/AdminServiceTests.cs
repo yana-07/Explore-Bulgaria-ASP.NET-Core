@@ -14,29 +14,13 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
 {
     public class AdminServiceTests : UnitTestsBase
     {
-        private IDeletableEnityRepository<Attraction> attrRepo;
-        private IDeletableEnityRepository<AttractionTemporary> attrTempRepo;
-        private IDeletableEnityRepository<Category> categoriesRepo;
-        private IDeletableEnityRepository<Subcategory> subcategoriesRepo;
-        private IDeletableEnityRepository<Region> regionsRepo;
-        private IDeletableEnityRepository<Village> villagesRepo;
-        private IDeletableEnityRepository<Visitor> visitorsRepo;
+        
         private IAdminService adminService;
-        private IGuard guard;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-
-            attrRepo = new EfDeletableEntityRepository<Attraction>(context);
-            attrTempRepo = new EfDeletableEntityRepository<AttractionTemporary>(context);
-            categoriesRepo = new EfDeletableEntityRepository<Category>(context);
-            subcategoriesRepo = new EfDeletableEntityRepository<Subcategory>(context);
-            regionsRepo = new EfDeletableEntityRepository<Region>(context);
-            villagesRepo = new EfDeletableEntityRepository<Village>(context);
-            visitorsRepo = new EfDeletableEntityRepository<Visitor>(context);
-            guard = new Guard();
 
             AutoMapperConfig.MapperInstance = new Mapper(new MapperConfiguration(config =>
             {
@@ -257,24 +241,24 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetAllAsync_ShouldReturnParticularCount()
         {
-            await SeedAttractions();           
+            await SeedAttractionsAsync();           
 
             var attractions = (await adminService.GetAllAsync<AttractionTempMockModel>(
                 2, new AttractionTemporaryFilterModel(), 1)).ToList();
 
             Assert.That(attractions.Count, Is.EqualTo(1));
-            Assert.That(attractions[0].Name, Is.EqualTo("TestAttraction2"));
+            Assert.That(attractions[0].Name, Is.EqualTo("TestAttractionTemporary2"));
         }
 
         [Test]
         public async Task GetAllAsync_ShouldApplyFilter()
         {
-            await SeedAttractions();
+            await SeedAttractionsAsync();
 
             var attractions = (await adminService.GetAllAsync<AttractionTempMockModel>(
                 1, new AttractionTemporaryFilterModel { SearchTerm = "2" }, 1)).ToList();
 
-            Assert.That(attractions[0].Name, Is.EqualTo("TestAttraction2"));
+            Assert.That(attractions[0].Name, Is.EqualTo("TestAttractionTemporary2"));
         }
 
         [Test]
@@ -285,7 +269,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
             var attraction = await adminService
                   .GetByIdAsync<AttractionTempMockModel>(1);
 
-            Assert.That(attraction.Name, Is.EqualTo("TestAttraction"));
+            Assert.That(attraction.Name, Is.EqualTo("TestAttractionTemporary1"));
         }
 
         [Test]
@@ -300,7 +284,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetCountAsync_ShouldApplyFilterAndReturnCorrectCount()
         {
-            await SeedAttractions();
+            await SeedAttractionsAsync();
 
             var count = await adminService
                 .GetCountAsync(new AttractionTemporaryFilterModel { SearchTerm = "2SearchTerm" });
@@ -321,86 +305,10 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         }
 
         [Test]
-        public async Task RejectAsync_ShouldThrowExceptionIfAttractionTemporaryIdNotValid()
+        public void RejectAsync_ShouldThrowExceptionIfAttractionTemporaryIdNotValid()
         {
             Assert.ThrowsAsync<ExploreBulgariaException>(
                 async () => await adminService.RejectAsync(1));
-        }
-
-        private async Task SeedDbAsync()
-        {
-            await categoriesRepo.AddAsync(new Category
-            {
-                Name = "TestCategory"
-            });
-            await categoriesRepo.SaveChangesAsync();
-
-            await subcategoriesRepo.AddAsync(new Subcategory
-            {
-                Name = "TestSubcategory",
-                CategoryId = (await categoriesRepo
-                   .AllAsNoTracking()
-                   .FirstOrDefaultAsync(c => c.Name == "TestCategory"))!
-                   .Id
-            });
-            await subcategoriesRepo.SaveChangesAsync();
-
-            await visitorsRepo.AddAsync(new Visitor
-            {
-                User = new ApplicationUser
-                {
-                    UserName = "TestUserName",
-                    Email = "test@mail.com"
-                }
-            });
-            await visitorsRepo.SaveChangesAsync();
-
-            await regionsRepo.AddAsync(new Region
-            {
-                Name = "TestRegion"
-            });
-            await regionsRepo.SaveChangesAsync();
-
-            await attrTempRepo.AddAsync(new AttractionTemporary
-            {
-                Name = "TestAttraction",
-                CategoryId = (await categoriesRepo
-                    .AllAsNoTracking()
-                    .FirstOrDefaultAsync(c => c.Name == "TestCategory"))!.Id,
-                BlobNames = "test-blob-names",
-                Description = "TestDescription",
-                Latitude = 12.345,
-                Longitude = 12.345,
-                CreatedByVisitorId = (await visitorsRepo
-                    .AllAsNoTracking()
-                    .Include(v => v.User)
-                    .FirstOrDefaultAsync(v => v.User.UserName == "TestUserName"))!.Id,
-                Region = "TestRegion"
-            });
-            await attrTempRepo.SaveChangesAsync();
-        }
-
-        private async Task SeedAttractions()
-        {
-            await SeedDbAsync();
-
-            await attrTempRepo.AddAsync(new AttractionTemporary
-            {
-                Name = "TestAttraction2",
-                CategoryId = (await categoriesRepo
-                    .AllAsNoTracking()
-                    .FirstOrDefaultAsync(c => c.Name == "TestCategory"))!.Id,
-                BlobNames = "test-blob-names",
-                Description = "TestDescription2SearchTerm",
-                Latitude = 12.345,
-                Longitude = 12.345,
-                CreatedByVisitorId = (await visitorsRepo
-                    .AllAsNoTracking()
-                    .Include(v => v.User)
-                    .FirstOrDefaultAsync(v => v.User.UserName == "TestUserName"))!.Id,
-                Region = "TestRegion"
-            });
-            await attrTempRepo.SaveChangesAsync();
-        }
+        }            
     }
 }

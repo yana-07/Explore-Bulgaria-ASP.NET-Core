@@ -12,8 +12,6 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
 {
     public class CategoriesServiceTests : UnitTestsBase
     {
-        private IDeletableEnityRepository<Category> repo;
-        private IGuard guard;
         private ICategoriesService categoriesService;
 
         [SetUp]
@@ -21,9 +19,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         {
             base.SetUp();
 
-            repo = new EfDeletableEntityRepository<Category>(context);
-            guard = new Guard();
-            categoriesService = new CategoriesService(repo, guard);
+            categoriesService = new CategoriesService(categoriesRepo, guard);
 
             AutoMapperConfig.MapperInstance = new Mapper(new MapperConfiguration(config =>
             {
@@ -34,7 +30,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetAllAsync_ShouldWorkCorrectly()
         {
-            await SeedDbAsync(repo);
+            await SeedDbAsync(categoriesRepo);
 
             var categories = (await categoriesService
                 .GetAllAsync<CategoryOptionViewModel>()).ToList();
@@ -47,7 +43,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetAllForRegionAsync_ShouldWorkCorrectly()
         {
-            await SeedDbAsync(repo);
+            await SeedDbAsync(categoriesRepo);
 
             var categories = (await categoriesService
                 .GetAllForRegionAsync<CategoryOptionViewModel>("Test2"))
@@ -59,12 +55,12 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetByIdAsync_ShouldWorkCorrectly()
         {
-            await SeedDbAsync(repo);
+            await SeedDbAsync(categoriesRepo);
 
-            var dbFirstCategoryId = (await repo.AllAsNoTracking()
+            var dbFirstCategoryId = (await categoriesRepo.AllAsNoTracking()
                 .FirstOrDefaultAsync(c => c.Name == "TestCategory1"))!
                 .Id;
-            var dbSecondCategoryId = (await repo.AllAsNoTracking()
+            var dbSecondCategoryId = (await categoriesRepo.AllAsNoTracking()
                 .FirstOrDefaultAsync(c => c.Name == "TestCategory2"))!
                 .Id;
             var firstCategory = await categoriesService
@@ -79,7 +75,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         [Test]
         public async Task GetByIdAsync_ShouldThrowExceptionIfCategoryIdNotValid()
         {
-            await SeedDbAsync(repo);
+            await SeedDbAsync(categoriesRepo);
 
             Assert.ThrowsAsync<ExploreBulgariaException>(async () => await categoriesService
                .GetByIdAsync<CategoryOptionViewModel>(""));
