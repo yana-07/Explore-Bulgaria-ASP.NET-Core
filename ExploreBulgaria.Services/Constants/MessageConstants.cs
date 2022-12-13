@@ -15,5 +15,9 @@
         public const string RegionSuccessfullyAdded = "Регионът / градът беше добавен успешно.";
 
         public const string VillageSuccessfullyAdded = "Селото беше добавено успешно.";
+
+        public const string UserNameTaken = "Потребителското име е заето.";
+
+        public const string EmailTaken = "Имейлът е зает.";
     }
 }

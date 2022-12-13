@@ -16,6 +16,8 @@
 
         public const string InvalidAttractionTemporaryId = "Invalid AttractionTemporary ID.";
 
+        public const string InvalidImageExtension = "Невалидно разширение на снимката. - {0}";
+
         public const string SavingToDatabase = "Грешка в базата данни. Моля, опитайте отново.";
 
         public const string CategoryAlreadyExists = "Категорията, която се опитвате да добавите, вече съществува.";
