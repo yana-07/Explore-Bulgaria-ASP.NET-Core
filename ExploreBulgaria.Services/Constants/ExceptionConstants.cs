@@ -10,6 +10,8 @@
 
         public const string InvalidVisitorId = "Invalid Visitor ID.";
 
+        public const string InvalidUserId = "Invalid User ID.";
+
         public const string InvalidRegionId = "Invalid Region ID.";
 
         public const string InvalidAttractionTemporaryId = "Invalid AttractionTemporary ID.";
