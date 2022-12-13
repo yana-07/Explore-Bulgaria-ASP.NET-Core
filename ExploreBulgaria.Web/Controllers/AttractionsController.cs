@@ -9,8 +9,8 @@ using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NetTopologySuite.Geometries;
 using static ExploreBulgaria.Services.Constants.MessageConstants;
+using ExploreBulgaria.Services.Exceptions;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -24,6 +24,7 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly IVillagesService villagesService;
         private readonly IVisitorsService visitorsService;
         private readonly BlobServiceClient blobServiceClient;
+        private readonly ILogger<AttractionsController> logger;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
@@ -34,7 +35,8 @@ namespace ExploreBulgaria.Web.Controllers
             IRegionsService regionsService,
             IVillagesService villagesService,
             IVisitorsService visitorsService,
-            BlobServiceClient blobServiceClient)
+            BlobServiceClient blobServiceClient,
+            ILogger<AttractionsController> logger)
         {
             this.attractionsService = attractionsService;
             this.temporaryAttractionsService = temporaryAttractionsService;
@@ -44,6 +46,7 @@ namespace ExploreBulgaria.Web.Controllers
             this.villagesService = villagesService;
             this.visitorsService = visitorsService;
             this.blobServiceClient = blobServiceClient;
+            this.logger = logger;
         }
 
         [AllowAnonymous]
@@ -107,9 +110,9 @@ namespace ExploreBulgaria.Web.Controllers
 
                 return View(attraction);
             }
-            catch (Exception)
+            catch (ExploreBulgariaException ex)
             {
-                // TODO: Toast message
+                TempData[ErrorMessage] = ex.Message.ToString();
                 return RedirectToAction(nameof(All));
             }
         }
@@ -140,17 +143,26 @@ namespace ExploreBulgaria.Web.Controllers
             {
                 await temporaryAttractionsService.SaveTemporaryAsync(model, User.VisitorId());
             }
-            catch (Exception ex)
+            catch (InvalidImageExtensionException ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                ModelState.AddModelError(nameof(model.Images), ex.Message.ToString());
 
                 model.Categories = await categoriesService
                     .GetAllAsync<CategoryOptionViewModel>();
 
                 return View(model);
             }
+            catch (ExploreBulgariaDbException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                model.Categories = await categoriesService
+                    .GetAllAsync<CategoryOptionViewModel>();
 
-            TempData[SuccessMessage] = "Благодарим Ви за предложението! Ще бъдете уведомени относно статуса на обекта.";
+                return View(model);
+            }
+
+            TempData[SuccessMessage] = AttractionSuccessfullyRecommended;
 
             return RedirectToAction(nameof(All));
         }
@@ -162,9 +174,11 @@ namespace ExploreBulgaria.Web.Controllers
             var model = new AttractionVisitorListViewModel
             {
                 PageNumber = page,
-                ItemsCount = await attractionsService.GetCountByVisitorIdAsync(visitorId),
+                ItemsCount = await attractionsService
+                  .GetCountByVisitorIdAsync(visitorId),
                 ItemsPerPage = ItemsPerPage,
-                Attractions = await attractionsService.GetByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                Attractions = await attractionsService
+                  .GetByVisitorIdAsync(visitorId, page, ItemsPerPage),
                 FilterModel = filterModel,
                 Area = "",
                 Controller = "Attractions",
@@ -178,60 +192,87 @@ namespace ExploreBulgaria.Web.Controllers
         {
             var visitorId = User.VisitorId();
 
-            var model = new AttractionVisitorListViewModel
+            try
             {
-                Attractions = await attractionsService
-                .GetFavoritesByVisitorIdAsync(visitorId, page, ItemsPerPage),
-                PageNumber = page,
-                ItemsCount = await attractionsService.GetWanToVisitByVisitorIdCount(visitorId),
-                ItemsPerPage = ItemsPerPage,
-                FilterModel = filterModel,
-                Area = "",
-                Controller = "Attractions",
-                Action = "Favorites"              
-            };
+                var model = new AttractionVisitorListViewModel
+                {
+                    Attractions = await attractionsService
+                      .GetFavoritesByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                    PageNumber = page,
+                    ItemsCount = await attractionsService
+                      .GetWanToVisitByVisitorIdCount(visitorId),
+                    ItemsPerPage = ItemsPerPage,
+                    FilterModel = filterModel,
+                    Area = "",
+                    Controller = "Attractions",
+                    Action = "Favorites"
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }         
         }
 
         public async Task<IActionResult> WantToVisit(AttractionVisitorFilterModel filterModel, int page = 1)
         {
             var visitorId = User.VisitorId();
 
-            var model = new AttractionVisitorListViewModel
+            try
             {
-                Attractions = await attractionsService
-                .GetWantToVisitByVisitorIdAsync(visitorId, page, ItemsPerPage),
-                PageNumber = page,
-                ItemsCount = await attractionsService.GetWanToVisitByVisitorIdCount(visitorId),
-                ItemsPerPage = ItemsPerPage,
-                FilterModel = filterModel,
-                Area = "",
-                Controller = "Attractions",
-                Action = "WantToVisit"
-            };
+                var model = new AttractionVisitorListViewModel
+                {
+                    Attractions = await attractionsService
+                      .GetWantToVisitByVisitorIdAsync(visitorId, page, ItemsPerPage),
+                    PageNumber = page,
+                    ItemsCount = await attractionsService
+                      .GetWanToVisitByVisitorIdCount(visitorId),
+                    ItemsPerPage = ItemsPerPage,
+                    FilterModel = filterModel,
+                    Area = "",
+                    Controller = "Attractions",
+                    Action = "WantToVisit"
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
 
         public async Task<IActionResult> Visited(AttractionVisitorFilterModel filterModel, int page = 1)
         {
             var visitorId = User.VisitorId();
 
-            var model = new AttractionVisitorListViewModel
+            try
             {
-                Attractions = await attractionsService
-                .GetVisitedByVisitorIdAsync(User.VisitorId(), page, ItemsPerPage),
-                PageNumber = page,
-                ItemsCount = await attractionsService.GetVisitedByVisitorIdCountAsync(visitorId),
-                ItemsPerPage = ItemsPerPage,
-                FilterModel = filterModel,
-                Area = "",
-                Controller = "Attractions",
-                Action = "Visited"
-            };
+                var model = new AttractionVisitorListViewModel
+                {
+                    Attractions = await attractionsService
+                      .GetVisitedByVisitorIdAsync(User.VisitorId(), page, ItemsPerPage),
+                    PageNumber = page,
+                    ItemsCount = await attractionsService
+                      .GetVisitedByVisitorIdCountAsync(visitorId),
+                    ItemsPerPage = ItemsPerPage,
+                    FilterModel = filterModel,
+                    Area = "",
+                    Controller = "Attractions",
+                    Action = "Visited"
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
 
         [AllowAnonymous]

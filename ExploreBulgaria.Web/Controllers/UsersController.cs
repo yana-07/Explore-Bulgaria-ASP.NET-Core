@@ -1,10 +1,12 @@
 ﻿using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -14,17 +16,20 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly IVisitorsService visitorsService;
         private readonly IWebHostEnvironment environment;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ILogger<UsersController> logger;
 
         public UsersController(
             IUsersService usersService,
             IVisitorsService visitorsService,
             IWebHostEnvironment environment,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ILogger<UsersController> logger)
         {
             this.usersService = usersService;
             this.visitorsService = visitorsService;
             this.environment = environment;
             this.signInManager = signInManager;
+            this.logger = logger;
         }
 
         [AllowAnonymous]
@@ -103,7 +108,7 @@ namespace ExploreBulgaria.Web.Controllers
 
             model.ExternalLogins = (await signInManager
                       .GetExternalAuthenticationSchemesAsync()).ToList();
-            ModelState.AddModelError(string.Empty, "Неуспешен опит.");
+            ModelState.AddModelError(string.Empty, AttemptFailed);
 
             return View(model);
         }
@@ -117,16 +122,38 @@ namespace ExploreBulgaria.Web.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            var model = await this.usersService.GetProfileAsync<UserProfileViewModel>(User.Id());
+            try
+            {
+                var model = await this.usersService
+                    .GetProfileAsync<UserProfileViewModel>(User.Id());
 
-            return View(model);
+                return View(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message);
+
+                TempData[ErrorMessage] = ex.Message.ToString();
+
+                return this.RedirectTo<HomeController>(c => c.Index());
+            }          
         }
 
         public async Task<IActionResult> EditProfile()
         {
-            var model = await this.usersService.GetProfileAsync<EditUserProfileInputModel>(User.Id());
+            try
+            {
+                var model = await this.usersService
+                    .GetProfileAsync<EditUserProfileInputModel>(User.Id());
 
-            return View(model);
+                return View(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+
+                return this.RedirectTo<HomeController>(c => c.Index());
+            }          
         }
 
         [HttpPost]
@@ -136,14 +163,14 @@ namespace ExploreBulgaria.Web.Controllers
             {
                 model.AvatarUrl = model.AvatarUrlPreliminary;
 
-                ModelState.AddModelError(nameof(model.UserName), "Потребителското име е заето.");
+                ModelState.AddModelError(nameof(model.UserName), UserNameTaken);
             }
 
             if (model.Email != User.Email() && !await usersService.EmailAvailable(model.Email))
             {
                 model.AvatarUrl = model.AvatarUrlPreliminary;
 
-                ModelState.AddModelError(nameof(model.Email), "Имейлът е зает.");
+                ModelState.AddModelError(nameof(model.Email), EmailTaken);
             }
 
             if (!ModelState.IsValid)
@@ -154,9 +181,25 @@ namespace ExploreBulgaria.Web.Controllers
             }
 
             // TODO: Save changes
-            await usersService.EditProfileAsync(model, User.Id(), $"{environment.WebRootPath}/images");
+            try
+            {
+                await usersService.EditProfileAsync(
+                    model, User.Id(), $"{environment.WebRootPath}/images");
+            }
+            catch (InvalidImageExtensionException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
 
-            await usersService.SignAutAndInAsync(User);
+                return View(model);
+            }
+            catch(ExploreBulgariaDbException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+
+                return View(model);
+            }
+
+            await usersService.SignOutAndInAsync(User);
 
             return this.RedirectTo<HomeController>(c => c.Index());
         }
@@ -208,6 +251,12 @@ namespace ExploreBulgaria.Web.Controllers
             {
                 return RedirectToAction(nameof(Register));
             }
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

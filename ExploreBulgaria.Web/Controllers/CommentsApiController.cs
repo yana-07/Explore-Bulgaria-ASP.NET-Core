@@ -1,10 +1,12 @@
 ﻿using ExploreBulgaria.Services.Data;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.Extensions;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using ExploreBulgaria.Web.ViewModels.Visitors;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -14,12 +16,14 @@ namespace ExploreBulgaria.Web.Controllers
     public class CommentsApiController : ControllerBase
     {
         private readonly ICommentsService commentsService;
+        private readonly ILogger<CommentsApiController> logger;
 
         public CommentsApiController(
             ICommentsService commentsService,
-            IVisitorsService visitorsService)
+            ILogger<CommentsApiController> logger)
         {
             this.commentsService = commentsService;
+            this.logger = logger;
         }
 
         [HttpPost("add")]
@@ -29,8 +33,22 @@ namespace ExploreBulgaria.Web.Controllers
             model.Text = sanitizer.Sanitize(model.Text);
 
             var visitorId = User.VisitorId();
-            var commentId = await commentsService.PostCommentAsync(model, visitorId);
-
+            int commentId;
+            try
+            {
+                commentId = await commentsService.PostCommentAsync(model, visitorId);
+            }
+            catch(ExploreBulgariaException ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
+            }
+            
             return Created("/Attractions/Details", new CommentViewModel
             {
                 Id = commentId,
@@ -50,7 +68,22 @@ namespace ExploreBulgaria.Web.Controllers
         [HttpPost("like")]
         public async Task<IActionResult> Like(CommentLikeDislikeInputModel model)
         {
-            var likesCount = await commentsService.LikeCommentAsync(model.CommentId, User.VisitorId());
+            int likesCount;
+            try
+            {
+                likesCount = await commentsService
+                    .LikeCommentAsync(model.CommentId, User.VisitorId());
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
+            }
 
             return Ok(likesCount);
         }
@@ -58,7 +91,22 @@ namespace ExploreBulgaria.Web.Controllers
         [HttpPost("dislike")]
         public async Task<IActionResult> Dislike(CommentLikeDislikeInputModel model)
         {
-            var dislikesCount = await commentsService.DislikeCommentAsync(model.CommentId, User.VisitorId());
+            int dislikesCount;
+            try
+            {
+                dislikesCount = await commentsService
+                    .DislikeCommentAsync(model.CommentId, User.VisitorId());
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
+            }
 
             return Ok(dislikesCount);
         }
@@ -69,7 +117,21 @@ namespace ExploreBulgaria.Web.Controllers
             HtmlSanitizer sanitizer = new HtmlSanitizer();
             model.ReplyText = sanitizer.Sanitize(model.ReplyText);
 
-            var repliesCount = await commentsService.AddReplyAsync(model, User.VisitorId());
+            int repliesCount;
+            try
+            {
+                repliesCount = await commentsService.AddReplyAsync(model, User.VisitorId());
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
+            }
 
             return Created("/Attractions/Details", new ReplyViewModel
             {

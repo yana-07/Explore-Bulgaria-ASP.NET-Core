@@ -6,6 +6,8 @@ using ExploreBulgaria.Web.ViewModels.Villages;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using Microsoft.AspNetCore.Mvc;
+using ExploreBulgaria.Services.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace ExploreBulgaria.Web.Controllers
 {
@@ -18,19 +20,22 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
         private readonly IVillagesService locationsService;
+        private readonly ILogger<AttractionsApiController> logger;
 
         public AttractionsApiController(
             IAttractionsService attractionsService, 
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
-            IVillagesService locationsService)
+            IVillagesService locationsService,
+            ILogger<AttractionsApiController> logger)
         {
             this.attractionsService = attractionsService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
             this.locationsService = locationsService;
+            this.logger = logger;
         }
 
         [HttpPost("subcategories")]
@@ -57,9 +62,15 @@ namespace ExploreBulgaria.Web.Controllers
                 await attractionsService
                     .AddAttractionToFavoritesAsync(User.VisitorId(), model.AttractionId);
             }
-            catch (Exception ex)
+            catch (ExploreBulgariaException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
             }
 
             return NoContent();
@@ -73,11 +84,16 @@ namespace ExploreBulgaria.Web.Controllers
                 await attractionsService
                     .AddAttractionToVisitedAsync(User.VisitorId(), model.AttractionId);
             }
-            catch (Exception ex)
+            catch (ExploreBulgariaException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message.ToString() });
             }
-
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
+            }
 
             return NoContent();
         }
@@ -90,9 +106,15 @@ namespace ExploreBulgaria.Web.Controllers
                 await attractionsService
                     .WantToVisitAttractionAsync(User.VisitorId(), model.AttractionId);
             }
-            catch (Exception ex)
+            catch (ExploreBulgariaException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+                return StatusCode(StatusCodes
+                    .Status500InternalServerError, new { message = ex.Message.ToString() });
             }
 
             return NoContent();
