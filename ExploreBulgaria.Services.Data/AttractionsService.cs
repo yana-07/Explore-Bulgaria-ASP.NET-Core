@@ -6,10 +6,10 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using Microsoft.EntityFrameworkCore;
-using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 using System.Device.Location;
 using ExploreBulgaria.Data;
 using ExploreBulgaria.Services.Exceptions;
+using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data
 {
@@ -78,55 +78,7 @@ namespace ExploreBulgaria.Services.Data
             guard.AgainstNull(attraction, InvalidAttractionId);
 
             return attraction!;
-        }
-
-        private IQueryable<Attraction> ApplyFilter(
-            string? categoryName = null,
-            string? subcategoryName = null,
-            string? regionName = null,
-            string? villageName = null,
-            string? searchTerm = null)
-        {
-            var result = repo
-                .AllAsNoTracking();
-
-            if (string.IsNullOrEmpty(categoryName) == false)
-            {
-                result = result
-                    .Where(a => a.Category.Name == categoryName);
-            }
-
-            if (string.IsNullOrEmpty(subcategoryName) == false)
-            {
-                result = result
-                    .Where(a => a.Subcategory != null &&
-                           a.Subcategory.Name == subcategoryName);
-            }
-
-            if (string.IsNullOrEmpty(regionName) == false)
-            {
-                result = result
-                    .Where(a => a.Region.Name == regionName);
-            }
-
-            if (string.IsNullOrEmpty(villageName) == false)
-            {
-                result = result
-                    .Where(a => a.Village != null &&
-                           a.Village.Name == villageName);
-            }
-
-            if (string.IsNullOrEmpty(searchTerm) == false)
-            {
-                searchTerm = $"%{searchTerm.ToLower()}%";
-
-                result = result
-                    .Where(a => EF.Functions.Like(a.Name.ToLower(), searchTerm) ||
-                        EF.Functions.Like(a.Description.ToLower(), searchTerm));
-            }
-
-            return result;
-        }
+        }      
 
         public async Task<IEnumerable<AttractionSimpleViewModel>> GetByVisitorIdAsync(
             string visitorId, int page, int itemsPerPage = 12)
@@ -168,7 +120,7 @@ namespace ExploreBulgaria.Services.Data
             var visitor = await visitorRepo
                 .All()
                 .Include(v => v.FavoriteAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -217,7 +169,7 @@ namespace ExploreBulgaria.Services.Data
             var visitor = await visitorRepo.All()
                 .Include(v => v.VisitedAttractions)
                 .Include(x => x.WantToVisitAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -275,7 +227,7 @@ namespace ExploreBulgaria.Services.Data
             var visitor = await visitorRepo.All()
                 .Include(v => v.WantToVisitAttractions)
                 .Include(v => v.VisitedAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -332,7 +284,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.FavoriteAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -345,7 +297,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.VisitedAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -358,7 +310,7 @@ namespace ExploreBulgaria.Services.Data
         {
             var visitor = await visitorRepo.AllAsNoTracking()
                 .Include(v => v.WantToVisitAttractions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var attraction = await repo.GetByIdAsync(attractionId);
@@ -377,7 +329,7 @@ namespace ExploreBulgaria.Services.Data
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
                 .Include(v => v.FavoriteAttractions).ThenInclude(fa => fa.Attraction.Images)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var skip = (page - 1) * itemsPerPage;
@@ -407,7 +359,7 @@ namespace ExploreBulgaria.Services.Data
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
                 .Include(v => v.VisitedAttractions).ThenInclude(fa => fa.Attraction.Images)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var skip = (page - 1) * itemsPerPage;
@@ -437,7 +389,7 @@ namespace ExploreBulgaria.Services.Data
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Category)
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Subcategory)
                 .Include(v => v.WantToVisitAttractions).ThenInclude(fa => fa.Attraction.Images)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == visitorId);
             guard.AgainstNull(visitor, InvalidVisitorId);
 
             var skip = (page - 1) * itemsPerPage;
@@ -579,5 +531,53 @@ namespace ExploreBulgaria.Services.Data
                 .To<AttractionSidebarViewModel>()
                 .Take(5)
                 .ToListAsync();
+
+        private IQueryable<Attraction> ApplyFilter(
+            string? categoryName = null,
+            string? subcategoryName = null,
+            string? regionName = null,
+            string? villageName = null,
+            string? searchTerm = null)
+        {
+            var result = repo
+                .AllAsNoTracking();
+
+            if (string.IsNullOrEmpty(categoryName) == false)
+            {
+                result = result
+                    .Where(a => a.Category.Name == categoryName);
+            }
+
+            if (string.IsNullOrEmpty(subcategoryName) == false)
+            {
+                result = result
+                    .Where(a => a.Subcategory != null &&
+                           a.Subcategory.Name == subcategoryName);
+            }
+
+            if (string.IsNullOrEmpty(regionName) == false)
+            {
+                result = result
+                    .Where(a => a.Region.Name == regionName);
+            }
+
+            if (string.IsNullOrEmpty(villageName) == false)
+            {
+                result = result
+                    .Where(a => a.Village != null &&
+                           a.Village.Name == villageName);
+            }
+
+            if (string.IsNullOrEmpty(searchTerm) == false)
+            {
+                searchTerm = $"%{searchTerm.ToLower()}%";
+
+                result = result
+                    .Where(a => EF.Functions.Like(a.Name.ToLower(), searchTerm) ||
+                        EF.Functions.Like(a.Description.ToLower(), searchTerm));
+            }
+
+            return result;
+        }
     }
 }
