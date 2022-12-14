@@ -2,27 +2,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ExploreBulgaria.Services.Data.Tests.Mocks
 {
     public class DatabaseMock : IDisposable
     {
         private readonly DbConnection connection;
-        private readonly DbContextOptions<ApplicationDbContext> dbContextOptions;
 
         public DatabaseMock()
         {
             connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
-
-            dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlite(connection)
-                .Options;
         }
 
-        public ApplicationDbContext CreateContext() 
-            => new ApplicationDbContext(dbContextOptions);
+        public ApplicationDbContext CreateContext(params IInterceptor[] interceptors)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlite(connection);
 
+            if (interceptors.Any())
+            {
+                optionsBuilder.AddInterceptors(interceptors);
+            }
+
+            return new ApplicationDbContext(optionsBuilder.Options);
+        }
+            
         public void Dispose() => connection.Dispose();
     }
 }
