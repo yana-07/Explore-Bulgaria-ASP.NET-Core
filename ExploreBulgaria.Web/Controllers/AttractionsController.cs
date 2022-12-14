@@ -23,7 +23,7 @@ namespace ExploreBulgaria.Web.Controllers
         private readonly IRegionsService regionsService;
         private readonly IVillagesService villagesService;
         private readonly IVisitorsService visitorsService;
-        private readonly IBlobServiceClient blobServiceClient;
+        private readonly BlobServiceClient blobServiceClient;
         private readonly ILogger<AttractionsController> logger;
         private const int ItemsPerPage = 12;
 
@@ -35,7 +35,7 @@ namespace ExploreBulgaria.Web.Controllers
             IRegionsService regionsService,
             IVillagesService villagesService,
             IVisitorsService visitorsService,
-            IBlobServiceClient blobServiceClient,
+            BlobServiceClient blobServiceClient,
             ILogger<AttractionsController> logger)
         {
             this.attractionsService = attractionsService;

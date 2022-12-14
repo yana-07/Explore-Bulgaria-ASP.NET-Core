@@ -14,11 +14,11 @@ namespace ExploreBulgaria.Services.Data
         private readonly string[] allowedExtensions = new[] { "jpg", "png", "gif" };
 
         private readonly IDeletableEnityRepository<AttractionTemporary> repo;
-        private readonly IBlobServiceClient blobServiceClient;
+        private readonly BlobServiceClient blobServiceClient;
 
         public TemporaryAttractionsService(
             IDeletableEnityRepository<AttractionTemporary> repo,
-            IBlobServiceClient blobServiceClient)
+            BlobServiceClient blobServiceClient)
         {
             this.repo = repo;
             this.blobServiceClient = blobServiceClient;
