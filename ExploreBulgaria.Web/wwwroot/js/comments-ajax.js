@@ -132,7 +132,7 @@ const appendReplySection = function (event) {
                 const replyDivElement = document.createElement('div');
                 replyDivElement.setAttribute('class', 'card p-4 mt-2 col-lg-11 offset-lg-1');
                 replyDivElement.innerHTML = `
-                            <div class="user d-flex flex-row align-items-center">
+                            <div class="user d-flex flex-row align-items-center mb-3">
                                 <img src="${reply.author.userAvatarUrl}" class="user-img rounded-circle mr-2">
                                 <div class="row">
                                     <small class="font-weight-bold text-primary">${reply.author.userFirstName} ${reply.author.userLastName}</small>
