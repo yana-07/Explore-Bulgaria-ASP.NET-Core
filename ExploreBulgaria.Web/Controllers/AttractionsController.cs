@@ -99,7 +99,7 @@ namespace ExploreBulgaria.Web.Controllers
 
                 if (information != attraction.GenerateSlug())
                 {
-                    TempData[ErrorMessage] = "Моля, не променяйте информацията в адреса!";
+                    TempData[ErrorMessage] = DoNotChangeTheUrl;
 
                     return RedirectToAction(nameof(All));
                 }

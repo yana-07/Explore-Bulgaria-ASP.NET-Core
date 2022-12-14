@@ -17,6 +17,8 @@
         public const string VillageSuccessfullyAdded = "Селото беше добавено успешно.";
 
         public const string AttractionSuccessfullyRecommended = "Благодарим Ви за предложението! Ще бъдете уведомени относно статуса на обекта.";
+        
+        public const string DoNotChangeTheUrl = "Моля, не променяйте информацията в адреса!";
 
         public const string UserNameTaken = "Потребителското име е заето.";
 
