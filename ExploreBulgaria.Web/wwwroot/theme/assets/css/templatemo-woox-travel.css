@@ -379,7 +379,7 @@ Header Style
 }
 
 .header-area .main-nav .nav {
-  flex-basis: 70%;
+  flex-basis: 100% !important;
   justify-content: flex-end;
   vertical-align: middle;
   margin-top: 15px;
@@ -2152,7 +2152,7 @@ Reservation Page Style
 
 .registration-form #registration-form input,
 .registration-form #registration-form select ,
-.generic-form input, 
+.generic-form input:not([type="checkbox"]), 
 .generic-form select {
   width: 100%;
   height: 46px;
