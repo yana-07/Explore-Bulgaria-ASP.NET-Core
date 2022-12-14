@@ -103,7 +103,7 @@ namespace ExploreBulgaria.Web.Controllers
             if (result.Succeeded)
             {
                 // TODO: change redirect strategy
-                return this.RedirectTo<HomeController>(c => c.Index());
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
             model.ExternalLogins = (await signInManager
@@ -135,7 +135,7 @@ namespace ExploreBulgaria.Web.Controllers
 
                 TempData[ErrorMessage] = ex.Message.ToString();
 
-                return this.RedirectTo<HomeController>(c => c.Index());
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }          
         }
 
@@ -152,7 +152,7 @@ namespace ExploreBulgaria.Web.Controllers
             {
                 TempData[ErrorMessage] = ex.Message.ToString();
 
-                return this.RedirectTo<HomeController>(c => c.Index());
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }          
         }
 
@@ -201,7 +201,7 @@ namespace ExploreBulgaria.Web.Controllers
 
             await usersService.SignOutAndInAsync(User);
 
-            return this.RedirectTo<HomeController>(c => c.Index());
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
