@@ -21,6 +21,8 @@ namespace ExploreBulgaria.Data.Models
 
         public virtual ApplicationUser User { get; set; } = null!;
 
+        public string? Notifications { get; set; }
+
         public virtual ICollection<Attraction> CreatedAttractions { get; set; }
 
         public virtual ICollection<VisitorLikedComment> LikedComments { get; set; }
