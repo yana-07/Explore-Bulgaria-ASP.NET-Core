@@ -6,6 +6,7 @@ using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using System.Text;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data.Administration
@@ -18,6 +19,7 @@ namespace ExploreBulgaria.Services.Data.Administration
         private readonly IDeletableEnityRepository<Subcategory> subcategoriesRepo;
         private readonly IDeletableEnityRepository<Region> regionsRepo;
         private readonly IDeletableEnityRepository<Village> villagesRepo;
+        private readonly IDeletableEnityRepository<Visitor> visitorsRepo;
         private readonly IGuard guard;
 
         public AdminService(
@@ -27,6 +29,7 @@ namespace ExploreBulgaria.Services.Data.Administration
             IDeletableEnityRepository<Subcategory> subcategoriesRepo,
             IDeletableEnityRepository<Region> regionsRepo,
             IDeletableEnityRepository<Village> villagesRepo,
+            IDeletableEnityRepository<Visitor> visitorsRepo,
             IGuard guard)
         {
             this.attrTempRepo = attrTempRepo;
@@ -35,6 +38,7 @@ namespace ExploreBulgaria.Services.Data.Administration
             this.subcategoriesRepo = subcategoriesRepo;
             this.regionsRepo = regionsRepo;
             this.villagesRepo = villagesRepo;
+            this.visitorsRepo = visitorsRepo;
             this.guard = guard;
         }
 
@@ -189,6 +193,21 @@ namespace ExploreBulgaria.Services.Data.Administration
             await attrTempRepo.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<string>> GetAdminNotifications(string visitorId)
+        {
+            var visitor = await visitorsRepo.GetByIdAsync(visitorId);
+            guard.AgainstNull(visitor, InvalidVisitorId);
+
+            if (!string.IsNullOrEmpty(visitor!.Notifications))
+            {
+                return visitor!.Notifications.Split(" ");
+            }
+            else
+            {
+                return Enumerable.Empty<string>();  
+            }
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync<T>(int page,
             AttractionTemporaryFilterModel filterModel,
             int itemsPerPage)
@@ -222,6 +241,28 @@ namespace ExploreBulgaria.Services.Data.Administration
             var attractionsTemp = ApplyFilter(filterModel);
 
             return await attractionsTemp.CountAsync();
+        }
+
+        public async Task NotifyAdmin(string groupName)
+        {
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync(v => v.User.Email == "adminuser@abv.bg");
+
+            guard.AgainstNull(adminVisitor, InvalidUserId);
+
+            var notifications = adminVisitor!.Notifications;
+
+            if (string.IsNullOrEmpty(notifications) || 
+                notifications.Contains(groupName) == false)
+            {
+                var sb = new StringBuilder(adminVisitor!.Notifications);
+                sb.Append($" {groupName}");
+                adminVisitor.Notifications = sb.ToString().Trim();
+            }
+
+            await visitorsRepo.SaveChangesAsync();
         }
 
         public async Task RejectAsync(int id)

@@ -28,29 +28,25 @@
     <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-                    <nav class="main-nav">
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">
-                            @*<img src="~/theme/assets/images/logo.png" alt="">*@                           
-                       </a>
-                        <ul class="nav">
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">Начало</a></li>
-                            @if (User.Identity?.IsAuthenticated ?? false)
-                            {
-                                <li><a asp-area="" asp-controller="Attractions" asp-action="Add">Предложи обект</a></li>
+                <nav class="main-nav">
+                    <ul class="nav">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Начало</a></li>
+                        <li><a asp-area="" asp-controller="Attractions" asp-action="ByRoute">По маршрут</a></li>
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li><a asp-area="" asp-controller="Attractions" asp-action="Add">Предложи обект</a></li>
 
-                                @if (User.IsInRole(AdministratorRoleName))
-                                {
-                                    <li><a asp-area="Administration" asp-controller="Home" asp-action="Index">Панел</a></li>
-                                }
+                            @if (User.IsInRole(AdministratorRoleName))
+                            {
+                                <li><a asp-area="Administration" asp-controller="Home" asp-action="Index">Панел</a></li>
                             }
-                            <partial name="_LoginPartial" />
-                        </ul>
-                        <a class='menu-trigger'>
-                            <span>Menu</span>
-                        </a>
-                    </nav>
-                </div>
+                        }
+                        <partial name="_LoginPartial" />
+                    </ul>
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                </nav>
             </div>
         </div>
     </header>
@@ -63,6 +59,7 @@
             </div>
             <aside class="col-md-3 bg-gradient">
                 <vc:sidebar></vc:sidebar>
+                <a asp-area="" asp-controller="Chat" asp-action="Index" class="btn btn-secondary mt-5 w-100">Започни чат</a>
             </aside>
         </div>
     </div>

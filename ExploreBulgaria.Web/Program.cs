@@ -3,6 +3,7 @@ using ExploreBulgaria.Data;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Seeding;
 using ExploreBulgaria.Services.Mapping;
+using ExploreBulgaria.Web.Hubs;
 using ExploreBulgaria.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddSignalR();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -113,5 +115,6 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

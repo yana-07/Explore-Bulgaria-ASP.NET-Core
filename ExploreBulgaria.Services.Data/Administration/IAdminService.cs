@@ -24,5 +24,9 @@ namespace ExploreBulgaria.Services.Data.Administration
         Task AddRegionAsync(string regionName);
 
         Task AddVillageAsync(string villageName, string regionId);
+
+        Task NotifyAdmin(string groupName);
+
+        Task<IEnumerable<string>> GetAdminNotifications(string visitorId);
     }
 }
