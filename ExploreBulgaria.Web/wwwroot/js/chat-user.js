@@ -53,3 +53,19 @@ sendBtn.addEventListener('click', (event) => {
         return console.error(err.toString());
        });
 });
+
+document.getElementById('closeBtn').addEventListener('click', () => {
+    let antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
+    let group = `private@${myUserIdentifier}`;
+    fetch('/api/ChatApi/clearNotification', {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json',
+            'X-CSRF-TOKEN': antiForgeryToken
+        },
+        body: JSON.stringify({ group })
+    });
+
+    document.getElementById('messagesContainer').remove();
+    window.location.href = '/';
+});

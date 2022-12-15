@@ -27,6 +27,8 @@ namespace ExploreBulgaria.Services.Data.Administration
 
         Task NotifyAdmin(string groupName);
 
+        Task ClearAdminNotification(string groupName);
+
         Task<IEnumerable<string>> GetAdminNotifications(string visitorId);
     }
 }

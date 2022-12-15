@@ -30,10 +30,6 @@ const configureConnection = () => {
         messagesDiv.appendChild(messageDiv);
     });
 
-    connection.on('ReceivePreviousMessages', (prevMsgs) => {
-
-    });
-
     connection.start()
         .then(() => {
             sendBtn.disabled = false
@@ -54,4 +50,19 @@ sendBtn.addEventListener('click', (event) => {
     connection.invoke("SendMessageToGroup", message, group)
         .then(() => messageInput.value = '')
         .catch(err => console.error(err.toString()));
+});
+
+document.getElementById('closeBtn').addEventListener('click', () => {
+    let antiForgeryToken = document.querySelector('#antiForgeryForm input[name=__RequestVerificationToken]').value;
+
+    fetch('/api/ChatApi/clearNotification', {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json',
+            'X-CSRF-TOKEN': antiForgeryToken
+        },
+        body: JSON.stringify({ group })
+    });
+
+    document.getElementById('messagesContainer').remove();
 });

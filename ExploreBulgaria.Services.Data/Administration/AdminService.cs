@@ -284,6 +284,25 @@ namespace ExploreBulgaria.Services.Data.Administration
 
         }
 
+        public async Task ClearAdminNotification(string groupName)
+        {
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync(v => v.User.Email == "adminuser@abv.bg");
+
+            guard.AgainstNull(adminVisitor, InvalidUserId);
+
+            if (string.IsNullOrEmpty(adminVisitor!.Notifications) == false &&
+                adminVisitor.Notifications.Contains(groupName))
+            {
+                adminVisitor.Notifications = adminVisitor
+                    .Notifications.Replace(groupName, string.Empty).Trim();
+
+                await visitorsRepo.SaveChangesAsync();
+            }
+        }
+
         private IQueryable<AttractionTemporary> ApplyFilter(AttractionTemporaryFilterModel filterModel)
         {
             var result = attrTempRepo.AllAsNoTracking();

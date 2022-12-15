@@ -4,7 +4,7 @@
     var myUserIdentifier = ViewData.ContainsKey("UserIdentifier") ? ViewData["UserIdentifier"] : "";
 }
 
-<div class="row" style="height: 600px;">
+<div id="messagesContainer" class="row" style="height: 600px;">
     <input id="groupName" type="hidden" value="@group" />
     <input id="myUserIdentifier" type="hidden" value="@myUserIdentifier" />
     <div class="card card-secondary direct-chat direct-chat-secondary col-md-6 offset-md-3 mt-5 h-100">
@@ -12,20 +12,17 @@
             <h3 class="card-title">Чат с потребител</h3>
             <div class="card-tools">
                 <span data-toggle="tooltip" title="3 New Messages" class="badge badge-light">0</span>
-                <button type="button" class="btn btn-tool" data-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
                 <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
                     <i class="fas fa-comments"></i>
                 </button>
-                <button type="button" class="btn btn-tool" data-widget="remove">
+                <button id="closeBtn" type="button" class="btn btn-tool" data-widget="remove">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
 
         <div class="card-body">
-            <div class="direct-chat-messages"></div>
+            <div class="direct-chat-messages h-100"></div>
         </div>
 
         <div class="card-footer">
@@ -40,6 +37,7 @@
         </div>
     </div>
 </div>
+<form id="antiForgeryForm" method="post"></form>
 
 @section Scripts {
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
