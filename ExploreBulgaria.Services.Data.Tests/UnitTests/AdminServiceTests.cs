@@ -1,20 +1,19 @@
 using AutoMapper;
-using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Data.Repositories;
 using ExploreBulgaria.Services.Data.Administration;
+using ExploreBulgaria.Services.Data.Tests.Mocks;
 using ExploreBulgaria.Services.Data.Tests.Models;
 using ExploreBulgaria.Services.Exceptions;
-using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace ExploreBulgaria.Services.Data.Tests.UnitTests
 {
     public class AdminServiceTests : UnitTestsBase
     {
-        
         private IAdminService adminService;
 
         [SetUp]
@@ -27,8 +26,11 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
                 config.CreateMap<AttractionTemporary, AttractionTempMockModel>();
             }));
 
+            var emailSender = new EmailSenderMock();
+            var logger = new Mock<ILogger<AdminService>>().Object;
+
             adminService = new AdminService(attrTempRepo, attrRepo, categoriesRepo,
-                subcategoriesRepo, regionsRepo, villagesRepo, guard);
+                subcategoriesRepo, regionsRepo, villagesRepo, visitorsRepo, logger, emailSender, guard);
         }
 
         [Test]
@@ -239,6 +241,44 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         }
 
         [Test]
+        public async Task GetAdminNotifications_ShouldReturnNotificationsIfThereAreSome()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .All()
+                .FirstOrDefaultAsync();
+            adminVisitor!.Notifications = "private@some-guid private@some-other-guid";
+            await visitorsRepo.SaveChangesAsync();
+
+            var notifications = await adminService.GetAdminNotifications(adminVisitor.Id);
+
+            Assert.That(notifications.Count(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task GetAdminNotifications_ShouldReturnEmptyEnumerableIfThereAreNoNotifications()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var notifications = await adminService.GetAdminNotifications(adminVisitor!.Id);
+
+            Assert.True(notifications.Any() == false);
+            Assert.That(notifications.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GetAdminNotifications_ShouldThrowExceptionIfAdminVisitorIdNotValid()
+        {
+            Assert.ThrowsAsync<ExploreBulgariaException>(
+                async () => await adminService.GetAdminNotifications(""));
+        }
+
+        [Test]
         public async Task GetAllAsync_ShouldReturnParticularCount()
         {
             await SeedAttractionsAsync();           
@@ -293,11 +333,114 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         }
 
         [Test]
+        public async Task NotifyAdmin_ShouldAddNotificationIfItWasNotAlreadyAdded()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+            adminVisitor!.User.Email = "adminuser@abv.bg";
+            await visitorsRepo.SaveChangesAsync();
+
+            await adminService.NotifyAdmin("private@testGroup");
+
+            Assert.That(adminVisitor!.Notifications, Is.EqualTo("private@testGroup"));
+        }
+
+        [Test]
+        public async Task NotifyAdmin_ShouldThrowExceptionIfAdminVisitorIdNotValid()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .AllAsNoTracking()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+
+            Assert.ThrowsAsync<ExploreBulgariaException>(
+                async () => await adminService.NotifyAdmin(adminVisitor!.Id));
+        }
+
+        [Test]
+        public async Task NotifyAdmin_ShouldNotAddNotificationIfItWasAlreadyAdded()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+            adminVisitor!.User.Email = "adminuser@abv.bg";
+            adminVisitor.Notifications = "private@testGroup";
+            await visitorsRepo.SaveChangesAsync();
+
+            await adminService.NotifyAdmin("private@testGroup");
+
+            Assert.That(adminVisitor!.Notifications, Is.Not.EqualTo("private@testGroup private@testGroup"));
+        }
+
+        [Test]
+        public async Task ClearAdminNotification_ShouldRemoveNotificationIfSuchExists()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+            adminVisitor!.User.Email = "adminuser@abv.bg";
+            adminVisitor.Notifications = "private@testGroup";
+            await visitorsRepo.SaveChangesAsync();
+
+            await adminService.ClearAdminNotification("private@testGroup");
+
+            Assert.True(adminVisitor.Notifications.Contains("private @testGroup") == false);
+        }
+
+        [Test]
+        public async Task ClearAdminNotification_ShouldDoNothingIfNotificationDoesNotExist()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .All()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+            adminVisitor!.User.Email = "adminuser@abv.bg";
+            adminVisitor.Notifications = "private@testGroup";
+            await visitorsRepo.SaveChangesAsync();
+
+            await adminService.ClearAdminNotification("private@someOthertestGroup");
+
+            Assert.True(adminVisitor.Notifications.Contains("private@testGroup"));
+        }
+
+        [Test]
+        public async Task ClearAdminNotification_ShouldThrowExceptionIfAdminVisitorIdNotValid()
+        {
+            await SeedDbAsync();
+
+            var adminVisitor = await visitorsRepo
+                .AllAsNoTracking()
+                .Include(v => v.User)
+                .FirstOrDefaultAsync();
+
+            Assert.ThrowsAsync<ExploreBulgariaException>(
+                async () => await adminService.ClearAdminNotification(adminVisitor!.Id));
+        }
+
+        [Test]
         public async Task RejectAsync_ShouldSetIsDeletedAndIsRejectedPropertyOfAttractionTemporaryToTrue()
         {
             await SeedDbAsync();
 
-            await adminService.RejectAsync(1);
+            var visitor = await visitorsRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+
+            await adminService.RejectAsync(1, visitor!.Id);
             var attraction = await attrTempRepo.GetByIdAsync(1);
 
             Assert.True(attraction!.IsRejected);
@@ -305,10 +448,16 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
         }
 
         [Test]
-        public void RejectAsync_ShouldThrowExceptionIfAttractionTemporaryIdNotValid()
+        public async Task RejectAsync_ShouldThrowExceptionIfAttractionTemporaryIdNotValid()
         {
+            await SeedDbAsync();
+
+            var visitor = await visitorsRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+
             Assert.ThrowsAsync<ExploreBulgariaException>(
-                async () => await adminService.RejectAsync(1));
-        }            
+                async () => await adminService.RejectAsync(7, visitor!.Id));
+        }
     }
 }
