@@ -28,6 +28,7 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
             AutoMapperConfig.MapperInstance = new Mapper(new MapperConfiguration(config =>
             {
                 config.CreateMap<Attraction, AttractionSimpleViewModel>();
+                config.CreateMap<Attraction, AttractionSidebarViewModel>();
             }));
         }
 
@@ -747,6 +748,235 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
             Assert.ThrowsAsync<ExploreBulgariaException>(
                 async () => await attractionsService
                   .GetWantToVisitByVisitorIdAsync("", 1, 1));
+        }
+
+        [Test]
+        public async Task GetFavoritesByVisitorIdCountAsync_ShouldWorkCorrectly()
+        {
+            await SeedAttractionsAsync();
+
+            var attraction = await attrRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+            var visitor = await visitorsRepo
+                .All()
+                .Include(v => v.FavoriteAttractions)
+                .FirstOrDefaultAsync();
+            visitor!.FavoriteAttractions.Add(new VisitorFavoriteAttraction
+            {
+                AttractionId = attraction!.Id
+            });
+            await visitorsRepo.SaveChangesAsync();
+
+            var count = await attractionsService
+                .GetFavoritesByVisitorIdCountAsync(visitor.Id);
+
+            Assert.That(count, Is.EqualTo(1));
+        }
+
+
+        [Test]
+        public async Task GetVisitedByVisitorIdCountAsync_ShouldWorkCorrectly()
+        {
+            await SeedAttractionsAsync();
+
+            var attraction = await attrRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+            var visitor = await visitorsRepo
+                .All()
+                .Include(v => v.VisitedAttractions)
+                .FirstOrDefaultAsync();
+            visitor!.VisitedAttractions.Add(new VisitorVisitedAttraction
+            {
+                AttractionId = attraction!.Id
+            });
+            await visitorsRepo.SaveChangesAsync();
+
+            var count = await attractionsService
+                .GetVisitedByVisitorIdCountAsync(visitor.Id);
+
+            Assert.That(count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task GetWanToVisitByVisitorIdCount_ShouldWorkCorrectly()
+        {
+            await SeedAttractionsAsync();
+
+            var attraction = await attrRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+            var visitor = await visitorsRepo
+                .All()
+                .Include(v => v.WantToVisitAttractions)
+                .FirstOrDefaultAsync();
+            visitor!.WantToVisitAttractions.Add(new VisitorWantToVisitAttraction
+            {
+                AttractionId = attraction!.Id
+            });
+            await visitorsRepo.SaveChangesAsync();
+
+            var count = await attractionsService
+                .GetWanToVisitByVisitorIdCountAsync(visitor.Id);
+
+            Assert.That(count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task GetSidebarAttractions_ShouldOrderByVisitsCount()
+        {
+            await ArrangeGetSidebarAttractionsTestAsync();
+
+            var attractions = (await attractionsService
+                .GetSidebarAttractions(Enums.SidebarOrderEnum.MostVisited))
+                .ToList();
+
+            Assert.That(attractions[0].Name, Is.EqualTo("TestAttraction1"));
+            Assert.That(attractions[1].Name, Is.EqualTo("TestAttraction2"));
+        }
+
+        [Test]
+        public async Task GetSidebarAttractions_ShouldOrderByAddedToFavoritesCount()
+        {
+            await ArrangeGetSidebarAttractionsTestAsync();
+
+            var attractions = (await attractionsService
+                .GetSidebarAttractions(Enums.SidebarOrderEnum.MostFavorite))
+                .ToList();
+
+            Assert.That(attractions[0].Name, Is.EqualTo("TestAttraction2"));
+            Assert.That(attractions[1].Name, Is.EqualTo("TestAttraction1"));
+        }
+
+        [Test]
+        public async Task GetSidebarAttractions_ShouldReturnNewestFirst()
+        {
+            await ArrangeGetSidebarAttractionsTestAsync();
+
+            var attractions = (await attractionsService
+                .GetSidebarAttractions(Enums.SidebarOrderEnum.Newest))
+                .ToList();
+
+            Assert.That(attractions[0].Name, Is.EqualTo("TestAttraction2"));
+            Assert.That(attractions[1].Name, Is.EqualTo("TestAttraction1"));
+        }
+
+
+        [Test]
+        public async Task GetByCategories_ShouldWorkCorrectly()
+        {
+            await SeedAttractionsAsync();
+
+            var category = await categoriesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var attractions = await attractionsService
+                .GetByCategories<AttractionSimpleViewModel>(category!.Id);
+
+            Assert.That(attractions.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task GetForHomePageAsync_ShouldWorkCorrectly()
+        {
+            await SeedAttractionsAsync();
+
+            var attractions = await attractionsService.GetForHomePageAsync();
+
+            Assert.That(attractions.Count(), Is.EqualTo(1));
+        }
+
+        private async Task ArrangeGetSidebarAttractionsTestAsync()
+        {
+            await SeedAttractionsAsync();
+
+            await visitorsRepo.AddAsync(new Visitor
+            {
+                User = new ApplicationUser
+                {
+                    UserName = "TestUserName2",
+                    Email = "test2@mail.com"
+                }
+            });
+            await visitorsRepo.SaveChangesAsync();
+
+            var attraction = await attrRepo
+                .All()
+                .FirstOrDefaultAsync();
+            attraction!.VisitedByVisitors.Add(new VisitorVisitedAttraction
+            {
+                VisitorId = (await visitorsRepo
+                   .AllAsNoTracking()
+                   .Include(v => v.User)
+                   .FirstOrDefaultAsync(v => v.User.Email == "test@mail.com"))!.Id
+            });
+            attraction!.VisitedByVisitors.Add(new VisitorVisitedAttraction
+            {
+                VisitorId = (await visitorsRepo
+                   .AllAsNoTracking()
+                   .Include(v => v.User)
+                   .FirstOrDefaultAsync(v => v.User.Email == "test2@mail.com"))!.Id
+            });
+            attraction!.AddedToFavoritesByVisitors.Add(new VisitorFavoriteAttraction
+            {
+                VisitorId = (await visitorsRepo
+                   .AllAsNoTracking()
+                   .Include(v => v.User)
+                   .FirstOrDefaultAsync(v => v.User.Email == "test@mail.com"))!.Id
+            });
+
+            await attrRepo.AddAsync(new Attraction
+            {
+                Name = "TestAttraction2",
+                CategoryId = (await categoriesRepo
+                    .AllAsNoTracking()
+                    .FirstOrDefaultAsync(c => c.Name == "TestCategory"))!.Id,
+                SubcategoryId = (await subcategoriesRepo
+                    .AllAsNoTracking()
+                    .FirstOrDefaultAsync())!.Id,
+                Description = "TestDescription2",
+                CreatedByVisitorId = (await visitorsRepo
+                    .AllAsNoTracking()
+                    .Include(v => v.User)
+                    .FirstOrDefaultAsync(v => v.User.UserName == "TestUserName"))!.Id,
+                RegionId = (await regionsRepo
+                    .AllAsNoTracking()
+                    .FirstOrDefaultAsync())!.Id,
+                VillageId = (await villagesRepo
+                    .AllAsNoTracking()
+                    .FirstOrDefaultAsync())!.Id,
+                VisitedByVisitors = new List<VisitorVisitedAttraction>
+                {
+                    new VisitorVisitedAttraction
+                    {
+                        VisitorId = (await visitorsRepo
+                           .AllAsNoTracking()
+                           .Include(v => v.User)
+                           .FirstOrDefaultAsync(v => v.User.Email == "test@mail.com"))!.Id
+                    }
+                },
+                AddedToFavoritesByVisitors = new List<VisitorFavoriteAttraction>
+                {
+                    new VisitorFavoriteAttraction
+                    {
+                        VisitorId = (await visitorsRepo
+                           .AllAsNoTracking()
+                           .Include(v => v.User)
+                           .FirstOrDefaultAsync(v => v.User.Email == "test@mail.com"))!.Id
+                    },
+                    new VisitorFavoriteAttraction
+                    {
+                        VisitorId = (await visitorsRepo
+                           .AllAsNoTracking()
+                           .Include(v => v.User)
+                           .FirstOrDefaultAsync(v => v.User.Email == "test2@mail.com"))!.Id
+                    },
+                }
+            });
+
+            await attrRepo.SaveChangesAsync();
         }
     }
 }
