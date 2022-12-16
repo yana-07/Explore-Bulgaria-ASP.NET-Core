@@ -25,5 +25,23 @@
         public const string EmailTaken = "Имейлът е зает.";
 
         public const string AttemptFailed = "Неуспешен опит.";
+
+        public const string MustProvideSubjectAndContent = "Трябва да бъдат посочени тема и съобщение";
+
+        public const string ResponseStatusCode = "Response status code: {0}";
+
+        public const string ResponseBody = "Response body: {0}";
+
+        public const string AttractionApprovedSubject = "Oдобрено предложение";
+
+        public const string AttractionApprovedContent = "<h1>Поздравления! Предложената от вас забележителност {0} бе одобрена и добавена.</h1>";
+
+        public const string AttractionRejected = "Отхърлено предложение";
+       
+        public const string AttractionRejectedContent = "<h1>Съжаляваме, предложената от вас забележителност {0} не бе одобрена.</h1>";
+
+        public const string ExploreBgTeam = "екипът на Explore Bulgaria";
+
+        public const string FromEmail = "iana_krasimirova@abv.bg";
     }
 }

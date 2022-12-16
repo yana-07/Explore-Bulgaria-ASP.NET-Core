@@ -27,5 +27,7 @@
         public const string RegionAlreadyExists = "Регионът, който се опитвате да добавите, вече съществува.";
 
         public const string VillageAlreadyExists = "Селото, което се опитвате да добавите, вече съществува.";
+
+        public const string EmailSenderException = "Error while sendin an email.";
     }
 }

@@ -15,7 +15,7 @@ namespace ExploreBulgaria.Services.Data.Administration
 
         Task ApproveAsync(AttractionTempDetailsViewModel model);
 
-        Task RejectAsync(int id);
+        Task RejectAsync(int id, string visitorId);
 
         Task AddCategoryAsync(string categoryName);
 

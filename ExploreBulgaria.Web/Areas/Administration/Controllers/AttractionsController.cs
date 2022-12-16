@@ -1,12 +1,14 @@
 ﻿using Azure.Storage.Blobs;
 using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Data.Administration;
+using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using ExploreBulgaria.Web.ViewModels.Categories;
 using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using ExploreBulgaria.Web.ViewModels.Villages;
 using Microsoft.AspNetCore.Mvc;
+using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
 {
@@ -17,6 +19,7 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
         private readonly ISubcategoriesService subcategoriesService;
         private readonly IRegionsService regionsService;
         private readonly IVillagesService vilaggesService;
+        private readonly ILogger<AttractionsController> logger;
         private const int ItemsPerPage = 12;
 
         public AttractionsController(
@@ -24,13 +27,15 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             ICategoriesService categoriesService,
             ISubcategoriesService subcategoriesService,
             IRegionsService regionsService,
-            IVillagesService vilaggesService)
+            IVillagesService vilaggesService,
+            ILogger<AttractionsController> logger)
         {
             this.adminService = adminService;
             this.categoriesService = categoriesService;
             this.subcategoriesService = subcategoriesService;
             this.regionsService = regionsService;
             this.vilaggesService = vilaggesService;
+            this.logger = logger;
         }
 
         public async Task<IActionResult> All(AttractionTemporaryFilterModel filterModel, int page = 1)
@@ -84,24 +89,24 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             {
                 await adminService.ApproveAsync(model);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                // TODO: toast message
+                TempData[ErrorMessage] = ex.Message.ToString();
             }
 
             return RedirectToAction(nameof(All));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Reject(int id)
+        public async Task<IActionResult> Reject(int id, string visitorId)
         {
             try
             {
-                await adminService.RejectAsync(id);
+                await adminService.RejectAsync(id, visitorId);
             }
             catch (Exception ex)
             {
-                // TODO: toast message
+                TempData[ErrorMessage] = ex.Message.ToString();
             }
 
             return RedirectToAction(nameof(All));

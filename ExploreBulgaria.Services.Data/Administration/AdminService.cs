@@ -3,11 +3,14 @@ using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Mapping;
+using ExploreBulgaria.Services.Messaging;
 using ExploreBulgaria.Web.ViewModels.Administration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NetTopologySuite.Geometries;
 using System.Text;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
+using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Services.Data.Administration
 {
@@ -20,6 +23,8 @@ namespace ExploreBulgaria.Services.Data.Administration
         private readonly IDeletableEnityRepository<Region> regionsRepo;
         private readonly IDeletableEnityRepository<Village> villagesRepo;
         private readonly IDeletableEnityRepository<Visitor> visitorsRepo;
+        private readonly ILogger<AdminService> logger;
+        private readonly IEmailSender emailSender;
         private readonly IGuard guard;
 
         public AdminService(
@@ -30,6 +35,8 @@ namespace ExploreBulgaria.Services.Data.Administration
             IDeletableEnityRepository<Region> regionsRepo,
             IDeletableEnityRepository<Village> villagesRepo,
             IDeletableEnityRepository<Visitor> visitorsRepo,
+            ILogger<AdminService> logger,
+            IEmailSender emailSender,
             IGuard guard)
         {
             this.attrTempRepo = attrTempRepo;
@@ -39,6 +46,8 @@ namespace ExploreBulgaria.Services.Data.Administration
             this.regionsRepo = regionsRepo;
             this.villagesRepo = villagesRepo;
             this.visitorsRepo = visitorsRepo;
+            this.logger = logger;
+            this.emailSender = emailSender;
             this.guard = guard;
         }
 
@@ -191,6 +200,31 @@ namespace ExploreBulgaria.Services.Data.Administration
             attrTempToDelete!.IsApproved = true;
             attrTempRepo.Delete(attrTempToDelete!);
             await attrTempRepo.SaveChangesAsync();
+
+            var user = await visitorsRepo
+                .AllAsNoTracking()
+                .Where(v => v.Id == model.CreatedByVisitorId)
+                .Select(v => v.User)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(user!.Email) == false)
+            {
+                try
+                {
+                    await emailSender.SendEmailAsync(
+                        FromEmail, ExploreBgTeam,
+                         user.Email, AttractionApprovedSubject,
+                         string.Format(AttractionApprovedContent, model.Name));
+                }
+                catch (ArgumentException ex)
+                {
+                    logger.LogError(ex.Message.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaException(EmailSenderException, ex);
+                }
+            }          
         }
 
         public async Task<IEnumerable<string>> GetAdminNotifications(string visitorId)
@@ -265,7 +299,7 @@ namespace ExploreBulgaria.Services.Data.Administration
             await visitorsRepo.SaveChangesAsync();
         }
 
-        public async Task RejectAsync(int id)
+        public async Task RejectAsync(int id, string visitorId)
         {
             var attraction = await attrTempRepo.GetByIdAsync(id);
             guard.AgainstNull(attraction, InvalidAttractionTemporaryId);
@@ -282,6 +316,30 @@ namespace ExploreBulgaria.Services.Data.Administration
                 throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
 
+            var user = await visitorsRepo
+                .AllAsNoTracking()
+                .Where(v => v.Id == visitorId)
+                .Select(v => v.User)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(user!.Email) == false)
+            {
+                try
+                {
+                    await emailSender.SendEmailAsync(
+                        FromEmail, ExploreBgTeam,
+                         user.Email, AttractionRejected,
+                         string.Format(AttractionRejectedContent, attraction.Name));
+                }
+                catch (ArgumentException ex)
+                {
+                    logger.LogError(ex.Message.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw new ExploreBulgariaException(EmailSenderException, ex);
+                }
+            }           
         }
 
         public async Task ClearAdminNotification(string groupName)

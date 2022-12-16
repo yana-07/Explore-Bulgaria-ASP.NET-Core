@@ -4,6 +4,7 @@ using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Services.Data;
 using ExploreBulgaria.Services.Data.Administration;
 using ExploreBulgaria.Web.ViewModels.Users;
+using ExploreBulgaria.Services.Messaging;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -28,6 +29,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IGuard, Guard>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ISpatialDataService, SpatialDataService>();
+
+            using(var scope = services.BuildServiceProvider().CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<SendGridEmailSender>>();
+                var apiKey = scope.ServiceProvider
+                    .GetRequiredService<IConfiguration>()
+                    .GetSection("SendGrid:ApiKey")
+                    .Value;
+                services.AddScoped<IEmailSender>(x => new SendGridEmailSender(apiKey, logger));
+            }
 
             return services;
         }

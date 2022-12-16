@@ -62,7 +62,7 @@
                             <label class="form-label text-secondary" asp-for="Region">Регион / град:</label>
                         </div>
                         <div class="col-lg-3">
-                            <input asp-for="Region" class="form-control" disabled/>
+                            <input asp-for="Region" class="form-control"/>
                         </div>
                         <div class="col-lg-2 text-secondary">Избери:</div>
                         <div class="col-lg-3">
@@ -141,6 +141,7 @@
             </form>
             <form asp-area="Administration" asp-controller="Attractions" asp-action="Reject">
                 <input type="hidden" name="id" value="@Model.Id"/>
+                <input type="hidden" name="visitorId" value="@Model.CreatedByVisitorId"/>
                 <div class="col-lg-3 offset-lg-5 mt-4">
                     <button type="submit" class="btn btn-danger w-100">Отхвърли</button>
                 </div>
