@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExploreBulgaria.Common\ExploreBulgaria.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Data.Common\ExploreBulgaria.Data.Common.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Data.Models\ExploreBulgaria.Data.Models.csproj" />
     <ProjectReference Include="..\ExploreBulgaria.Services\ExploreBulgaria.Services.csproj" />
