@@ -26,6 +26,8 @@
 
         public const string AttemptFailed = "Неуспешен опит.";
 
+        public const string ProfileUpdateFailed = "Неуспешна редакция на профила.";
+
         public const string MustProvideSubjectAndContent = "Трябва да бъдат посочени тема и съобщение";
 
         public const string ResponseStatusCode = "Response status code: {0}";

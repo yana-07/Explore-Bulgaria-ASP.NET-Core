@@ -105,21 +105,42 @@ namespace ExploreBulgaria.Services.Data
             => await userManager.FindByNameAsync(userName) == null;
 
         public async Task AddFirstNameClaimAsync(ApplicationUser user)
-            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.GivenName, user.FirstName));
+        {
+            if (string.IsNullOrEmpty(user.FirstName))
+            {
+                throw new ArgumentNullException(nameof(user.FirstName));
+            }
+
+            await userManager.AddClaimAsync(user, new Claim(ClaimTypes.GivenName, user.FirstName));
+        }
 
         public async Task AddLastNameClaimAsync(ApplicationUser user)
-            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Surname, user.LastName));
+        {
+            if (string.IsNullOrEmpty(user.LastName))
+            {
+                throw new ArgumentNullException(nameof(user.LastName));
+            }
+
+            await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Surname, user.LastName));
+        }           
 
         public async Task AddEmailClaimAsync(ApplicationUser user)
             => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
 
         public async Task AddAvatarUrlClaimAsync(ApplicationUser user)
-            => await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Uri, user.AvatarUrl!));
+        {
+            if (string.IsNullOrEmpty(user.AvatarUrl))
+            {
+                throw new ArgumentNullException(nameof(user.AvatarUrl));
+            }
+
+            await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Uri, user.AvatarUrl));
+        }           
 
         public async Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId)
             => await userManager.AddClaimAsync(user, new Claim("urn:exploreBulgaria:visitorId", visitorId));
         
-        public async Task EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath)
+        public async Task<bool> EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath)
         {
             var user = await userManager.FindByIdAsync(userId);
 
@@ -161,6 +182,10 @@ namespace ExploreBulgaria.Services.Data
             {
                 throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
+
+            var result = await userManager.UpdateAsync(user);
+
+            return result.Succeeded;
         }
 
         public async Task SignOutAndInAsync(ClaimsPrincipal user)

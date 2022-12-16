@@ -183,8 +183,15 @@ namespace ExploreBulgaria.Web.Controllers
             // TODO: Save changes
             try
             {
-                await usersService.EditProfileAsync(
+                var result = await usersService.EditProfileAsync(
                     model, User.Id(), $"{environment.WebRootPath}/images");
+
+                if (!result)
+                {
+                    TempData[ErrorMessage] = ProfileUpdateFailed;
+
+                    return View(model);
+                }
             }
             catch (InvalidImageExtensionException ex)
             {
