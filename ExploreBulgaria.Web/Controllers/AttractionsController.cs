@@ -200,7 +200,7 @@ namespace ExploreBulgaria.Web.Controllers
                       .GetFavoritesByVisitorIdAsync(visitorId, page, ItemsPerPage),
                     PageNumber = page,
                     ItemsCount = await attractionsService
-                      .GetWanToVisitByVisitorIdCount(visitorId),
+                      .GetWanToVisitByVisitorIdCountAsync(visitorId),
                     ItemsPerPage = ItemsPerPage,
                     FilterModel = filterModel,
                     Area = "",
@@ -229,7 +229,7 @@ namespace ExploreBulgaria.Web.Controllers
                       .GetWantToVisitByVisitorIdAsync(visitorId, page, ItemsPerPage),
                     PageNumber = page,
                     ItemsCount = await attractionsService
-                      .GetWanToVisitByVisitorIdCount(visitorId),
+                      .GetWanToVisitByVisitorIdCountAsync(visitorId),
                     ItemsPerPage = ItemsPerPage,
                     FilterModel = filterModel,
                     Area = "",

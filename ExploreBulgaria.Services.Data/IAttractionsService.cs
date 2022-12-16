@@ -47,7 +47,7 @@ namespace ExploreBulgaria.Services.Data
 
         Task<int> GetVisitedByVisitorIdCountAsync(string visitorId);
 
-        Task<int> GetWanToVisitByVisitorIdCount(string visitorId);
+        Task<int> GetWanToVisitByVisitorIdCountAsync(string visitorId);
 
         Task<IEnumerable<AttractionSidebarViewModel>> GetSidebarAttractions(SidebarOrderEnum orderBy);
 

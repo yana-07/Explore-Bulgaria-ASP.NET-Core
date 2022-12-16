@@ -421,7 +421,7 @@ namespace ExploreBulgaria.Services.Data
                 .Select(v => v.VisitedAttractions)
                 .CountAsync();
 
-        public async Task<int> GetWanToVisitByVisitorIdCount(string visitorId)
+        public async Task<int> GetWanToVisitByVisitorIdCountAsync(string visitorId)
             => await visitorRepo.AllAsNoTracking()
                 .Where(v => v.Id == visitorId)
                 .Select(v => v.WantToVisitAttractions)
