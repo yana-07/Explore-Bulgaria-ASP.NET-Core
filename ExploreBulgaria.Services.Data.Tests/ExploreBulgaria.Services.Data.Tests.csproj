@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExploreBulgaria.Services.Data\ExploreBulgaria.Services.Data.csproj" />
+    <ProjectReference Include="..\ExploreBulgaria.Services.Messaging\ExploreBulgaria.Services.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,13 @@
 ﻿using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Data.Repositories;
+using ExploreBulgaria.Services.Data.Tests.Mocks;
 using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.ViewModels.Comments;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Reflection.Metadata.Ecma335;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 
 namespace ExploreBulgaria.Services.Data.Tests.UnitTests
@@ -44,6 +48,50 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
             Assert.That(comments[0].Text, Is.EqualTo("TestCommentText"));
             Assert.That(comments[0].AddedByVisitorId, Is.EqualTo(visitorId));
         }
+
+        [Test]
+        public async Task PostCommentAsync_ShouldThrowExceptionIfVisitorIdNotValid()
+        {
+            await SeedAttractionsAsync();
+
+            var model = new CommentInputModel
+            {
+                AttractionId = (await attrRepo
+                   .AllAsNoTracking()
+                   .FirstOrDefaultAsync())!.Id,
+                Text = "TestCommentText"
+            };
+
+            Assert.ThrowsAsync<ExploreBulgariaException>(
+                async () => await commentsService.PostCommentAsync(model, ""));
+        }
+
+        //[Test]
+        //public async Task PostCommentAsync_ShouldThrowExceptionIfSavingToDbFails()
+        //{
+        //    context = new DatabaseMock().CreateContext(new FailCommandInterceptorMock());
+        //    context.Database.EnsureCreated();
+        //    commentsRepo = new EfDeletableEntityRepository<Comment>(context);
+        //    visitorsRepo = new EfDeletableEntityRepository<Visitor>(context);
+        //    commentsService = new CommentsService(commentsRepo, visitorsRepo, guard);
+
+        //    await SeedAttractionsAsync();
+
+        //    var model = new CommentInputModel
+        //    {
+        //        AttractionId = (await attrRepo
+        //           .AllAsNoTracking()
+        //           .FirstOrDefaultAsync())!.Id,
+        //        Text = "TestCommentText"
+        //    };
+
+        //    var visitorId = (await visitorsRepo
+        //        .AllAsNoTracking()
+        //        .FirstOrDefaultAsync())!.Id;
+
+        //    Assert.ThrowsAsync<ExploreBulgariaDbException>(
+        //        async () => await commentsService.PostCommentAsync(new CommentInputModel(), ""));
+        //}
 
         [Test]
         public async Task LikeCommentAsync_VisitorShouldLikeCommentIfNotAlreadyLiked()
@@ -128,6 +176,30 @@ namespace ExploreBulgaria.Services.Data.Tests.UnitTests
                 async () => await commentsService.LikeCommentAsync(7, visitor!.Id),
                 InvalidVisitorId);
         }
+
+        //[Test]
+        //public async Task LikeCommentAsync_ShouldThrowExceptionIfSavingToDbFails()
+        //{
+        //    await SeedAttractionsAsync();
+        //    await SeedCommentAsync();
+
+        //    var comment = await commentsRepo
+        //        .All()
+        //        .FirstOrDefaultAsync();
+        //    var visitor = await visitorsRepo
+        //       .AllAsNoTracking()
+        //       .FirstOrDefaultAsync();
+
+        //    context = new DatabaseMock().CreateContext(new FailCommandInterceptorMock());
+        //    context.Database.EnsureCreated();
+        //    commentsRepo = new EfDeletableEntityRepository<Comment>(context);
+        //    visitorsRepo = new EfDeletableEntityRepository<Visitor>(context);
+        //    commentsService = new CommentsService(commentsRepo, visitorsRepo, guard);
+
+        //    Assert.ThrowsAsync<ExploreBulgariaDbException>(
+        //        async () => await commentsService.LikeCommentAsync(comment!.Id, visitor!.Id),
+        //        SavingToDatabase);
+        //}
 
         [Test]
         public async Task DislikeCommentAsync_VisitorShouldDislikeCommentIfNotAlreadyDisliked()

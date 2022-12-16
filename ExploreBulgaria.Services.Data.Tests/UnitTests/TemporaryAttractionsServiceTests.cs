@@ -1,9 +1,6 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using ExploreBulgaria.Data.Models;
-using ExploreBulgaria.Data.Repositories;
-using ExploreBulgaria.Services.Data.Tests.Mocks;
 using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Web.ViewModels.Attractions;
 using Microsoft.AspNetCore.Http;
