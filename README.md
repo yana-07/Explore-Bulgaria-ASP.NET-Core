@@ -3,7 +3,7 @@ ASP.NET Core web application as my defense project @ SoftUni's ASP.NET Core cour
 
 ## Application Overview
 A web application for exploring attractions in Bulgaria.
-9000+ attractions belonging to:
+9000+ attractions having:
 + one of the following categories:
 	+ Buildings and Architecture
 	+ Culture and Art
@@ -60,7 +60,7 @@ Extending all of the above listed possible :)
 	+ MVC
 	+ Web API
 	+ SignalR
-+ ASP.NET-Core-Template by [Nikolay Kostov] (https://github.com/NikolayIT)
++ ASP.NET-Core-Template by [Nikolay Kostov](https://github.com/NikolayIT)
 + Entity Framework Core 6.0
 + Azure Blob Storage
 + SendGrid
