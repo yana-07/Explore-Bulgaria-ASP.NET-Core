@@ -31,7 +31,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0B8E7E78
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Data.Tests", "ExploreBulgaria.Services.Data.Tests\ExploreBulgaria.Services.Data.Tests.csproj", "{42264929-2107-46AF-9F9B-31FA4FC50001}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreBulgaria.Services.Messaging", "ExploreBulgaria.Services.Messaging\ExploreBulgaria.Services.Messaging.csproj", "{CCE2600C-9724-4C49-9CEA-772BC2251A1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploreBulgaria.Services.Messaging", "ExploreBulgaria.Services.Messaging\ExploreBulgaria.Services.Messaging.csproj", "{CCE2600C-9724-4C49-9CEA-772BC2251A1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B653BE04-6D9D-4382-88BC-CF1CADB9FEB8}"
+	ProjectSection(SolutionItems) = preProject
+		images\1.png = images\1.png
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
