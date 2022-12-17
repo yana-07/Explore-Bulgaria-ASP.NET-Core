@@ -64,23 +64,55 @@
                         </div>
                     </div>
                     <div class="col-lg-12 mt-4">
+                        @if (Model.RemoteImageUrls.Any() && Model.RemoteImageUrls.Count() <= 4)
+                        {
+                            <div class="row">
+                                @foreach (var url in Model.RemoteImageUrls)
+                                {
+                                    <div class="item col-md-3" style="height: 250px;">
+                                        <div class="thumb h-100">
+                                            <img src="@url" alt="" class="h-100">
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.BlobStorageUrls.Any() && Model.BlobStorageUrls.Count() <= 4)
+                        {
+                            <div class="row">
+                                @foreach (var url in Model.BlobStorageUrls)
+                                {
+                                    <div class="item col-md-3" style="height: 250px;">
+                                        <div class="thumb h-100">
+                                            <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = url })" alt="">
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
                         <div class="owl-cites-town owl-carousel">
-                            @foreach (var url in Model.RemoteImageUrls)
+                            @if (Model.RemoteImageUrls.Count() > 4)
                             {
-                                <div class="item" style="height: 250px;">
-                                    <div class="thumb h-100">
-                                        <img src="@url" alt="" class="h-100">
+                                @foreach (var url in Model.RemoteImageUrls)
+                                {
+                                    <div class="item" style="height: 250px;">
+                                        <div class="thumb h-100">
+                                            <img src="@url" alt="" class="h-100">
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
-                            @foreach (var url in Model.BlobStorageUrls)
+                            @if (Model.BlobStorageUrls.Count() > 4)
                             {
-                                <div class="item">
-                                    <div class="thumb">
-                                        <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = url })" alt="">
+                                @foreach (var url in Model.BlobStorageUrls)
+                                {
+                                    <div class="item" style="height: 250px;">
+                                        <div class="thumb h-100">
+                                            <img src="@Url.Action("GetImage", "Attractions", new { area = "", blobName = url })" alt="">
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            }                            
                         </div>
                     </div>
                     <div class="card mb-0 mt-5">
