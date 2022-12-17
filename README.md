@@ -62,6 +62,8 @@ Extending all of the above listed possible :)
 	+ Web API
 	+ SignalR
 + ASP.NET-Core-Template by [Nikolay Kostov](https://github.com/NikolayIT)
++ MS SQL Server
++ SQLite in-memory (for unit tests)
 + Entity Framework Core 6.0
 + Azure Blob Storage
 + SendGrid
