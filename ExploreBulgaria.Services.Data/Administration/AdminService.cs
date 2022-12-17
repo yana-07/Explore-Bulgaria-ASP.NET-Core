@@ -1,4 +1,5 @@
-﻿using ExploreBulgaria.Data.Common.Repositories;
+﻿using Azure.Storage.Blobs;
+using ExploreBulgaria.Data.Common.Repositories;
 using ExploreBulgaria.Data.Models;
 using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
@@ -23,6 +24,7 @@ namespace ExploreBulgaria.Services.Data.Administration
         private readonly IDeletableEnityRepository<Region> regionsRepo;
         private readonly IDeletableEnityRepository<Village> villagesRepo;
         private readonly IDeletableEnityRepository<Visitor> visitorsRepo;
+        private readonly BlobServiceClient blobServiceClient;
         private readonly ILogger<AdminService> logger;
         private readonly IEmailSender emailSender;
         private readonly IGuard guard;
@@ -35,6 +37,7 @@ namespace ExploreBulgaria.Services.Data.Administration
             IDeletableEnityRepository<Region> regionsRepo,
             IDeletableEnityRepository<Village> villagesRepo,
             IDeletableEnityRepository<Visitor> visitorsRepo,
+            BlobServiceClient blobServiceClient,
             ILogger<AdminService> logger,
             IEmailSender emailSender,
             IGuard guard)
@@ -46,6 +49,7 @@ namespace ExploreBulgaria.Services.Data.Administration
             this.regionsRepo = regionsRepo;
             this.villagesRepo = villagesRepo;
             this.visitorsRepo = visitorsRepo;
+            this.blobServiceClient = blobServiceClient;
             this.logger = logger;
             this.emailSender = emailSender;
             this.guard = guard;
@@ -211,10 +215,33 @@ namespace ExploreBulgaria.Services.Data.Administration
             {
                 try
                 {
+                    var attachments = new List<EmailAttachment>();
+                    var containerClient = blobServiceClient.GetBlobContainerClient("attractions");
+                    foreach (var blobName in model.BlobNames.Split(", "))
+                    {
+                        var blob = blobName.TrimEnd(',');
+                        var blobClient = containerClient.GetBlobClient(blob);
+                        var result = await blobClient.DownloadAsync();
+                        var attachment = new EmailAttachment
+                        {
+                            fileName = blob,
+                            mimeType = result.Value.Details.ContentType
+                        };
+
+                        using (var ms = new MemoryStream())
+                        {
+                            await result.Value.Content.CopyToAsync(ms);
+                            attachment.Content = ms.ToArray();
+                        }
+                        
+                        attachments.Add(attachment);
+                    }
+
                     await emailSender.SendEmailAsync(
                         FromEmail, ExploreBgTeam,
-                         user.Email, AttractionApprovedSubject,
-                         string.Format(AttractionApprovedContent, model.Name));
+                         "cohitel454@paxven.com", AttractionApprovedSubject,
+                         string.Format(AttractionApprovedContent, model.Name),
+                         attachments);
                 }
                 catch (ArgumentException ex)
                 {
