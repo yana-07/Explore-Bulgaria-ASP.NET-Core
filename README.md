@@ -22,6 +22,8 @@ A web application for exploring attractions in Bulgaria.
 Extending all of the above listed possible :)
 
 ## Users
+### seeded admin user for testing purposes
+#### email: adminuser@abv.bg / password: admin@123456
 + General users
 	+ unauthorized users
 		+ can browse through all attractions
