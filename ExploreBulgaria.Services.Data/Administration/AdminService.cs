@@ -239,7 +239,7 @@ namespace ExploreBulgaria.Services.Data.Administration
 
                     await emailSender.SendEmailAsync(
                         FromEmail, ExploreBgTeam,
-                         "cohitel454@paxven.com", AttractionApprovedSubject,
+                         user.Email, AttractionApprovedSubject,
                          string.Format(AttractionApprovedContent, model.Name),
                          attachments);
                 }
