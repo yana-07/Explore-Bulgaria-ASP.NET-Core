@@ -28,22 +28,38 @@
                             }
                         </div>
                         <ul class="item-rating" onclick="postVote(event)">
-                            <li class="star-@if(Model.AverageVote >= 1) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="1"></i></li>
-                            <li class="star-@if(Model.AverageVote >= 2) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="2"></i></li>
-                            <li class="star-@if(Model.AverageVote >= 3) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="3"></i></li>
-                            <li class="star-@if(Model.AverageVote >= 4) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="4"></i></li>
-                            <li class="star-@if(Model.AverageVote == 5) {<text>fill</text>}else{<text>empty</text>}"><i class="fas fa-star" data-vote="5"></i></li>
+                            <li class="star-@if(Model.AverageVote >= 1) {<text>fill</text>}else{<text>empty</text>}">
+                                <i class="fas fa-star @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)" data-vote="1"></i>
+                            </li>
+                            <li class="star-@if(Model.AverageVote >= 2) {<text>fill</text>}else{<text>empty</text>}">
+                                <i class="fas fa-star @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)" data-vote="2"></i>
+                            </li>
+                            <li class="star-@if(Model.AverageVote >= 3) {<text>fill</text>}else{<text>empty</text>}">
+                                <i class="fas fa-star @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)" data-vote="3"></i>
+                            </li>
+                            <li class="star-@if(Model.AverageVote >= 4) {<text>fill</text>}else{<text>empty</text>}">
+                                <i class="fas fa-star @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)" data-vote="4"></i>
+                            </li>
+                            <li class="star-@if(Model.AverageVote == 5) {<text>fill</text>}else{<text>empty</text>}">
+                                <i class="fas fa-star @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)" data-vote="5"></i>
+                            </li>
                             <li><span id="averageVoteValue">@Model.AverageVote.ToString("0.0")</span><span> / 5.0</span></li>
                         </ul>
                         <div class="user-actions text-secondary mt-3">
                             <span class="pe-3">
-                                  <i id="addToFavorites" class="@(Model.AddedToFavorites == true ? "fa-solid fill-red" : "fa-regular") fa-heart pe-2"></i>Добави в любими
+                                <i id="addToFavorites" class="@(Model.AddedToFavorites == true ? "fa-solid fill-red" : "fa-regular") 
+                                   @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty) 
+                                   fa-heart pe-2"></i>Добави в любими
                             </span>
                             <span class="pe-3">
-                                <i id="wantToVisit" class="@(Model.WantToVisit == true ? "fa-solid fill-green" : "fa-regular") fa-square-plus pe-2"></i>Искам да посетя
+                                <i id="wantToVisit" class="@(Model.WantToVisit == true ? "fa-solid fill-green" : "fa-regular") 
+                                   @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)
+                                   fa-square-plus pe-2"></i>Искам да посетя
                             </span>
                             <span class="pe-3">
-                                <i id="addToVisited" class="@(Model.AddedToVisited == true ? "fa-solid fill-green" : "fa-regular") fa-circle-check pe-2"></i>Бил съм тук
+                                <i id="addToVisited" class="@(Model.AddedToVisited == true ? "fa-solid fill-green" : "fa-regular") 
+                                   @((User.Identity?.IsAuthenticated ?? false) == false ? "disabled" : string.Empty)
+                                   fa-circle-check pe-2"></i>Бил съм тук
                             </span>
                         </div>
                     </div>
