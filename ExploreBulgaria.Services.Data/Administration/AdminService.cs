@@ -409,8 +409,15 @@ namespace ExploreBulgaria.Services.Data.Administration
         {
             var attraction = await attrRepo.GetByIdAsync(id);
             guard.AgainstNull(attraction, InvalidAttractionId);
-            attraction!.IsDeleted = true;
-            await attrRepo.SaveChangesAsync();
+            attrRepo.Delete(attraction!);
+            try
+            {
+                await attrRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
         }
     }
 }

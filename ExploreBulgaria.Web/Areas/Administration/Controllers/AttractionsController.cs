@@ -123,6 +123,11 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             {
                 TempData[ErrorMessage] = ex.Message.ToString();
             }
+            catch (ExploreBulgariaDbException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+            }
             
             return RedirectToAction(nameof(All), new { area = ""});
         }
