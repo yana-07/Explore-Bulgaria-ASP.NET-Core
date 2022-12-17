@@ -112,6 +112,21 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                await adminService.DeleteAsync(id);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+            }
+            
+            return RedirectToAction(nameof(All), new { area = ""});
+        }
+
         private async Task PopulateModel(AttractionTempDetailsViewModel model)
         {
             model.CategoryModel = await categoriesService

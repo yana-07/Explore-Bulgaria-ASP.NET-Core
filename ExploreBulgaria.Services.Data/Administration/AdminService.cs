@@ -233,7 +233,7 @@ namespace ExploreBulgaria.Services.Data.Administration
                             await result.Value.Content.CopyToAsync(ms);
                             attachment.Content = ms.ToArray();
                         }
-                        
+
                         attachments.Add(attachment);
                     }
 
@@ -251,7 +251,7 @@ namespace ExploreBulgaria.Services.Data.Administration
                 {
                     throw new ExploreBulgariaException(EmailSenderException, ex);
                 }
-            }          
+            }
         }
 
         public async Task<IEnumerable<string>> GetAdminNotifications(string visitorId)
@@ -403,6 +403,14 @@ namespace ExploreBulgaria.Services.Data.Administration
             }
 
             return result;
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var attraction = await attrRepo.GetByIdAsync(id);
+            guard.AgainstNull(attraction, InvalidAttractionId);
+            attraction!.IsDeleted = true;
+            await attrRepo.SaveChangesAsync();
         }
     }
 }

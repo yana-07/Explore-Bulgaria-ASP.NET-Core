@@ -137,6 +137,22 @@
                     <input id="longitude" type="hidden" value="@Model.Coordinates.X"/>
                     <input id="description" type="hidden" value="@Model.Description.Substring(0, 100)"/>
                     <div id="map" style="width: 1200px; height: 300px;" class="card mb-0 mt-5"></div>
+                    @if(User.IsInRole(AdministratorRoleName))
+                    {
+                        <div class="row mt-3">
+                            <div class="col-md-3 offset-md-3">
+                                <a asp-area="Administration" asp-controller="Attractions" asp-action="Edit"
+                                   asp-route-id="@Model.Id" 
+                                   class="btn btn-primary w-100 disabled">Редактирай</a>
+                            </div>
+                            <div class="col-md-3">
+                                <form id="deleteForm" asp-area="Administration" asp-controller="Attractions" asp-action="Delete">
+                                    <input type="hidden" name="id" value="@Model.Id"/>
+                                    <button id="deleteBtn" type="submit" class="btn btn-danger w-100">Изтрий</button>
+                                </form>                               
+                            </div>                           
+                        </div>
+                    }                   
                 </div>
             </div>
         </div>
@@ -230,5 +246,34 @@
     <script src="~/js/leaflet.js" asp-append-version="true"></script>   
     <script src="~/js/votes-ajax.js" asp-append-version="true"></script>
     <script src="~/js/user-actions.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('deleteBtn').addEventListener('click', (event) => {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Наистина ли желаете',
+                text: 'да изтриете тази забележителност?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Потвърждавам',
+                cancelButtonText: 'Отказвам се'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(() => {
+                        document.getElementById('deleteForm').submit();
+                    }, 2000);
+                    Swal.fire(
+                        'Изтрита!',
+                        'Забележителността беше изтрита.',
+                        'success'
+                    )
+                }
+            })
+        })
+    </script>
 }
 
