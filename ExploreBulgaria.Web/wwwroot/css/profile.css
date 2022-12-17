@@ -33,7 +33,7 @@ input {
     transform: scale(1.5)
 }
 
-.btn {
+.btn:not(.chat) {
     height: 140px;
     width: 140px;
     border-radius: 50%
