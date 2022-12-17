@@ -27,17 +27,16 @@ namespace ExploreBulgaria.Web.ViewModels.Administration
         [Display(Name = DisplayDescription)]
         public string Description { get; set; } = null!;
 
-        [Required(ErrorMessage = FieldRequired)]
+        [Required(ErrorMessage = FieldIdRequired)]
         public string CategoryId { get; set; } = null!;
 
         public CategoryOptionViewModel? CategoryModel { get; set; }
 
-        [Required(ErrorMessage = FieldRequired)]
         [StringLength(RegionNameMaxLength, MinimumLength = RegionNameMinLength, ErrorMessage = FieldLength)]
         [Display(Name = DisplayRegion)]
-        public string Region { get; set; } = null!;
+        public string? Region { get; set; }
 
-        [Required(ErrorMessage = FieldRequired)]
+        [Required(ErrorMessage = FieldIdRequired)]
         public string RegionId { get; set; } = null!;
 
         [StringLength(NameMaxLength, MinimumLength = VillageNameMinLength, ErrorMessage = FieldLength)]
@@ -46,14 +45,18 @@ namespace ExploreBulgaria.Web.ViewModels.Administration
 
         public string? VillageId { get; set; }
 
-        [Required(ErrorMessage = FieldRequired)]
+        [Required(ErrorMessage = FieldIdRequired)]
         public string SubcategoryId { get; set; } = null!;
 
+        [Required(ErrorMessage = FieldRequired)]
+        [Display(Name = DisplayLatitude)]
         public double Latitude { get; set; }
 
+        [Required(ErrorMessage = FieldRequired)]
+        [Display(Name = DisplayLongitude)]
         public double Longitude { get; set; }
 
-        [Required(ErrorMessage = FieldRequired)]
+        [Required(ErrorMessage = FieldIdRequired)]
         public string CreatedByVisitorId { get; set; } = null!;
 
         [Required]

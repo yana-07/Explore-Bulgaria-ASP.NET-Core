@@ -419,5 +419,46 @@ namespace ExploreBulgaria.Services.Data.Administration
                 throw new ExploreBulgariaDbException(SavingToDatabase, ex);
             }
         }
+
+        public async Task<T> GetForEdit<T>(string id)
+        {
+            var attraction = await attrRepo
+                .All()
+                .Where(a => a.Id == id)
+                .To<T>()
+                .FirstOrDefaultAsync();
+
+            guard.AgainstNull(attraction, InvalidAttractionId);
+
+            return attraction!;
+        }
+
+        public async Task SaveEdited(EditAttractionViewModel model)
+        {
+            var attraction = await attrRepo
+                .All()
+                .Where(a => a.Id == model.Id)
+                .FirstOrDefaultAsync();
+
+            guard.AgainstNull(attraction, InvalidAttractionId);
+
+            attraction!.Name = model.Name;
+            attraction.Description = model.Description;
+            attraction.CategoryId = model.CategoryId;
+            attraction.SubcategoryId = model.SubcategoryId;
+            attraction.RegionId = model.RegionId;
+            attraction.VillageId = model.VillageId;
+            attraction.Coordinates = new Point(
+                model.Longitude, model.Latitude) { SRID = 4326 };
+
+            try
+            {
+                await attrRepo.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ExploreBulgariaDbException(SavingToDatabase, ex);
+            }
+        }
     }
 }

@@ -32,5 +32,9 @@ namespace ExploreBulgaria.Services.Data.Administration
         Task<IEnumerable<string>> GetAdminNotifications(string visitorId);
 
         Task DeleteAsync(string id);
+
+        Task<T> GetForEdit<T>(string id);
+
+        Task SaveEdited(EditAttractionViewModel model);
     }
 }

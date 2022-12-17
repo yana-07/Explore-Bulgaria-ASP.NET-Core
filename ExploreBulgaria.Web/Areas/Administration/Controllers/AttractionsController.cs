@@ -8,6 +8,7 @@ using ExploreBulgaria.Web.ViewModels.Regions;
 using ExploreBulgaria.Web.ViewModels.Subcategories;
 using ExploreBulgaria.Web.ViewModels.Villages;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Areas.Administration.Controllers
@@ -132,6 +133,41 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             return RedirectToAction(nameof(All), new { area = ""});
         }
 
+        public async Task<IActionResult> Edit(string id)
+        {
+            var model = await adminService
+                .GetForEdit<EditAttractionViewModel>(id);
+            await PopulateModelForEdit(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditAttractionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                await PopulateModelForEdit(model);
+                return View(model);
+            }
+
+            try
+            {
+                await adminService.SaveEdited(model);
+            }
+            catch (ExploreBulgariaException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+            }
+            catch (ExploreBulgariaDbException ex)
+            {
+                TempData[ErrorMessage] = ex.Message.ToString();
+                logger.LogError(ex.InnerException, ex.Message.ToString());
+            }
+
+            return RedirectToAction(nameof(All), new { area = "" });
+        }
+
         private async Task PopulateModel(AttractionTempDetailsViewModel model)
         {
             model.CategoryModel = await categoriesService
@@ -141,6 +177,18 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
                 .GetAllAsync<CategoryOptionViewModel>();
             model.Subcategories = await subcategoriesService
                 .GetAllForCategory<SubcategoryOptionViewModel>(model.CategoryModel!.Name);
+            model.Regions = await regionsService
+                .GetAllAsync<RegionOptionViewModel>();
+            model.Villages = await vilaggesService
+                .GetAllAsync<VillageOptionViewModel>();
+        }
+
+        private async Task PopulateModelForEdit (EditAttractionViewModel model)
+        {
+            model.Categories = await categoriesService
+                .GetAllAsync<CategoryOptionViewModel>();
+            model.Subcategories = await subcategoriesService
+                .GetAllForCategory<SubcategoryOptionViewModel>(model.CategoryName);
             model.Regions = await regionsService
                 .GetAllAsync<RegionOptionViewModel>();
             model.Villages = await vilaggesService
