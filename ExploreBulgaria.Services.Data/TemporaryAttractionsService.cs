@@ -55,7 +55,7 @@ namespace ExploreBulgaria.Services.Data
                 await UploadImageAsync(image, blobName);
             }
 
-            attractionTemp.BlobNames = sb.ToString().Trim();
+            attractionTemp.BlobNames = sb.ToString().Trim(' ', ',');
 
             try
             {
