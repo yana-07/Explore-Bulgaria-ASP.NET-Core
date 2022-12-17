@@ -51,6 +51,7 @@ Extending all of the above listed possible :)
     + can do all of the above
 	+ can approve/reject attracions, recommended for adding by users
 		+ can edit the attraction information
+    + can edit existing attractions
 	+ can delete attractions
 	+ can add categories, subcategories, regions/cities, villages
 	+ can enter a one-to-one chat room with users
