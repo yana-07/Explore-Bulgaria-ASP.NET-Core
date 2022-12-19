@@ -476,12 +476,14 @@ namespace ExploreBulgaria.Services.Data
                 .Include(a => a.Region).Include(a => a.Village)
                 .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
 
+            var ids = new HashSet<string>();
             foreach (var point in points)
             {
-                result = result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000);
+                ids.UnionWith(result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000).Select(a => a.Id));
             }
 
             var attractions = await result
+                .Where(a => ids.Contains(a.Id))
                 .OrderBy(a => a.Id)
                 .Skip((page - 1) * itemsPerPage)
                 .Take(itemsPerPage).ToListAsync();
@@ -517,12 +519,15 @@ namespace ExploreBulgaria.Services.Data
                 .AllAsNoTracking()
                 .Where(a => !categoryIds.Any() ? true : categoryIds.Contains(a.CategoryId));
 
+            var ids = new HashSet<string>();
             foreach (var point in points)
             {
-                result = result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000);
+                ids.UnionWith(result.Where(a => context.GetDistance(point, a.Coordinates) <= 15000).Select(a => a.Id));
             }
 
-            return await result.CountAsync();
+            return await result
+                .Where(a => ids.Contains(a.Id))
+                .CountAsync();
         }
 
         public async Task<IEnumerable<AttractionSidebarViewModel>> GetForHomePageAsync()
