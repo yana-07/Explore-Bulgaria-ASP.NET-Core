@@ -291,20 +291,27 @@ namespace ExploreBulgaria.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ByRoute(ByRouteInputModel model, int page = 1)
+        public  IActionResult ByRoute(ByRouteInputModel model, int page = 1)
         {
-            var viewModel = new AttractionByRouteListViewModel
+            return RedirectToAction(nameof(VisualizeByRoute),
+                new { page, categoriesInput = model.CategoriesInput, steps = model.Steps});
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> VisualizeByRoute(int page, IEnumerable<string> categoriesInput, string steps)
+        {
+            var model = new AttractionByRouteListViewModel
             {
                 Attractions = await attractionsService
-                   .GetByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput, page, ItemsPerPage),
-                Steps = model.Steps,
+                   .GetByRouteAndCategoriesAsync(steps, categoriesInput, page, ItemsPerPage),
+                Steps = steps,
                 PagesCount = (int)Math.Ceiling((decimal)(await attractionsService
-                   .GetCountByRouteAndCategoriesAsync(model.Steps, model.CategoriesInput)) / ItemsPerPage),
-                CategoriesInput = model.CategoriesInput,
+                   .GetCountByRouteAndCategoriesAsync(steps, categoriesInput)) / ItemsPerPage),
+                CategoriesInput = categoriesInput,
                 Page = page,
             };
 
-            return View("VisualizeByRoute", viewModel);
+            return View(model);
         }
 
         [AllowAnonymous]
