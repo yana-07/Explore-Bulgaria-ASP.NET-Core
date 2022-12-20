@@ -31,4 +31,6 @@ public interface IUsersService
     Task<bool> EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
 
     Task SignOutAndInAsync(ClaimsPrincipal user);
+
+    Task<(IdentityResult, ApplicationUser)> ExternalLoginAsync(ExternalLoginInfo extLoginInfo);
 }

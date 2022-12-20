@@ -6,6 +6,8 @@ using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using static ExploreBulgaria.Data.Common.Constants.EntityAndVMConstants;
 using static ExploreBulgaria.Services.Constants.MessageConstants;
 
 namespace ExploreBulgaria.Web.Controllers
@@ -245,7 +247,6 @@ namespace ExploreBulgaria.Web.Controllers
 
             if (result.Succeeded)
             {
-                //TODO: Add Claims
                 return LocalRedirect(returnUrl);
             }
 
@@ -256,7 +257,17 @@ namespace ExploreBulgaria.Web.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(Register));
+                var (loginResult, user) = await usersService.ExternalLoginAsync(info);
+                if (loginResult.Succeeded)
+                {
+                    var visitorId = await visitorsService.CreateByUserId(user!.Id);
+                    await usersService.AddVisitorIdClaimAsync(user, visitorId);
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+
+                TempData[ErrorMessage] = "Error loging in with external provider";
+                return RedirectToAction(nameof(Login));
             }
         }
 

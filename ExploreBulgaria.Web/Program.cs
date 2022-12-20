@@ -5,6 +5,7 @@ using ExploreBulgaria.Data.Seeding;
 using ExploreBulgaria.Services.Mapping;
 using ExploreBulgaria.Web.Hubs;
 using ExploreBulgaria.Web.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -25,11 +26,13 @@ builder.Services.AddAuthentication()
     {
         fbOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
         fbOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+        fbOptions.SignInScheme = IdentityConstants.ExternalScheme;
     })
     .AddGoogle(googleOptions =>
     {
         googleOptions.ClientId = builder.Configuration["Authentication:Google:AppId"];
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:AppSecret"];
+        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
 builder.Services.ConfigureApplicationCookie(options =>

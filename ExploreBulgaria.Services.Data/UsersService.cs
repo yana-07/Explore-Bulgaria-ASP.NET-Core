@@ -195,5 +195,36 @@ namespace ExploreBulgaria.Services.Data
             await signInManager.SignInAsync(
                 await userManager.GetUserAsync(user), isPersistent: false);
         }
+
+        public async Task<(IdentityResult, ApplicationUser)> ExternalLoginAsync(ExternalLoginInfo extLoginInfo)
+        {
+            var email = extLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            var user = await userManager.FindByEmailAsync(email);
+            IdentityResult result;
+            if (user != null)
+            {
+                result = await userManager.AddLoginAsync(user, extLoginInfo);
+                if (result.Succeeded)
+                {
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                }
+            }
+            else
+            {
+                user = new ApplicationUser
+                {
+                    Email = email,
+                    UserName = email.Substring(0, email.IndexOf('@'))
+                };
+
+                result = await userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result =  await userManager.AddLoginAsync(user, extLoginInfo);
+                }
+            }
+
+            return (result, user);
+        }
     }
 }
