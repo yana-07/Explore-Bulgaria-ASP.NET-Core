@@ -8,13 +8,11 @@
 
     public class EditUserProfileInputModel : IMapFrom<ApplicationUser>
     {
-        [Required]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
-        public string FirstName { get; set; } = null!;
+        public string? FirstName { get; set; } = null!;
 
-        [Required]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; } = null!;
 
         [Required]
         [EmailAddress]
