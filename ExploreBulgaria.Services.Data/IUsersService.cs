@@ -28,6 +28,8 @@ public interface IUsersService
 
     Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId);
 
+    Task ReplaceClaimAsync(ApplicationUser user, string claimType, string newClaimValue);
+
     Task<bool> EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath);
 
     Task SignOutAndInAsync(ClaimsPrincipal user);

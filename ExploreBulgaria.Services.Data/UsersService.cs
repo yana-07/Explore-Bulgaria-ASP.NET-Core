@@ -5,6 +5,7 @@ using ExploreBulgaria.Services.Exceptions;
 using ExploreBulgaria.Services.Guards;
 using ExploreBulgaria.Web.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static ExploreBulgaria.Services.Constants.ExceptionConstants;
 using static ExploreBulgaria.Services.Constants.MessageConstants;
@@ -139,14 +140,33 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task AddVisitorIdClaimAsync(ApplicationUser user, string visitorId)
             => await userManager.AddClaimAsync(user, new Claim("urn:exploreBulgaria:visitorId", visitorId));
-        
+
+        public async Task ReplaceClaimAsync(ApplicationUser user, string claimType, string newClaimValue)
+        {
+            var claimToReplace = user.Claims.FirstOrDefault(iuc => iuc.ClaimType == claimType)!.ToClaim();
+            await userManager.ReplaceClaimAsync(user, claimToReplace, new Claim(claimType, newClaimValue));
+        }
+
         public async Task<bool> EditProfileAsync(EditUserProfileInputModel model, string userId, string imagePath)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await repo
+                .All()
+                .Include(u => u.Claims)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             guard.AgainstNull(user, InvalidUserId);
 
-            user.FirstName = model.FirstName;
+            if (model.FirstName != user.FirstName)
+            {
+                await ReplaceClaimAsync(user, ClaimTypes.GivenName, model.FirstName ?? string.Empty);
+            }
+
+            if (model.LastName != user.LastName)
+            {
+                await ReplaceClaimAsync(user, ClaimTypes.Surname, model.LastName ?? string.Empty);
+            }
+
+            user!.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.UserName = model.UserName;
@@ -169,9 +189,17 @@ namespace ExploreBulgaria.Services.Data
                     await model.AvatarUrlUploaded.CopyToAsync(fileStream);
                 }
 
-                user.AvatarUrl = $"/images/avatars/{userId}.{extension}";
+                var avatarUrl = $"/images/avatars/{userId}.{extension}";
+                user.AvatarUrl = avatarUrl;
 
-                await AddAvatarUrlClaimAsync(user);
+                if (!string.IsNullOrEmpty(user.AvatarUrl))
+                {
+                    await ReplaceClaimAsync(user, ClaimTypes.Uri, avatarUrl);
+                }
+                else
+                {
+                    await AddAvatarUrlClaimAsync(user);
+                }
             }
 
             try
