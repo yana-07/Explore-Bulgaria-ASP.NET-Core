@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<ChatMessageViewModel>
+
+@{
     ViewData["Title"] = "Чат с потребител";
     var group = ViewData.ContainsKey("Group") ? ViewData["Group"] : "";
     var myUserIdentifier = ViewData.ContainsKey("UserIdentifier") ? ViewData["UserIdentifier"] : "";
@@ -22,7 +24,19 @@
         </div>
 
         <div class="card-body">
-            <div class="direct-chat-messages h-100"></div>
+            <div class="direct-chat-messages h-100">
+                @foreach (var msg in Model)
+                {
+                    <div class="direct-chat-infos clearfix">
+                        <span class="direct-chat-name float-left text-primary">@msg.Name</span>
+                        <span class="direct-chat-timestamp float-right">@msg.SentOn</span>
+                    </div>
+                    <img class="direct-chat-img" src="@msg.AvatarUrl" alt="message user image">
+                    <div class="direct-chat-text">
+                        @msg.Message
+                    </div>
+                }
+            </div>
         </div>
 
         <div class="card-footer">

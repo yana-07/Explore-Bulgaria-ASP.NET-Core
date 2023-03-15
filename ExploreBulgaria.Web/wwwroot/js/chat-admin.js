@@ -64,5 +64,17 @@ document.getElementById('closeBtn').addEventListener('click', () => {
         body: JSON.stringify({ group })
     });
 
+    fetch('/api/ChatApi/clearMessages', {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json',
+            'X-CSRF-TOKEN': antiForgeryToken
+        },
+        body: JSON.stringify({
+            fromUserId: group.split('@')[1],
+            toUserId: myUserIdentifier
+        })
+    });
+
     document.getElementById('messagesContainer').remove();
 });

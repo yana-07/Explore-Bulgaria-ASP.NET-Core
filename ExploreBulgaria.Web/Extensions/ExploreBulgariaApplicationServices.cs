@@ -29,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IGuard, Guard>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ISpatialDataService, SpatialDataService>();
+            services.AddScoped<IChatService, ChatService>();
 
             using(var scope = services.BuildServiceProvider().CreateScope())
             {
