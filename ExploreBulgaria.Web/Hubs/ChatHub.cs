@@ -22,18 +22,18 @@ namespace ExploreBulgaria.Web.Hubs
         {
             if (string.IsNullOrEmpty(groupName))
             {
-                groupName = $"private@{Context.UserIdentifier}";
+                groupName = $"private@{Context.User!.VisitorId()}";
             }
 
             string user = $"{Context.User!.FirstName()} {Context.User!.LastName()}";
-            var userIdentifier = Context.UserIdentifier;
+            var userIdentifier = Context.User!.VisitorId();
             var dateTime = DateTime.UtcNow;
             var avatar = Context.User!.AvatarUrl();
 
             if (Context.User!.Email() != "adminuser@abv.bg")
             {
                 await adminService.NotifyAdmin(groupName);
-                await chatService.SendChat(Context.UserIdentifier!, message, dateTime);
+                await chatService.SendChat(Context.User!.VisitorId()!, message, dateTime);
             }
          
             await Clients.Group(groupName)
@@ -44,7 +44,7 @@ namespace ExploreBulgaria.Web.Hubs
         {
             if (string.IsNullOrEmpty(groupName))
             {
-                groupName = $"private@{Context.UserIdentifier}";
+                groupName = $"private@{Context.User!.VisitorId()}";
             }
             
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);

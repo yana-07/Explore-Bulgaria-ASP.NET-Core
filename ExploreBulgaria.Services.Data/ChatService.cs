@@ -26,23 +26,10 @@ namespace ExploreBulgaria.Services.Data
 
         public async Task ClearMessages(ClearChatMessageViewModel model)
         {
-            var fromVisitorId = await visitorRepo
-                .AllAsNoTracking()
-                .Where(v => v.UserId == model.FromUserId)
-                .Select(v => v.Id)
-                .FirstOrDefaultAsync();
-            guard.AgainstNull(fromVisitorId, InvalidUserId);
-
-            var toVisitorId = await visitorRepo
-                .AllAsNoTracking()
-                .Where(v => v.UserId == model.ToUserId)
-                .Select(v => v.Id)
-                .FirstOrDefaultAsync();
-            guard.AgainstNull(toVisitorId, InvalidUserId);
-
             var msgsToDelete = await repo
                 .All()
-                .Where(c => c.FromVisitorId == fromVisitorId && c.ToVisitorId == toVisitorId)
+                .Where(c => c.FromVisitorId == model.FromVisitorId &&
+                    c.ToVisitorId == model.ToVisitorId)
                 .ToListAsync();
             msgsToDelete.ForEach(m => repo.Delete(m));
             await repo.SaveChangesAsync();
@@ -53,20 +40,12 @@ namespace ExploreBulgaria.Services.Data
             var fromVisitor = await visitorRepo
                 .AllAsNoTracking()
                 .Include(v => v.User)
-                .Where(v => v.UserId == fromId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(v => v.Id == fromId);
             guard.AgainstNull(fromVisitor, InvalidUserId);
-
-            string? toVisitorId = await visitorRepo
-                .AllAsNoTracking()
-                .Where(v => v.UserId == toId)
-                .Select(v => v.Id)
-                .FirstOrDefaultAsync();
-            guard.AgainstNull(toVisitorId, InvalidUserId);
 
             return await repo
                 .AllAsNoTracking()
-                .Where(c => c.FromVisitorId == fromVisitor!.Id && c.ToVisitorId == toVisitorId)
+                .Where(c => c.FromVisitorId == fromId && c.ToVisitorId == toId)
                 .Select(c => new ChatMessageViewModel
                 {
                     Name = $"{fromVisitor!.User.FirstName} {fromVisitor.User.LastName}",
@@ -77,7 +56,7 @@ namespace ExploreBulgaria.Services.Data
                 .ToListAsync();
         }
 
-        public async Task SendChat(string fromId, string message, DateTime sentOn)
+        public async Task SendChat(string fromVisitorId, string message, DateTime sentOn)
         {
             var adminVisitor = await visitorRepo
                 .AllAsNoTracking()
@@ -85,16 +64,9 @@ namespace ExploreBulgaria.Services.Data
                 .FirstOrDefaultAsync(v => v.User.Email == "adminuser@abv.bg");
             guard.AgainstNull(adminVisitor, InvalidVisitorId);
 
-            var sendingChatVisitorId = await visitorRepo
-                .AllAsNoTracking()
-                .Where(v => v.UserId == fromId)
-                .Select(v => v.Id)
-                .FirstOrDefaultAsync();
-            guard.AgainstNull(sendingChatVisitorId, InvalidVisitorId);
-
             await repo.AddAsync(new Chat
             {
-                FromVisitorId = sendingChatVisitorId!, 
+                FromVisitorId = fromVisitorId, 
                 ToVisitorId = adminVisitor!.Id,
                 Message = message,
                 SentOn = sentOn 

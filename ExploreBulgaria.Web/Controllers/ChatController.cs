@@ -7,7 +7,7 @@ namespace ExploreBulgaria.Web.Controllers
     {
         public IActionResult Index()
         {
-            ViewData["UserIdentifier"] = User.Id();
+            ViewData["UserIdentifier"] = User.VisitorId();
             return View();
         }
     }

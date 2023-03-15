@@ -29,12 +29,12 @@ namespace ExploreBulgaria.Web.Areas.Administration.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Chat(string group, string fromUserId)
+        public async Task<IActionResult> Chat(string group, string fromVisitorId)
         {
             ViewData["Group"] = group;
-            ViewData["UserIdentifier"] = User.Id();
+            ViewData["UserIdentifier"] = User.VisitorId();
 
-            var messages = await chatService.GetMessages(fromUserId, User.Id());
+            var messages = await chatService.GetMessages(fromVisitorId, User.VisitorId());
 
             return View(messages);
         }

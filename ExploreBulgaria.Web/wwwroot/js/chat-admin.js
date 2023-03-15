@@ -71,8 +71,8 @@ document.getElementById('closeBtn').addEventListener('click', () => {
             'X-CSRF-TOKEN': antiForgeryToken
         },
         body: JSON.stringify({
-            fromUserId: group.split('@')[1],
-            toUserId: myUserIdentifier
+            fromVisitorId: group.split('@')[1],
+            toVisitorId: myUserIdentifier
         })
     });
 

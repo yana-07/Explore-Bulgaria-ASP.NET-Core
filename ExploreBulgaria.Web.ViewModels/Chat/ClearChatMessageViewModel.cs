@@ -2,8 +2,8 @@
 {
     public class ClearChatMessageViewModel
     {
-        public string FromUserId { get; set; } = null!;
+        public string FromVisitorId { get; set; } = null!;
 
-        public string ToUserId { get; set; } = null!;
+        public string ToVisitorId { get; set; } = null!;
     }
 }
