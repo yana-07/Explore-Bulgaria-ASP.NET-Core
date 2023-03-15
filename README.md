@@ -1,5 +1,6 @@
 # Explore-Bulgaria-ASP.NET-Core
 ASP.NET Core web application as my defense project @ SoftUni's ASP.NET Core course
+https://xplorebg.azurewebsites.net
 
 ## Application Overview
 A web application for exploring attractions in Bulgaria.
